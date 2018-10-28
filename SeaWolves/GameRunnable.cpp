@@ -541,6 +541,7 @@ void GameRunnable::setup(void)
 }
 //----------------------------------------------------------------
 
+
 void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 {
 	/* Camera movement */
@@ -586,6 +587,8 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 						mUnitNode->rotate(quat);
 					}
 					*/
+
+					/* Unit rotation code */
 					if ((1.0 + src.dotProduct(unit->direction)) < 0.0001) {
 						unit->unitNode->yaw(Ogre::Degree(180));
 					}
@@ -602,9 +605,17 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 					*/
 				}
 				else if (flowFieldLock && flowField[unit->currentPos.x][unit->currentPos.y] != Ogre::Vector2::ZERO) {
+					Ogre::Vector2 currPos = numericalCordFinder(unit->currentPos);
 					unit->currentPos = flowField[unit->currentPos.x][unit->currentPos.y];
 					Ogre::Vector2 nextPos = numericalCordFinder(unit->currentPos);
-					Ogre::Vector3* nextCord = new Ogre::Vector3(nextPos.x, 0, nextPos.y);
+					Ogre::Vector3* nextCord;
+					if (dijkastraGrid2d[unit->currentPos.x][unit->currentPos.y] != 1) {
+						nextCord = interpolateMovement(currPos, nextPos);
+					}
+					else {
+						nextCord = new Ogre::Vector3(nextPos.x, 0, nextPos.y);
+					}
+
 					unit->walkList.push_back(*nextCord);
 					
 				}
@@ -637,19 +648,7 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 				}
 				else {
 					//mUnitNode->translate(move * mDirection);
-					Ogre::Vector2 floor = flowField[unit->currentPos.x-1][unit->currentPos.y-1];
-
-					int f00 = dijkastraGrid2d[floor.x][floor.y];
-					int f01 = dijkastraGrid2d[floor.x][floor.y + 1];
-					int f10 = dijkastraGrid2d[floor.x + 1][floor.y];
-					int f11 = dijkastraGrid2d[floor.x + 1][floor.y + 1];
-
-					//Do the x interpolations
-					int xWeight = unit->currentPos.x - floor.x;
-
-					int top = (f00 * (1- xWeight)) + (f10 * xWeight);
-					int bottom = f01.mul(1 - xWeight).plus(f11.mul(xWeight));
-
+					
 					unit->unitNode->translate(move * unit->direction);
 				}
 			}
@@ -659,6 +658,15 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 		}
 	}
 	mTrayMgr->frameRendered(evt);
+}
+//----------------------------------------------------------------
+
+
+Ogre::Vector3* GameRunnable::interpolateMovement(Ogre::Vector2 start, Ogre::Vector2 end) {
+	int x, y;
+	x = (start.x + end.x) / 2;
+	y = (start.y + end.y) / 2;
+	return new Ogre::Vector3(x, 0, y);
 }
 //----------------------------------------------------------------
 

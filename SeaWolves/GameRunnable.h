@@ -15,6 +15,7 @@
 #include <SDL.h>
 
 #include "Constants.h"
+#include "Bezier.h"
 #include "SquareNeighbor.h"
 #include "Unit.h"
 
@@ -42,6 +43,7 @@ public:
 	virtual void generateDijkastraGrid2(Ogre::Vector2 point);
 	virtual void steeringBehaviourFlowField(Ogre::Vector2 position);
 	virtual void findPath(Ogre::Vector2 origin, Unit unit);
+	virtual Ogre::Vector3* interpolateMovement(Ogre::Vector2 start, Ogre::Vector2 end);
 
 	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color);
 	virtual void createTileMap(void);
@@ -77,6 +79,7 @@ public:
 	int							robotNumber;
 
 	Constants*					CONSTANTS;
+	Bezier*						Bezier;
 
 
 
