@@ -17,6 +17,7 @@ GameRunnable::GameRunnable()
 	robotEntity(NULL),
 	dijkastraGrid2d(CONSTANTS->dimension, std::vector<int>(CONSTANTS->dimension, NULL)),
 	flowField(CONSTANTS->dimension),
+	losGrid(CONSTANTS->dimension, std::vector<bool>(CONSTANTS->dimension, false)),
 	flowFieldLock(false),
 	createUnitMode(false),
 	currentPos(0, 0),
@@ -177,6 +178,22 @@ Ogre::Vector2 GameRunnable::numericalCordFinder(Ogre::Vector2 cordinates) {
 }
 //----------------------------------------------------------------
 
+Ogre::Vector3 GameRunnable::numericalCordFinder(Ogre::Vector3 cordinates) {
+	int x = 0;
+	int z = 0;
+	float fedge = CONSTANTS->edgeLength * 0.7f;
+	x = (cordinates.x * fedge) + (fedge * 0.5);
+	z = (cordinates.z * fedge) + (fedge * 1.5);
+	Ogre::Vector3 cords(x, 0, z);
+	return cords;
+}
+//----------------------------------------------------------------
+
+Ogre::Vector3 GameRunnable::vector2dTo3d(Ogre::Vector2 squareIndex) {
+	return Ogre::Vector3(squareIndex.x, 0, squareIndex.y);
+}
+//----------------------------------------------------------------
+
 Ogre::Vector2 GameRunnable::gridIndexFinder(Ogre::String squareName) {
 	int squareNumber = stoi(squareName);
 	
@@ -217,14 +234,24 @@ void GameRunnable::generateDijkastraGrid2(Ogre::Vector2 point) {
 
 		for (int y = 0; y < CONSTANTS->dimension; y++) {
 			dijkastraGrid2d[x][y] = NULL;
+			losGrid[x][y] = false;
 		}
 	}
+
+	//Set impassable terrain
+	dijkastraGrid2d[3][2] = CONSTANTS->WALL;
+	dijkastraGrid2d[3][4] = CONSTANTS->WALL;
+	dijkastraGrid2d[4][5] = CONSTANTS->WALL;
+	dijkastraGrid2d[1][5] = CONSTANTS->WALL;
+	dijkastraGrid2d[7][7] = CONSTANTS->WALL;
+	dijkastraGrid2d[6][7] = CONSTANTS->WALL;
 
 	//Set point of origin to 0
 	int x, y;
 	x = point.x;
 	y = point.y;
 	dijkastraGrid2d[x][y] = 1;
+	losGrid[x][y] = true;
 	SquareNeighbor* origin = new SquareNeighbor(Ogre::Vector2(x, y), 1);
 
 	std::queue<SquareNeighbor*> toVisit;
@@ -232,6 +259,13 @@ void GameRunnable::generateDijkastraGrid2(Ogre::Vector2 point) {
 
 	while (!toVisit.empty()) {
 		SquareNeighbor* start = toVisit.front();
+
+		//Calculate if we have LOS
+		//Only need to see if don't have LOS if we aren't the end
+		if (start->getDistance() != origin->getDistance()) {
+			calculateLos(*start, *origin);	
+		}
+
 		getNeighbors(*start);
 
 		while (!squareNeighbors.empty()) {
@@ -251,6 +285,50 @@ void GameRunnable::generateDijkastraGrid2(Ogre::Vector2 point) {
 
 		toVisit.pop();
 	}
+}
+
+void GameRunnable::calculateLos(SquareNeighbor at, SquareNeighbor pathEnd) {
+	float xDif = pathEnd.getPosition().x - at.getPosition().x;
+	float yDif = pathEnd.getPosition().y - at.getPosition().y;
+
+	float xDifAbs = std::abs(xDif);
+	float yDifAbs = std::abs(yDif);
+
+	bool hasLos = false;
+
+	float xDifOne = (xDif > 0) ? 1 : ((xDif < 0) ? -1 : 0);
+	float yDifOne = (yDif > 0) ? 1 : ((yDif < 0) ? -1 : 0);;
+
+	//Check in the x direction
+	if (xDifAbs >= yDifAbs) {
+
+		if (losGrid[at.getPosition().x + xDifOne][at.getPosition().y]) {
+			hasLos = true;
+		}
+	}
+	//Check in the y direction
+	if (yDifAbs >= xDifAbs) {
+
+		if (losGrid[at.getPosition().x][at.getPosition().y + yDifOne]) {
+			hasLos = true;
+		}
+	}
+
+	//If we are not a straight line vertically/horizontally to the exit
+	if (yDifAbs > 0 && xDifAbs > 0) {
+		//If the diagonal doesn't have LOS, we don't
+		if (!losGrid[at.getPosition().x + xDifOne][at.getPosition().y + yDifOne]) {
+			hasLos = false;
+		}
+		else if (yDifAbs == xDifAbs) {
+			//If we are an exact diagonal and either straight direction is a wall, we don't have LOS
+			if (dijkastraGrid2d[at.getPosition().x + xDifOne][at.getPosition().y] == CONSTANTS->WALL || dijkastraGrid2d[at.getPosition().x][at.getPosition().y + yDifOne] == CONSTANTS->WALL) {
+				hasLos = false;
+			}
+		}
+	}
+	//It's a definite now
+	losGrid[at.getPosition().x][at.getPosition().y] = hasLos;
 }
 
 void GameRunnable::changeSquareColor(int num) {
@@ -397,6 +475,9 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 		
 		// Used for right click movement... basic click to move
 		Ogre::Vector2 SquareIndex = gridIndexFinder(objectName);
+		for (std::vector<Unit>::iterator unit = units.begin(); unit != units.end(); ++unit) {
+			unit->finalDestination = SquareIndex;
+		}
 		generateDijkastraGrid2(SquareIndex);
 		generateFlowField();
 		//mWalkList.push_back(Ogre::Vector3(cords.x, 0, cords.y));
@@ -442,7 +523,10 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 		Ogre::Vector2 toFlow = flowField[xcount][ycount];
 
 		std::ostringstream oss;
-		oss << "distance: " << distance << " for " << xcount << "," << ycount << " and pathTo: " << toFlow.x << "," << toFlow.y;
+		/*oss << "distance: " << distance << " for " << xcount << "," << ycount << " and pathTo: " << toFlow.x << 
+			"," << toFlow.y << " and has LOS: " << losGrid[xcount][ycount];*/
+		bool checkval = losGrid[xcount][ycount];
+		oss << xcount << "," << ycount << " has LOS: " << checkval;
 		mCordPanel->setText(oss.str());
 	}
 
@@ -494,25 +578,25 @@ void GameRunnable::setup(void)
 
 	root->addFrameListener(this);
 
-	Ogre::String robotName = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
+	Ogre::String robotName1 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
 	robotNumber++;
-	Unit* unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 50.0f), robotName);
+	Ogre::String robotName2 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
+	robotNumber++;
+	Ogre::String robotName3 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
+	robotNumber++;
+	Ogre::String robotName4 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
+	robotNumber++;
+	Unit* unit;
+	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 50.0f), robotName1);
 	units.push_back(*unit);
-	
-	/*
-	robotEntity = mScnMgr->createEntity("robot.mesh");
-	robotEntity->setCastShadows(true);
-	mUnitNode = mScnMgr->getRootSceneNode()->createChildSceneNode("RobotNode", Ogre::Vector3(15.0f, 0.0f, 50.0f));
-	mUnitNode->attachObject(robotEntity);
-	robotAnimState = robotEntity->getAnimationState("Idle");
-	robotAnimState->setLoop(true);
-	robotAnimState->setEnabled(true);
-	*/
-	
+	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 400.0f), robotName2);
+	units.push_back(*unit);
+	unit = new Unit(mScnMgr, Ogre::Vector3(365.0f, 0.0f, 50.0f), robotName3);
+	units.push_back(*unit);
+	unit = new Unit(mScnMgr, Ogre::Vector3(365.0f, 0.0f, 400.0f), robotName4);
+	units.push_back(*unit);
 
 	createTileMap();
-
-	//generateFlowField();
 
 	mScnMgr->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
 	//scnMgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
@@ -532,10 +616,18 @@ void GameRunnable::setup(void)
 	/* TESTING ZONE */
 
 	//Ogre::Entity* ent = mScnMgr->getEntity("Ogre/MO60");
-	Ogre::Entity* ent = mScnMgr->getEntity("60");
-	ent->setMaterialName("Examples/circuit");
-	//generateDijkastraGrid2(Ogre::Vector2(5, 5));
-	//generateFlowField();
+	Ogre::Entity* ent0 = mScnMgr->getEntity("83");
+	Ogre::Entity* ent1 = mScnMgr->getEntity("84");
+	Ogre::Entity* ent2 = mScnMgr->getEntity("25");
+	Ogre::Entity* ent3 = mScnMgr->getEntity("47");
+	Ogre::Entity* ent4 = mScnMgr->getEntity("59");
+	Ogre::Entity* ent5 = mScnMgr->getEntity("56");
+	ent0->setMaterialName("Examples/circuit");
+	ent1->setMaterialName("Examples/circuit");
+	ent2->setMaterialName("Examples/circuit");
+	ent3->setMaterialName("Examples/circuit");
+	ent4->setMaterialName("Examples/circuit");
+	ent5->setMaterialName("Examples/circuit");
 
 	/* END TESTING ZONE */
 }
@@ -573,20 +665,7 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			if (unit->direction == Ogre::Vector3::ZERO) {
 				if (unit->nextLocation()) {
 
-					//Ogre::Vector3 src = mUnitNode->getOrientation() * Ogre::Vector3::UNIT_X;
 					Ogre::Vector3 src = unit->unitNode->getOrientation() * Ogre::Vector3::UNIT_X;
-					// TODO unit specific roto code
-					/*
-					if ((1.0 + src.dotProduct(mDirection)) < 0.0001)
-					{
-						mUnitNode->yaw(Ogre::Degree(180));
-					}
-					else
-					{
-						Ogre::Quaternion quat = src.getRotationTo(mDirection);
-						mUnitNode->rotate(quat);
-					}
-					*/
 
 					/* Unit rotation code */
 					if ((1.0 + src.dotProduct(unit->direction)) < 0.0001) {
@@ -598,26 +677,29 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 					}
 					// TODO: replace with units vector
 					unit->animate("Walk");
-					/*
-					robotAnimState = robotEntity->getAnimationState("Walk");
-					robotAnimState->setLoop(true);
-					robotAnimState->setEnabled(true);
-					*/
+					
 				}
 				else if (flowFieldLock && flowField[unit->currentPos.x][unit->currentPos.y] != Ogre::Vector2::ZERO) {
-					Ogre::Vector2 currPos = numericalCordFinder(unit->currentPos);
-					unit->currentPos = flowField[unit->currentPos.x][unit->currentPos.y];
-					Ogre::Vector2 nextPos = numericalCordFinder(unit->currentPos);
 					Ogre::Vector3* nextCord;
-					if (dijkastraGrid2d[unit->currentPos.x][unit->currentPos.y] != 1) {
-						nextCord = interpolateMovement(currPos, nextPos);
+					if (losGrid[unit->currentPos.x][unit->currentPos.y]) {
+						Ogre::Vector2 finalCords = numericalCordFinder(unit->finalDestination);
+						unit->currentPos = unit->finalDestination;
+						nextCord = new Ogre::Vector3(finalCords.x, 0, finalCords.y);
 					}
 					else {
-						nextCord = new Ogre::Vector3(nextPos.x, 0, nextPos.y);
+						Ogre::Vector2 currPos = numericalCordFinder(unit->currentPos);
+						unit->currentPos = flowField[unit->currentPos.x][unit->currentPos.y];
+						Ogre::Vector2 nextPos = numericalCordFinder(unit->currentPos);
+
+						if (dijkastraGrid2d[unit->currentPos.x][unit->currentPos.y] != 1) {
+							nextCord = interpolateMovement(currPos, nextPos);
+						}
+						else {
+							nextCord = new Ogre::Vector3(nextPos.x, 0, nextPos.y);
+						}
 					}
 
-					unit->walkList.push_back(*nextCord);
-					
+					unit->walkList.push_back(*nextCord);	
 				}
 			}
 			else {
@@ -631,20 +713,12 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 
 				}*/
 				if (unit->distance <= 0.0f) {
-				//if (mDistance <= 0.0f) {
-					//mUnitNode->setPosition(mDestination);
-					//mDirection = Ogre::Vector3::ZERO;
 
 					unit->unitNode->setPosition(unit->destination);
 					unit->direction = Ogre::Vector3::ZERO;
 
 					// Consider adding rotation code (intermediate tutorial1)
 					unit->animate("Idle");
-					/*
-					robotAnimState = robotEntity->getAnimationState("Idle");
-					robotAnimState->setLoop(true);
-					robotAnimState->setEnabled(true);
-					*/
 				}
 				else {
 					//mUnitNode->translate(move * mDirection);

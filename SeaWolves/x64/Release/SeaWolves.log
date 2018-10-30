@@ -1,3 +1,1080 @@
-﻿  SeaWolves.vcxproj -> C:\Projects\SeaWolves\x64\Release\SeaWolves.exe
+﻿  GameRunnable.cpp
+\\mac\home\desktop\ogresdk11\include\ogre\OgreTextureManager.h(409): warning C4251: 'Ogre::TextureManager::mWarningTexture': class 'Ogre::SharedPtr<Ogre::Texture>' needs to have dll-interface to be used by clients of class 'Ogre::TextureManager'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgrePrerequisites.h(303): note: see declaration of 'Ogre::SharedPtr<Ogre::Texture>'
+\\mac\home\desktop\ogresdk11\include\ogre\OgreTimer.h(41): warning C4251: 'Ogre::Timer::start': class 'std::chrono::time_point<std::chrono::steady_clock,std::chrono::steady_clock::duration>' needs to have dll-interface to be used by clients of class 'Ogre::Timer'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\chrono(994): note: see declaration of 'std::chrono::time_point<std::chrono::steady_clock,std::chrono::steady_clock::duration>'
+\\mac\home\desktop\ogresdk11\include\ogre\bites\OgreStaticPluginLoader.h(36): warning C4251: 'OgreBites::StaticPluginLoader::mPlugins': class 'std::vector<Ogre::Plugin *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'OgreBites::StaticPluginLoader'
+          with
+          [
+              _Ty=Ogre::Plugin *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreRoot.h(134): note: see declaration of 'std::vector<Ogre::Plugin *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::Plugin *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(208): warning C4251: 'Ogre::RTShader::ProgramManager::mCpuProgramsList': class 'std::set<Ogre::RTShader::Program *,std::less<_Kty>,std::allocator<_Kty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ProgramManager'
+          with
+          [
+              _Kty=Ogre::RTShader::Program *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(105): note: see declaration of 'std::set<Ogre::RTShader::Program *,std::less<_Kty>,std::allocator<_Kty>>'
+          with
+          [
+              _Kty=Ogre::RTShader::Program *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(210): warning C4251: 'Ogre::RTShader::ProgramManager::mProgramWritersMap': class 'std::map<Ogre::String,Ogre::RTShader::ProgramWriter *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ProgramManager'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::RTShader::ProgramWriter *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(107): note: see declaration of 'std::map<Ogre::String,Ogre::RTShader::ProgramWriter *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::RTShader::ProgramWriter *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(212): warning C4251: 'Ogre::RTShader::ProgramManager::mProgramProcessorsMap': class 'std::map<Ogre::String,Ogre::RTShader::ProgramProcessor *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ProgramManager'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::RTShader::ProgramProcessor *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(112): note: see declaration of 'std::map<Ogre::String,Ogre::RTShader::ProgramProcessor *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::RTShader::ProgramProcessor *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(214): warning C4251: 'Ogre::RTShader::ProgramManager::mProgramWriterFactories': class 'std::vector<Ogre::RTShader::ProgramWriterFactory *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ProgramManager'
+          with
+          [
+              _Ty=Ogre::RTShader::ProgramWriterFactory *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(109): note: see declaration of 'std::vector<Ogre::RTShader::ProgramWriterFactory *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::ProgramWriterFactory *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(216): warning C4251: 'Ogre::RTShader::ProgramManager::mVertexShaderMap': class 'std::map<Ogre::String,Ogre::GpuProgramPtr,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ProgramManager'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::GpuProgramPtr
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(100): note: see declaration of 'std::map<Ogre::String,Ogre::GpuProgramPtr,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::GpuProgramPtr
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(218): warning C4251: 'Ogre::RTShader::ProgramManager::mFragmentShaderMap': class 'std::map<Ogre::String,Ogre::GpuProgramPtr,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ProgramManager'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::GpuProgramPtr
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(100): note: see declaration of 'std::map<Ogre::String,Ogre::GpuProgramPtr,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::GpuProgramPtr
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(220): warning C4251: 'Ogre::RTShader::ProgramManager::mDefaultProgramProcessors': class 'std::vector<Ogre::RTShader::ProgramProcessor *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ProgramManager'
+          with
+          [
+              _Ty=Ogre::RTShader::ProgramProcessor *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderProgramManager.h(115): note: see declaration of 'std::vector<Ogre::RTShader::ProgramProcessor *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::ProgramProcessor *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderParameter.h(363): warning C4251: 'Ogre::RTShader::Parameter::mName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::Parameter'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderSubRenderState.h(151): warning C4251: 'Ogre::RTShader::SubRenderState::mThisAccessor': class 'Ogre::SharedPtr<Ogre::RTShader::SubRenderStateAccessor>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::SubRenderState'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderSubRenderState.h(43): note: see declaration of 'Ogre::SharedPtr<Ogre::RTShader::SubRenderStateAccessor>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderSubRenderState.h(153): warning C4251: 'Ogre::RTShader::SubRenderState::mOtherAccessor': class 'Ogre::SharedPtr<Ogre::RTShader::SubRenderStateAccessor>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::SubRenderState'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderSubRenderState.h(43): note: see declaration of 'Ogre::SharedPtr<Ogre::RTShader::SubRenderStateAccessor>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderSubRenderState.h(208): warning C4251: 'Ogre::RTShader::SubRenderStateAccessor::mSubRenderStateInstancesSet': class 'std::set<Ogre::RTShader::SubRenderState *,std::less<_Kty>,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::SubRenderStateAccessor'
+          with
+          [
+              _Kty=Ogre::RTShader::SubRenderState *,
+              _Ty=Ogre::RTShader::SubRenderState *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderSubRenderState.h(161): note: see declaration of 'std::set<Ogre::RTShader::SubRenderState *,std::less<_Kty>,std::allocator<_Ty>>'
+          with
+          [
+              _Kty=Ogre::RTShader::SubRenderState *,
+              _Ty=Ogre::RTShader::SubRenderState *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderSubRenderState.h(311): warning C4251: 'Ogre::RTShader::SubRenderStateFactory::mSubRenderStateList': class 'std::set<Ogre::RTShader::SubRenderState *,std::less<_Kty>,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::SubRenderStateFactory'
+          with
+          [
+              _Kty=Ogre::RTShader::SubRenderState *,
+              _Ty=Ogre::RTShader::SubRenderState *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderSubRenderState.h(161): note: see declaration of 'std::set<Ogre::RTShader::SubRenderState *,std::less<_Kty>,std::allocator<_Ty>>'
+          with
+          [
+              _Kty=Ogre::RTShader::SubRenderState *,
+              _Ty=Ogre::RTShader::SubRenderState *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderRenderState.h(117): warning C4251: 'Ogre::RTShader::RenderState::mSubRenderStateList': class 'std::vector<Ogre::RTShader::SubRenderState *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::RenderState'
+          with
+          [
+              _Ty=Ogre::RTShader::SubRenderState *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderSubRenderState.h(157): note: see declaration of 'std::vector<Ogre::RTShader::SubRenderState *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::SubRenderState *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(419): warning C4251: 'Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(506): warning C4251: 'Ogre::RTShader::ShaderGenerator::SGPass::UserKey': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator::SGPass'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(582): warning C4251: 'Ogre::RTShader::ShaderGenerator::SGTechnique::UserKey': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator::SGTechnique'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(605): warning C4251: 'Ogre::RTShader::ShaderGenerator::SGTechnique::mPassEntries': class 'std::vector<Ogre::RTShader::ShaderGenerator::SGPass *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator::SGTechnique'
+          with
+          [
+              _Ty=Ogre::RTShader::ShaderGenerator::SGPass *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(439): note: see declaration of 'std::vector<Ogre::RTShader::ShaderGenerator::SGPass *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::ShaderGenerator::SGPass *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(607): warning C4251: 'Ogre::RTShader::ShaderGenerator::SGTechnique::mCustomRenderStates': class 'std::vector<Ogre::RTShader::RenderState *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator::SGTechnique'
+          with
+          [
+              _Ty=Ogre::RTShader::RenderState *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderRenderState.h(129): note: see declaration of 'std::vector<Ogre::RTShader::RenderState *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::RenderState *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(611): warning C4251: 'Ogre::RTShader::ShaderGenerator::SGTechnique::mDstTechniqueSchemeName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator::SGTechnique'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(639): warning C4251: 'Ogre::RTShader::ShaderGenerator::SGMaterial::mName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator::SGMaterial'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(641): warning C4251: 'Ogre::RTShader::ShaderGenerator::SGMaterial::mGroup': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator::SGMaterial'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(643): warning C4251: 'Ogre::RTShader::ShaderGenerator::SGMaterial::mTechniqueEntries': class 'std::vector<Ogre::RTShader::ShaderGenerator::SGTechnique *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator::SGMaterial'
+          with
+          [
+              _Ty=Ogre::RTShader::ShaderGenerator::SGTechnique *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(443): note: see declaration of 'std::vector<Ogre::RTShader::ShaderGenerator::SGTechnique *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::ShaderGenerator::SGTechnique *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(716): warning C4251: 'Ogre::RTShader::ShaderGenerator::SGScheme::mName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator::SGScheme'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(718): warning C4251: 'Ogre::RTShader::ShaderGenerator::SGScheme::mTechniqueEntries': class 'std::vector<Ogre::RTShader::ShaderGenerator::SGTechnique *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator::SGScheme'
+          with
+          [
+              _Ty=Ogre::RTShader::ShaderGenerator::SGTechnique *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(443): note: see declaration of 'std::vector<Ogre::RTShader::ShaderGenerator::SGTechnique *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::ShaderGenerator::SGTechnique *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(755): warning C4275: non dll-interface class 'Ogre::SceneManager::Listener' used as base for dll-interface class 'Ogre::RTShader::ShaderGenerator::SGSceneManagerListener'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreSceneManager.h(217): note: see declaration of 'Ogre::SceneManager::Listener'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(755): note: see declaration of 'Ogre::RTShader::ShaderGenerator::SGSceneManagerListener'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(802): warning C4275: non dll-interface class 'Ogre::ScriptTranslatorManager' used as base for dll-interface class 'Ogre::RTShader::ShaderGenerator::SGScriptTranslatorManager'
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\OgreScriptTranslator.h(117): note: see declaration of 'Ogre::ScriptTranslatorManager'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(801): note: see declaration of 'Ogre::RTShader::ShaderGenerator::SGScriptTranslatorManager'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(938): warning C4251: 'Ogre::RTShader::ShaderGenerator::mSceneManagerMap': class 'std::map<Ogre::String,Ogre::SceneManager *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::SceneManager *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreSceneManagerEnumerator.h(91): note: see declaration of 'std::map<Ogre::String,Ogre::SceneManager *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::SceneManager *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(952): warning C4251: 'Ogre::RTShader::ShaderGenerator::mShaderLanguage': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(954): warning C4251: 'Ogre::RTShader::ShaderGenerator::mVertexShaderProfiles': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(956): warning C4251: 'Ogre::RTShader::ShaderGenerator::mVertexShaderProfilesList': class 'std::vector<Ogre::String,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreString.h(97): note: see declaration of 'std::vector<Ogre::String,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(958): warning C4251: 'Ogre::RTShader::ShaderGenerator::mFragmentShaderProfiles': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(960): warning C4251: 'Ogre::RTShader::ShaderGenerator::mFragmentShaderProfilesList': class 'std::vector<Ogre::String,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreString.h(97): note: see declaration of 'std::vector<Ogre::String,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(962): warning C4251: 'Ogre::RTShader::ShaderGenerator::mShaderCachePath': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(972): warning C4251: 'Ogre::RTShader::ShaderGenerator::mMaterialEntriesMap': class 'std::map<Ogre::RTShader::ShaderGenerator::MatGroupPair,Ogre::RTShader::ShaderGenerator::SGMaterial *,Ogre::RTShader::ShaderGenerator::MatGroupPair_less,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+          with
+          [
+              _Kty=Ogre::RTShader::ShaderGenerator::MatGroupPair,
+              _Ty=Ogre::RTShader::ShaderGenerator::SGMaterial *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(450): note: see declaration of 'std::map<Ogre::RTShader::ShaderGenerator::MatGroupPair,Ogre::RTShader::ShaderGenerator::SGMaterial *,Ogre::RTShader::ShaderGenerator::MatGroupPair_less,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::RTShader::ShaderGenerator::MatGroupPair,
+              _Ty=Ogre::RTShader::ShaderGenerator::SGMaterial *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(974): warning C4251: 'Ogre::RTShader::ShaderGenerator::mSchemeEntriesMap': class 'std::map<Ogre::String,Ogre::RTShader::ShaderGenerator::SGScheme *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::RTShader::ShaderGenerator::SGScheme *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(454): note: see declaration of 'std::map<Ogre::String,Ogre::RTShader::ShaderGenerator::SGScheme *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::RTShader::ShaderGenerator::SGScheme *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(976): warning C4251: 'Ogre::RTShader::ShaderGenerator::mTechniqueEntriesMap': class 'std::map<Ogre::RTShader::ShaderGenerator::SGTechnique *,Ogre::RTShader::ShaderGenerator::SGTechnique *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+          with
+          [
+              _Kty=Ogre::RTShader::ShaderGenerator::SGTechnique *,
+              _Ty=Ogre::RTShader::ShaderGenerator::SGTechnique *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(447): note: see declaration of 'std::map<Ogre::RTShader::ShaderGenerator::SGTechnique *,Ogre::RTShader::ShaderGenerator::SGTechnique *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::RTShader::ShaderGenerator::SGTechnique *,
+              _Ty=Ogre::RTShader::ShaderGenerator::SGTechnique *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(978): warning C4251: 'Ogre::RTShader::ShaderGenerator::mSubRenderStateFactories': class 'std::map<Ogre::String,Ogre::RTShader::SubRenderStateFactory *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::RTShader::SubRenderStateFactory *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(842): note: see declaration of 'std::map<Ogre::String,Ogre::RTShader::SubRenderStateFactory *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::RTShader::SubRenderStateFactory *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(980): warning C4251: 'Ogre::RTShader::ShaderGenerator::mSubRenderStateExFactories': class 'std::map<Ogre::String,Ogre::RTShader::SubRenderStateFactory *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::ShaderGenerator'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::RTShader::SubRenderStateFactory *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(842): note: see declaration of 'std::map<Ogre::String,Ogre::RTShader::SubRenderStateFactory *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::RTShader::SubRenderStateFactory *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTransform.h(76): warning C4251: 'Ogre::RTShader::FFPTransform::Type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTransform'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPColour.h(116): warning C4251: 'Ogre::RTShader::FFPColour::Type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPColour'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPColour.h(127): warning C4251: 'Ogre::RTShader::FFPColour::mVSInputDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPColour'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPColour.h(129): warning C4251: 'Ogre::RTShader::FFPColour::mVSInputSpecular': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPColour'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPColour.h(131): warning C4251: 'Ogre::RTShader::FFPColour::mVSOutputDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPColour'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPColour.h(133): warning C4251: 'Ogre::RTShader::FFPColour::mVSOutputSpecular': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPColour'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPColour.h(135): warning C4251: 'Ogre::RTShader::FFPColour::mPSInputDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPColour'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPColour.h(137): warning C4251: 'Ogre::RTShader::FFPColour::mPSInputSpecular': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPColour'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPColour.h(139): warning C4251: 'Ogre::RTShader::FFPColour::mPSOutputDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPColour'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPColour.h(141): warning C4251: 'Ogre::RTShader::FFPColour::mPSOutputSpecular': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPColour'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(86): warning C4251: 'Ogre::RTShader::FFPLighting::Type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(96): warning C4251: 'Ogre::RTShader::FFPLighting::LightParams::mPosition': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(98): warning C4251: 'Ogre::RTShader::FFPLighting::LightParams::mDirection': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(100): warning C4251: 'Ogre::RTShader::FFPLighting::LightParams::mAttenuatParams': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(102): warning C4251: 'Ogre::RTShader::FFPLighting::LightParams::mSpotParams': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(104): warning C4251: 'Ogre::RTShader::FFPLighting::LightParams::mDiffuseColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(106): warning C4251: 'Ogre::RTShader::FFPLighting::LightParams::mSpecularColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(186): warning C4251: 'Ogre::RTShader::FFPLighting::mLightParamsList': class 'std::vector<Ogre::RTShader::FFPLighting::LightParams,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+          with
+          [
+              _Ty=Ogre::RTShader::FFPLighting::LightParams
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(110): note: see declaration of 'std::vector<Ogre::RTShader::FFPLighting::LightParams,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::FFPLighting::LightParams
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(188): warning C4251: 'Ogre::RTShader::FFPLighting::mWorldViewMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(190): warning C4251: 'Ogre::RTShader::FFPLighting::mWorldViewITMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(192): warning C4251: 'Ogre::RTShader::FFPLighting::mVSInPosition': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(194): warning C4251: 'Ogre::RTShader::FFPLighting::mVSInNormal': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(196): warning C4251: 'Ogre::RTShader::FFPLighting::mVSDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(198): warning C4251: 'Ogre::RTShader::FFPLighting::mVSOutDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(200): warning C4251: 'Ogre::RTShader::FFPLighting::mVSOutSpecular': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(202): warning C4251: 'Ogre::RTShader::FFPLighting::mDerivedSceneColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(204): warning C4251: 'Ogre::RTShader::FFPLighting::mLightAmbientColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(206): warning C4251: 'Ogre::RTShader::FFPLighting::mDerivedAmbientLightColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(208): warning C4251: 'Ogre::RTShader::FFPLighting::mSurfaceAmbientColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(210): warning C4251: 'Ogre::RTShader::FFPLighting::mSurfaceDiffuseColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(212): warning C4251: 'Ogre::RTShader::FFPLighting::mSurfaceSpecularColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(214): warning C4251: 'Ogre::RTShader::FFPLighting::mSurfaceEmissiveColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPLighting.h(216): warning C4251: 'Ogre::RTShader::FFPLighting::mSurfaceShininess': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(87): warning C4251: 'Ogre::RTShader::FFPTexturing::Type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTexturing'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(110): warning C4251: 'Ogre::RTShader::FFPTexturing::TextureUnitParams::mTextureMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPTexturing::TextureUnitParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(112): warning C4251: 'Ogre::RTShader::FFPTexturing::TextureUnitParams::mTextureViewProjImageMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPTexturing::TextureUnitParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(114): warning C4251: 'Ogre::RTShader::FFPTexturing::TextureUnitParams::mTextureSampler': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPTexturing::TextureUnitParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(116): warning C4251: 'Ogre::RTShader::FFPTexturing::TextureUnitParams::mVSInputTexCoord': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPTexturing::TextureUnitParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(118): warning C4251: 'Ogre::RTShader::FFPTexturing::TextureUnitParams::mVSOutputTexCoord': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPTexturing::TextureUnitParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(120): warning C4251: 'Ogre::RTShader::FFPTexturing::TextureUnitParams::mPSInputTexCoord': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::FFPTexturing::TextureUnitParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(217): warning C4251: 'Ogre::RTShader::FFPTexturing::mTextureUnitParamsList': class 'std::vector<Ogre::RTShader::FFPTexturing::TextureUnitParams,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTexturing'
+          with
+          [
+              _Ty=Ogre::RTShader::FFPTexturing::TextureUnitParams
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(123): note: see declaration of 'std::vector<Ogre::RTShader::FFPTexturing::TextureUnitParams,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::FFPTexturing::TextureUnitParams
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(219): warning C4251: 'Ogre::RTShader::FFPTexturing::mWorldMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTexturing'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(221): warning C4251: 'Ogre::RTShader::FFPTexturing::mWorldITMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTexturing'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(223): warning C4251: 'Ogre::RTShader::FFPTexturing::mViewMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTexturing'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(225): warning C4251: 'Ogre::RTShader::FFPTexturing::mVSInputNormal': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTexturing'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(227): warning C4251: 'Ogre::RTShader::FFPTexturing::mVSInputPos': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTexturing'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(229): warning C4251: 'Ogre::RTShader::FFPTexturing::mPSOutDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTexturing'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(231): warning C4251: 'Ogre::RTShader::FFPTexturing::mPSDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTexturing'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPTexturing.h(233): warning C4251: 'Ogre::RTShader::FFPTexturing::mPSSpecular': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPTexturing'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPFog.h(117): warning C4251: 'Ogre::RTShader::FFPFog::Type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPFog'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPFog.h(151): warning C4251: 'Ogre::RTShader::FFPFog::mWorldViewProjMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPFog'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPFog.h(153): warning C4251: 'Ogre::RTShader::FFPFog::mFogColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPFog'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPFog.h(155): warning C4251: 'Ogre::RTShader::FFPFog::mFogParams': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPFog'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPFog.h(157): warning C4251: 'Ogre::RTShader::FFPFog::mVSInPos': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPFog'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPFog.h(159): warning C4251: 'Ogre::RTShader::FFPFog::mVSOutFogFactor': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPFog'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPFog.h(161): warning C4251: 'Ogre::RTShader::FFPFog::mPSInFogFactor': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPFog'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPFog.h(163): warning C4251: 'Ogre::RTShader::FFPFog::mVSOutDepth': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPFog'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPFog.h(165): warning C4251: 'Ogre::RTShader::FFPFog::mPSInDepth': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPFog'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderFFPFog.h(167): warning C4251: 'Ogre::RTShader::FFPFog::mPSOutDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::FFPFog'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(95): warning C4251: 'Ogre::RTShader::PerPixelLighting::Type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(105): warning C4251: 'Ogre::RTShader::PerPixelLighting::LightParams::mPosition': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::PerPixelLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(107): warning C4251: 'Ogre::RTShader::PerPixelLighting::LightParams::mDirection': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::PerPixelLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(109): warning C4251: 'Ogre::RTShader::PerPixelLighting::LightParams::mAttenuatParams': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::PerPixelLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(111): warning C4251: 'Ogre::RTShader::PerPixelLighting::LightParams::mSpotParams': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::PerPixelLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(113): warning C4251: 'Ogre::RTShader::PerPixelLighting::LightParams::mDiffuseColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::PerPixelLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(115): warning C4251: 'Ogre::RTShader::PerPixelLighting::LightParams::mSpecularColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::PerPixelLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(120): warning C4251: 'Ogre::RTShader::PerPixelLighting::LightParams::mVSOutToLightDir': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::PerPixelLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(122): warning C4251: 'Ogre::RTShader::PerPixelLighting::LightParams::mPSInToLightDir': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::PerPixelLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(124): warning C4251: 'Ogre::RTShader::PerPixelLighting::LightParams::mVSOutDirection': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::PerPixelLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(126): warning C4251: 'Ogre::RTShader::PerPixelLighting::LightParams::mPSInDirection': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::PerPixelLighting::LightParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(224): warning C4251: 'Ogre::RTShader::PerPixelLighting::mLightParamsList': class 'std::vector<Ogre::RTShader::PerPixelLighting::LightParams,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+          with
+          [
+              _Ty=Ogre::RTShader::PerPixelLighting::LightParams
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(129): note: see declaration of 'std::vector<Ogre::RTShader::PerPixelLighting::LightParams,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::PerPixelLighting::LightParams
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(226): warning C4251: 'Ogre::RTShader::PerPixelLighting::mWorldViewMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(228): warning C4251: 'Ogre::RTShader::PerPixelLighting::mWorldViewITMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(230): warning C4251: 'Ogre::RTShader::PerPixelLighting::mVSInPosition': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(232): warning C4251: 'Ogre::RTShader::PerPixelLighting::mVSOutViewPos': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(234): warning C4251: 'Ogre::RTShader::PerPixelLighting::mPSInViewPos': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(236): warning C4251: 'Ogre::RTShader::PerPixelLighting::mVSInNormal': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(238): warning C4251: 'Ogre::RTShader::PerPixelLighting::mVSOutNormal': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(240): warning C4251: 'Ogre::RTShader::PerPixelLighting::mPSInNormal': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(242): warning C4251: 'Ogre::RTShader::PerPixelLighting::mPSTempDiffuseColour': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(244): warning C4251: 'Ogre::RTShader::PerPixelLighting::mPSTempSpecularColour': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(246): warning C4251: 'Ogre::RTShader::PerPixelLighting::mPSDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(248): warning C4251: 'Ogre::RTShader::PerPixelLighting::mPSSpecular': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(250): warning C4251: 'Ogre::RTShader::PerPixelLighting::mPSOutDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(252): warning C4251: 'Ogre::RTShader::PerPixelLighting::mPSOutSpecular': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(254): warning C4251: 'Ogre::RTShader::PerPixelLighting::mDerivedSceneColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(256): warning C4251: 'Ogre::RTShader::PerPixelLighting::mLightAmbientColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(258): warning C4251: 'Ogre::RTShader::PerPixelLighting::mDerivedAmbientLightColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(260): warning C4251: 'Ogre::RTShader::PerPixelLighting::mSurfaceAmbientColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(262): warning C4251: 'Ogre::RTShader::PerPixelLighting::mSurfaceDiffuseColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(264): warning C4251: 'Ogre::RTShader::PerPixelLighting::mSurfaceSpecularColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(266): warning C4251: 'Ogre::RTShader::PerPixelLighting::mSurfaceEmissiveColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExPerPixelLighting.h(268): warning C4251: 'Ogre::RTShader::PerPixelLighting::mSurfaceShininess': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::PerPixelLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(93): warning C4251: 'Ogre::RTShader::NormalMapLighting::Type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(212): warning C4251: 'Ogre::RTShader::NormalMapLighting::mNormalMapTextureName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(230): warning C4251: 'Ogre::RTShader::NormalMapLighting::mWorldMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(232): warning C4251: 'Ogre::RTShader::NormalMapLighting::mWorldInvRotMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(234): warning C4251: 'Ogre::RTShader::NormalMapLighting::mCamPosWorldSpace': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(236): warning C4251: 'Ogre::RTShader::NormalMapLighting::mVSWorldPosition': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(238): warning C4251: 'Ogre::RTShader::NormalMapLighting::mVSOutView': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(240): warning C4251: 'Ogre::RTShader::NormalMapLighting::mPSInView': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(242): warning C4251: 'Ogre::RTShader::NormalMapLighting::mVSInTangent': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(244): warning C4251: 'Ogre::RTShader::NormalMapLighting::mVSTBNMatrix': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(246): warning C4251: 'Ogre::RTShader::NormalMapLighting::mVSLocalDir': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(248): warning C4251: 'Ogre::RTShader::NormalMapLighting::mNormalMapSampler': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(250): warning C4251: 'Ogre::RTShader::NormalMapLighting::mPSNormal': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(252): warning C4251: 'Ogre::RTShader::NormalMapLighting::mVSInTexcoord': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(254): warning C4251: 'Ogre::RTShader::NormalMapLighting::mVSOutTexcoord': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExNormalMapLighting.h(256): warning C4251: 'Ogre::RTShader::NormalMapLighting::mPSInTexcoord': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::NormalMapLighting'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(100): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::Type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(113): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams::mTextureSampler': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(115): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams::mInvTextureSize': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(117): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams::mWorldViewProjMatrix': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(119): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams::mVSOutLightPosition': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(121): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams::mPSInLightPosition': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of struct 'Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(166): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mShadowTextureParamsList': class 'std::vector<Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+          with
+          [
+              _Ty=Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(125): note: see declaration of 'std::vector<Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::IntegratedPSSM3::ShadowTextureParams
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(168): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mPSSplitPoints': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(170): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mVSInPos': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(172): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mVSOutPos': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(174): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mVSOutDepth': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(176): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mPSInDepth': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(178): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mPSLocalShadowFactor': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(180): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mPSDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(182): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mPSOutDiffuse': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(184): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mPSSpecualr': class 'std::shared_ptr<Ogre::RTShader::Parameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(74): note: see declaration of 'std::shared_ptr<Ogre::RTShader::Parameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExIntegratedPSSM3.h(186): warning C4251: 'Ogre::RTShader::IntegratedPSSM3::mPSDerivedSceneColour': class 'std::shared_ptr<Ogre::RTShader::UniformParameter>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::IntegratedPSSM3'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderPrerequisites.h(75): note: see declaration of 'std::shared_ptr<Ogre::RTShader::UniformParameter>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExLayeredBlending.h(153): warning C4251: 'Ogre::RTShader::LayeredBlending::Type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::LayeredBlending'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExLayeredBlending.h(190): warning C4251: 'Ogre::RTShader::LayeredBlending::mTextureBlends': class 'std::vector<Ogre::RTShader::LayeredBlending::TextureBlend,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::LayeredBlending'
+          with
+          [
+              _Ty=Ogre::RTShader::LayeredBlending::TextureBlend
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExLayeredBlending.h(190): note: see declaration of 'std::vector<Ogre::RTShader::LayeredBlending::TextureBlend,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::LayeredBlending::TextureBlend
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(145): warning C4251: 'Ogre::RTShader::HardwareSkinning::Type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::HardwareSkinning'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(164): warning C4251: 'Ogre::RTShader::HardwareSkinning::mLinear': class 'Ogre::SharedPtr<Ogre::RTShader::LinearSkinning>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::HardwareSkinning'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(164): note: see declaration of 'Ogre::SharedPtr<Ogre::RTShader::LinearSkinning>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(165): warning C4251: 'Ogre::RTShader::HardwareSkinning::mDualQuat': class 'Ogre::SharedPtr<Ogre::RTShader::DualQuaternionSkinning>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::HardwareSkinning'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(165): note: see declaration of 'Ogre::SharedPtr<Ogre::RTShader::DualQuaternionSkinning>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(166): warning C4251: 'Ogre::RTShader::HardwareSkinning::mActiveTechnique': class 'Ogre::SharedPtr<Ogre::RTShader::HardwareSkinningTechnique>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::HardwareSkinning'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(166): note: see declaration of 'Ogre::SharedPtr<Ogre::RTShader::HardwareSkinningTechnique>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(316): warning C4251: 'Ogre::RTShader::HardwareSkinningFactory::mCustomShadowCasterMaterialsLinear': class 'Ogre::SharedPtr<Ogre::Material>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::HardwareSkinningFactory'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgrePrerequisites.h(295): note: see declaration of 'Ogre::SharedPtr<Ogre::Material>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(317): warning C4251: 'Ogre::RTShader::HardwareSkinningFactory::mCustomShadowCasterMaterialsDualQuaternion': class 'Ogre::SharedPtr<Ogre::Material>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::HardwareSkinningFactory'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgrePrerequisites.h(295): note: see declaration of 'Ogre::SharedPtr<Ogre::Material>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(320): warning C4251: 'Ogre::RTShader::HardwareSkinningFactory::mCustomShadowReceiverMaterialsLinear': class 'Ogre::SharedPtr<Ogre::Material>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::HardwareSkinningFactory'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgrePrerequisites.h(295): note: see declaration of 'Ogre::SharedPtr<Ogre::Material>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderExHardwareSkinning.h(321): warning C4251: 'Ogre::RTShader::HardwareSkinningFactory::mCustomShadowReceiverMaterialsDualQuaternion': class 'Ogre::SharedPtr<Ogre::Material>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::HardwareSkinningFactory'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgrePrerequisites.h(295): note: see declaration of 'Ogre::SharedPtr<Ogre::Material>'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderMaterialSerializerListener.h(47): warning C4275: non dll-interface class 'Ogre::MaterialSerializer::Listener' used as base for dll-interface class 'Ogre::RTShader::SGMaterialSerializerListener'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreMaterialSerializer.h(63): note: see declaration of 'Ogre::MaterialSerializer::Listener'
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderMaterialSerializerListener.h(47): note: see declaration of 'Ogre::RTShader::SGMaterialSerializerListener'
+\\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderMaterialSerializerListener.h(101): warning C4251: 'Ogre::RTShader::SGMaterialSerializerListener::mSGPassList': class 'std::vector<Ogre::RTShader::ShaderGenerator::SGPass *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::RTShader::SGMaterialSerializerListener'
+          with
+          [
+              _Ty=Ogre::RTShader::ShaderGenerator::SGPass *
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\rtshadersystem\OgreShaderGenerator.h(439): note: see declaration of 'std::vector<Ogre::RTShader::ShaderGenerator::SGPass *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::RTShader::ShaderGenerator::SGPass *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\bites\OgreSGTechniqueResolverListener.h(47): warning C4275: non dll-interface class 'Ogre::MaterialManager::Listener' used as base for dll-interface class 'OgreBites::SGTechniqueResolverListener'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreMaterialManager.h(70): note: see declaration of 'Ogre::MaterialManager::Listener'
+  \\mac\home\desktop\ogresdk11\include\ogre\bites\OgreSGTechniqueResolverListener.h(47): note: see declaration of 'OgreBites::SGTechniqueResolverListener'
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreApplicationContext.h(301): warning C4251: 'OgreBites::ApplicationContext::mNextRenderer': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'OgreBites::ApplicationContext'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreApplicationContext.h(302): warning C4251: 'OgreBites::ApplicationContext::mAppName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'OgreBites::ApplicationContext'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreApplicationContext.h(303): warning C4251: 'OgreBites::ApplicationContext::mLastSampleState': class 'std::map<Ogre::String,Ogre::String,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'OgreBites::ApplicationContext'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::String
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreCommon.h(562): note: see declaration of 'std::map<Ogre::String,Ogre::String,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::String
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreApplicationContext.h(306): warning C4251: 'OgreBites::ApplicationContext::mWindows': class 'std::vector<OgreBites::NativeWindowPair,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'OgreBites::ApplicationContext'
+          with
+          [
+              _Ty=OgreBites::NativeWindowPair
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreApplicationContext.h(305): note: see declaration of 'std::vector<OgreBites::NativeWindowPair,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=OgreBites::NativeWindowPair
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreApplicationContext.h(309): warning C4251: 'OgreBites::ApplicationContext::mInputListeners': class 'std::set<std::pair<uint32_t,OgreBites::InputListener *>,std::less<_Kty>,std::allocator<_Kty>>' needs to have dll-interface to be used by clients of class 'OgreBites::ApplicationContext'
+          with
+          [
+              _Kty=std::pair<uint32_t,OgreBites::InputListener *>
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreApplicationContext.h(308): note: see declaration of 'std::set<std::pair<uint32_t,OgreBites::InputListener *>,std::less<_Kty>,std::allocator<_Kty>>'
+          with
+          [
+              _Kty=std::pair<uint32_t,OgreBites::InputListener *>
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreApplicationContext.h(314): warning C4251: 'OgreBites::ApplicationContext::mRTShaderLibPath': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'OgreBites::ApplicationContext'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(62): warning C4251: 'Ogre::OverlayManager::mOverlayMap': class 'std::map<Ogre::String,Ogre::Overlay *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayManager'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::Overlay *
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(58): note: see declaration of 'std::map<Ogre::String,Ogre::Overlay *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::Overlay *
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(63): warning C4251: 'Ogre::OverlayManager::mScriptPatterns': class 'std::vector<Ogre::String,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayManager'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreString.h(97): note: see declaration of 'std::vector<Ogre::String,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(78): warning C4251: 'Ogre::OverlayManager::mFactories': class 'std::map<Ogre::String,Ogre::OverlayElementFactory *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayManager'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::OverlayElementFactory *
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(60): note: see declaration of 'std::map<Ogre::String,Ogre::OverlayElementFactory *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::OverlayElementFactory *
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(80): warning C4251: 'Ogre::OverlayManager::mInstances': class 'std::map<Ogre::String,Ogre::OverlayElement *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayManager'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::OverlayElement *
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(59): note: see declaration of 'std::map<Ogre::String,Ogre::OverlayElement *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::OverlayElement *
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(81): warning C4251: 'Ogre::OverlayManager::mTemplates': class 'std::map<Ogre::String,Ogre::OverlayElement *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayManager'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::OverlayElement *
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(59): note: see declaration of 'std::map<Ogre::String,Ogre::OverlayElement *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::OverlayElement *
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(84): warning C4251: 'Ogre::OverlayManager::mLoadedScripts': class 'std::set<Ogre::String,std::less<_Kty>,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayManager'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::String
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreRenderSystemCapabilities.h(281): note: see declaration of 'std::set<Ogre::String,std::less<_Kty>,std::allocator<_Ty>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::String
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(86): warning C4251: 'Ogre::OverlayManager::mTranslatorManager': class 'std::unique_ptr<Ogre::ScriptTranslatorManager,std::default_delete<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayManager'
+          with
+          [
+              _Ty=Ogre::ScriptTranslatorManager
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(86): note: see declaration of 'std::unique_ptr<Ogre::ScriptTranslatorManager,std::default_delete<_Ty>>'
+          with
+          [
+              _Ty=Ogre::ScriptTranslatorManager
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlay.h(78): warning C4251: 'Ogre::Overlay::mName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::Overlay'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlay.h(84): warning C4251: 'Ogre::Overlay::m2DElements': class 'std::list<Ogre::OverlayContainer *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::Overlay'
+          with
+          [
+              _Ty=Ogre::OverlayContainer *
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlay.h(76): note: see declaration of 'std::list<Ogre::OverlayContainer *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::OverlayContainer *
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlay.h(87): warning C4251: 'Ogre::Overlay::mRotate': class 'Ogre::Radian' needs to have dll-interface to be used by clients of class 'Ogre::Overlay'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreMath.h(48): note: see declaration of 'Ogre::Radian'
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlay.h(101): warning C4251: 'Ogre::Overlay::mOrigin': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::Overlay'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreOverlayElement.h(127): warning C4251: 'Ogre::OverlayElement::mName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayElement'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreOverlayElement.h(134): warning C4251: 'Ogre::OverlayElement::mMaterial': class 'Ogre::SharedPtr<Ogre::Material>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgrePrerequisites.h(295): note: see declaration of 'Ogre::SharedPtr<Ogre::Material>'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreOverlayElement.h(137): warning C4251: 'Ogre::OverlayElement::mClippingRegion': struct 'Ogre::TRect<float>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreCommon.h(659): note: see declaration of 'Ogre::TRect<float>'
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayContainer.h(65): warning C4251: 'Ogre::OverlayContainer::mChildren': class 'std::map<Ogre::String,Ogre::OverlayElement *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayContainer'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::OverlayElement *
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayManager.h(59): note: see declaration of 'std::map<Ogre::String,Ogre::OverlayElement *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::OverlayElement *
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayContainer.h(67): warning C4251: 'Ogre::OverlayContainer::mChildContainers': class 'std::map<Ogre::String,Ogre::OverlayContainer *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::OverlayContainer'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::OverlayContainer *
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Overlay\OgreOverlayContainer.h(61): note: see declaration of 'std::map<Ogre::String,Ogre::OverlayContainer *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::String,
+              _Ty=Ogre::OverlayContainer *
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgrePanelOverlayElement.h(140): warning C4251: 'Ogre::PanelOverlayElement::mRenderOp': class 'Ogre::RenderOperation' needs to have dll-interface to be used by clients of class 'Ogre::PanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreRenderOperation.h(45): note: see declaration of 'Ogre::RenderOperation'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgrePanelOverlayElement.h(151): warning C4251: 'Ogre::PanelOverlayElement::msTypeName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::PanelOverlayElement'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgrePanelOverlayElement.h(154): warning C4251: 'Ogre::PanelOverlayElement::msCmdTiling': class 'Ogre::PanelOverlayElement::CmdTiling' needs to have dll-interface to be used by clients of class 'Ogre::PanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgrePanelOverlayElement.h(111): note: see declaration of 'Ogre::PanelOverlayElement::CmdTiling'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgrePanelOverlayElement.h(155): warning C4251: 'Ogre::PanelOverlayElement::msCmdTransparent': class 'Ogre::PanelOverlayElement::CmdTransparent' needs to have dll-interface to be used by clients of class 'Ogre::PanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgrePanelOverlayElement.h(118): note: see declaration of 'Ogre::PanelOverlayElement::CmdTransparent'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgrePanelOverlayElement.h(156): warning C4251: 'Ogre::PanelOverlayElement::msCmdUVCoords': class 'Ogre::PanelOverlayElement::CmdUVCoords' needs to have dll-interface to be used by clients of class 'Ogre::PanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgrePanelOverlayElement.h(125): note: see declaration of 'Ogre::PanelOverlayElement::CmdUVCoords'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(278): warning C4251: 'Ogre::BorderPanelOverlayElement::mBorderMaterial': class 'Ogre::SharedPtr<Ogre::Material>' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgrePrerequisites.h(295): note: see declaration of 'Ogre::SharedPtr<Ogre::Material>'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(281): warning C4251: 'Ogre::BorderPanelOverlayElement::mRenderOp2': class 'Ogre::RenderOperation' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreRenderOperation.h(45): note: see declaration of 'Ogre::RenderOperation'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(283): warning C4251: 'Ogre::BorderPanelOverlayElement::msTypeName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(305): warning C4251: 'Ogre::BorderPanelOverlayElement::msCmdBorderSize': class 'Ogre::BorderPanelOverlayElement::CmdBorderSize' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(194): note: see declaration of 'Ogre::BorderPanelOverlayElement::CmdBorderSize'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(306): warning C4251: 'Ogre::BorderPanelOverlayElement::msCmdBorderMaterial': class 'Ogre::BorderPanelOverlayElement::CmdBorderMaterial' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(201): note: see declaration of 'Ogre::BorderPanelOverlayElement::CmdBorderMaterial'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(307): warning C4251: 'Ogre::BorderPanelOverlayElement::msCmdBorderLeftUV': class 'Ogre::BorderPanelOverlayElement::CmdBorderLeftUV' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(208): note: see declaration of 'Ogre::BorderPanelOverlayElement::CmdBorderLeftUV'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(308): warning C4251: 'Ogre::BorderPanelOverlayElement::msCmdBorderTopUV': class 'Ogre::BorderPanelOverlayElement::CmdBorderTopUV' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(215): note: see declaration of 'Ogre::BorderPanelOverlayElement::CmdBorderTopUV'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(309): warning C4251: 'Ogre::BorderPanelOverlayElement::msCmdBorderBottomUV': class 'Ogre::BorderPanelOverlayElement::CmdBorderBottomUV' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(229): note: see declaration of 'Ogre::BorderPanelOverlayElement::CmdBorderBottomUV'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(310): warning C4251: 'Ogre::BorderPanelOverlayElement::msCmdBorderRightUV': class 'Ogre::BorderPanelOverlayElement::CmdBorderRightUV' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(222): note: see declaration of 'Ogre::BorderPanelOverlayElement::CmdBorderRightUV'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(311): warning C4251: 'Ogre::BorderPanelOverlayElement::msCmdBorderTopLeftUV': class 'Ogre::BorderPanelOverlayElement::CmdBorderTopLeftUV' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(236): note: see declaration of 'Ogre::BorderPanelOverlayElement::CmdBorderTopLeftUV'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(312): warning C4251: 'Ogre::BorderPanelOverlayElement::msCmdBorderBottomLeftUV': class 'Ogre::BorderPanelOverlayElement::CmdBorderBottomLeftUV' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(243): note: see declaration of 'Ogre::BorderPanelOverlayElement::CmdBorderBottomLeftUV'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(313): warning C4251: 'Ogre::BorderPanelOverlayElement::msCmdBorderTopRightUV': class 'Ogre::BorderPanelOverlayElement::CmdBorderTopRightUV' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(257): note: see declaration of 'Ogre::BorderPanelOverlayElement::CmdBorderTopRightUV'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(314): warning C4251: 'Ogre::BorderPanelOverlayElement::msCmdBorderBottomRightUV': class 'Ogre::BorderPanelOverlayElement::CmdBorderBottomRightUV' needs to have dll-interface to be used by clients of class 'Ogre::BorderPanelOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreBorderPanelOverlayElement.h(250): note: see declaration of 'Ogre::BorderPanelOverlayElement::CmdBorderBottomRightUV'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreFont.h(123): warning C4251: 'Ogre::Font::mSource': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::Font'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreFont.h(159): warning C4251: 'Ogre::Font::mCodePointMap': class 'std::map<Ogre::Font::CodePoint,Ogre::Font::GlyphInfo,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'Ogre::Font'
+          with
+          [
+              _Kty=Ogre::uint32,
+              _Ty=Ogre::Font::GlyphInfo
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreFont.h(158): note: see declaration of 'std::map<Ogre::Font::CodePoint,Ogre::Font::GlyphInfo,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>'
+          with
+          [
+              _Kty=Ogre::uint32,
+              _Ty=Ogre::Font::GlyphInfo
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreFont.h(162): warning C4251: 'Ogre::Font::mMaterial': class 'Ogre::SharedPtr<Ogre::Material>' needs to have dll-interface to be used by clients of class 'Ogre::Font'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgrePrerequisites.h(295): note: see declaration of 'Ogre::SharedPtr<Ogre::Material>'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreFont.h(165): warning C4251: 'Ogre::Font::mTexture': class 'Ogre::SharedPtr<Ogre::Texture>' needs to have dll-interface to be used by clients of class 'Ogre::Font'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgrePrerequisites.h(303): note: see declaration of 'Ogre::SharedPtr<Ogre::Texture>'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreFont.h(171): warning C4251: 'Ogre::Font::mCodePointRangeList': class 'std::vector<Ogre::Font::CodePointRange,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Ogre::Font'
+          with
+          [
+              _Ty=Ogre::Font::CodePointRange
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreFont.h(155): note: see declaration of 'std::vector<Ogre::Font::CodePointRange,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::Font::CodePointRange
+          ]
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(223): warning C4251: 'Ogre::TextAreaOverlayElement::mRenderOp': class 'Ogre::RenderOperation' needs to have dll-interface to be used by clients of class 'Ogre::TextAreaOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreRenderOperation.h(45): note: see declaration of 'Ogre::RenderOperation'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(228): warning C4251: 'Ogre::TextAreaOverlayElement::msTypeName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Ogre::TextAreaOverlayElement'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(231): warning C4251: 'Ogre::TextAreaOverlayElement::msCmdCharHeight': class 'Ogre::TextAreaOverlayElement::CmdCharHeight' needs to have dll-interface to be used by clients of class 'Ogre::TextAreaOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(148): note: see declaration of 'Ogre::TextAreaOverlayElement::CmdCharHeight'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(232): warning C4251: 'Ogre::TextAreaOverlayElement::msCmdSpaceWidth': class 'Ogre::TextAreaOverlayElement::CmdSpaceWidth' needs to have dll-interface to be used by clients of class 'Ogre::TextAreaOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(158): note: see declaration of 'Ogre::TextAreaOverlayElement::CmdSpaceWidth'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(233): warning C4251: 'Ogre::TextAreaOverlayElement::msCmdFontName': class 'Ogre::TextAreaOverlayElement::CmdFontName' needs to have dll-interface to be used by clients of class 'Ogre::TextAreaOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(168): note: see declaration of 'Ogre::TextAreaOverlayElement::CmdFontName'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(234): warning C4251: 'Ogre::TextAreaOverlayElement::msCmdColour': class 'Ogre::TextAreaOverlayElement::CmdColour' needs to have dll-interface to be used by clients of class 'Ogre::TextAreaOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(198): note: see declaration of 'Ogre::TextAreaOverlayElement::CmdColour'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(235): warning C4251: 'Ogre::TextAreaOverlayElement::msCmdColourTop': class 'Ogre::TextAreaOverlayElement::CmdColourTop' needs to have dll-interface to be used by clients of class 'Ogre::TextAreaOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(178): note: see declaration of 'Ogre::TextAreaOverlayElement::CmdColourTop'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(236): warning C4251: 'Ogre::TextAreaOverlayElement::msCmdColourBottom': class 'Ogre::TextAreaOverlayElement::CmdColourBottom' needs to have dll-interface to be used by clients of class 'Ogre::TextAreaOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(188): note: see declaration of 'Ogre::TextAreaOverlayElement::CmdColourBottom'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(237): warning C4251: 'Ogre::TextAreaOverlayElement::msCmdAlignment': class 'Ogre::TextAreaOverlayElement::CmdAlignment' needs to have dll-interface to be used by clients of class 'Ogre::TextAreaOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(208): note: see declaration of 'Ogre::TextAreaOverlayElement::CmdAlignment'
+\\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreTextAreaOverlayElement.h(240): warning C4251: 'Ogre::TextAreaOverlayElement::mFont': class 'Ogre::SharedPtr<Ogre::Font>' needs to have dll-interface to be used by clients of class 'Ogre::TextAreaOverlayElement'
+  \\mac\home\desktop\ogresdk11\include\ogre\overlay\OgreFont.h(419): note: see declaration of 'Ogre::SharedPtr<Ogre::Font>'
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(335): warning C4251: 'OgreBites::TextBox::mLines': class 'std::vector<Ogre::String,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'OgreBites::TextBox'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreString.h(97): note: see declaration of 'std::vector<Ogre::String,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(441): warning C4251: 'OgreBites::SelectMenu::mItemElements': class 'std::vector<Ogre::BorderPanelOverlayElement *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'OgreBites::SelectMenu'
+          with
+          [
+              _Ty=Ogre::BorderPanelOverlayElement *
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(441): note: see declaration of 'std::vector<Ogre::BorderPanelOverlayElement *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::BorderPanelOverlayElement *
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(448): warning C4251: 'OgreBites::SelectMenu::mItems': class 'std::vector<Ogre::String,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'OgreBites::SelectMenu'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreString.h(97): note: see declaration of 'std::vector<Ogre::String,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(629): warning C4251: 'OgreBites::ParamsPanel::mNames': class 'std::vector<Ogre::String,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'OgreBites::ParamsPanel'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreString.h(97): note: see declaration of 'std::vector<Ogre::String,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(630): warning C4251: 'OgreBites::ParamsPanel::mValues': class 'std::vector<Ogre::String,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'OgreBites::ParamsPanel'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+  \\mac\home\desktop\ogresdk11\include\ogre\OgreString.h(97): note: see declaration of 'std::vector<Ogre::String,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=Ogre::String
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(1165): warning C4251: 'OgreBites::TrayManager::mName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'OgreBites::TrayManager'
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xstring(2633): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(1173): warning C4251: 'OgreBites::TrayManager::mWidgets': class 'std::vector<OgreBites::Widget *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'OgreBites::TrayManager'
+          with
+          [
+              _Ty=OgreBites::Widget *
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(189): note: see declaration of 'std::vector<OgreBites::Widget *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=OgreBites::Widget *
+          ]
+\\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(1174): warning C4251: 'OgreBites::TrayManager::mWidgetDeathRow': class 'std::vector<OgreBites::Widget *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'OgreBites::TrayManager'
+          with
+          [
+              _Ty=OgreBites::Widget *
+          ]
+  \\Mac\Home\Desktop\OgreSDK11\include\OGRE\Bites\OgreTrays.h(189): note: see declaration of 'std::vector<OgreBites::Widget *,std::allocator<_Ty>>'
+          with
+          [
+              _Ty=OgreBites::Widget *
+          ]
+GameRunnable.cpp(52): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+GameRunnable.cpp(53): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+GameRunnable.cpp(54): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+GameRunnable.cpp(55): warning C4244: 'argument': conversion from 'int' to 'Ogre::Real', possible loss of data
+GameRunnable.cpp(57): warning C4244: 'argument': conversion from 'int' to 'Ogre::Real', possible loss of data
+GameRunnable.cpp(59): warning C4244: 'argument': conversion from 'int' to 'Ogre::Real', possible loss of data
+GameRunnable.cpp(61): warning C4244: 'argument': conversion from 'int' to 'Ogre::Real', possible loss of data
+GameRunnable.cpp(63): warning C4244: 'argument': conversion from 'int' to 'Ogre::Real', possible loss of data
+GameRunnable.cpp(65): warning C4244: 'argument': conversion from 'int' to 'Ogre::Real', possible loss of data
+GameRunnable.cpp(67): warning C4244: 'argument': conversion from 'int' to 'Ogre::Real', possible loss of data
+GameRunnable.cpp(69): warning C4244: 'argument': conversion from 'int' to 'Ogre::Real', possible loss of data
+GameRunnable.cpp(159): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+GameRunnable.cpp(160): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+GameRunnable.cpp(161): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(174): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+GameRunnable.cpp(175): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+GameRunnable.cpp(176): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(185): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+GameRunnable.cpp(186): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+GameRunnable.cpp(187): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(223): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(251): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(252): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(255): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(273): warning C4244: 'initializing': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(274): warning C4244: 'initializing': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(299): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+GameRunnable.cpp(300): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+GameRunnable.cpp(305): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(312): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(320): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(325): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(331): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(375): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(384): warning C4244: 'initializing': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(385): warning C4244: 'initializing': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(388): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(390): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(409): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(410): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(411): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(412): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(415): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(417): warning C4244: 'initializing': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(419): warning C4244: 'initializing': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(420): warning C4244: 'initializing': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(422): warning C4244: 'initializing': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(517): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(538): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(682): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(684): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(691): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(694): warning C4244: 'argument': conversion from 'Ogre::Real' to 'unsigned __int64', possible loss of data
+GameRunnable.cpp(661): warning C4101: 'tempState': unreferenced local variable
+GameRunnable.cpp(741): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(742): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(743): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(761): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(762): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(783): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(784): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(788): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(789): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(793): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(794): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(798): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(799): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(803): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(804): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(805): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(809): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(810): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(811): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(815): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(816): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(817): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(821): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(822): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(823): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(828): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(829): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(830): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(831): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(837): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(838): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(839): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(853): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(854): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(875): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(876): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(877): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(881): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(882): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(883): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(887): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(888): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(889): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(893): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(894): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(895): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(899): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(900): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(901): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(902): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(903): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(907): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(908): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(909): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(910): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(911): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(915): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(916): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(917): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(918): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(919): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(923): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(924): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(925): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(926): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(927): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(932): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(933): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(934): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(935): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(936): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(937): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(938): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(939): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+GameRunnable.cpp(945): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(946): warning C4244: '=': conversion from 'Ogre::Real' to 'int', possible loss of data
+GameRunnable.cpp(947): warning C4244: 'argument': conversion from 'int' to 'const Ogre::Real', possible loss of data
+  Generating code
+  3 of 1113 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  SeaWolves.vcxproj -> C:\Projects\SeaWolves\x64\Release\SeaWolves.exe
   SeaWolves.vcxproj -> C:\Projects\SeaWolves\x64\Release\SeaWolves.pdb (Full PDB)
           1 file(s) copied.

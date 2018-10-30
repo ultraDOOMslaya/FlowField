@@ -39,8 +39,11 @@ public:
 	virtual void frameRendered(const Ogre::FrameEvent& evt);
 	virtual Ogre::Vector2 gridSquareCordFinder(std::string squareName);
 	virtual Ogre::Vector2 numericalCordFinder(Ogre::Vector2 cordinates);
+	virtual Ogre::Vector3 numericalCordFinder(Ogre::Vector3 cordinates);
+	virtual Ogre::Vector3 vector2dTo3d(Ogre::Vector2 squareIndex);
 	virtual Ogre::Vector2 gridIndexFinder(Ogre::String squareName);
 	virtual void generateDijkastraGrid2(Ogre::Vector2 point);
+	virtual void calculateLos(SquareNeighbor at, SquareNeighbor pathEnd);
 	virtual void steeringBehaviourFlowField(Ogre::Vector2 position);
 	virtual void findPath(Ogre::Vector2 origin, Unit unit);
 	virtual Ogre::Vector3* interpolateMovement(Ogre::Vector2 start, Ogre::Vector2 end);
@@ -72,6 +75,7 @@ public:
 	std::vector<std::vector<int>>				dijkastraGrid2d;
 	std::vector<std::vector<Ogre::Vector2>>		flowField;
 	bool										flowFieldLock;
+	std::vector<std::vector<bool>>				losGrid;
 	
 	bool						createUnitMode;
 	std::vector<Unit>			units;

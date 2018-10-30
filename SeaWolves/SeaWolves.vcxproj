@@ -158,12 +158,14 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Bezier.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="GameRunnable.h" />
     <ClInclude Include="SquareNeighbor.h" />
     <ClInclude Include="Unit.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bezier.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="GameRunnable.cpp" />
     <ClCompile Include="SquareNeighbor.cpp" />

@@ -20,6 +20,7 @@ public:
 	Ogre::Vector3				direction; //direction the object is moving
 	Ogre::Real					distance; // distance object has left to travel
 	Ogre::Vector3				destination; // destination the object is moving towards
+	Ogre::Vector2				finalDestination;
 
 	Ogre::Vector2				currentPos;
 	std::deque<Ogre::Vector3>   walkList;
