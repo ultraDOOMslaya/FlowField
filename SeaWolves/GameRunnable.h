@@ -18,6 +18,7 @@
 #include "Bezier.h"
 #include "SquareNeighbor.h"
 #include "Unit.h"
+#include "SteeringBehaviour.h"
 
 
 
@@ -47,6 +48,10 @@ public:
 	virtual void steeringBehaviourFlowField(Ogre::Vector2 position);
 	virtual void findPath(Ogre::Vector2 origin, Unit unit);
 	virtual Ogre::Vector3* interpolateMovement(Ogre::Vector2 start, Ogre::Vector2 end);
+	Ogre::Vector3* seperation(Unit unit);
+	Ogre::Vector3 cohesion(Unit unit);
+	Ogre::Vector3 alignment(Unit unit);
+	Ogre::Vector3 seek(Unit unit, Ogre::Vector3 destination);
 
 	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color);
 	virtual void createTileMap(void);

@@ -239,12 +239,12 @@ void GameRunnable::generateDijkastraGrid2(Ogre::Vector2 point) {
 	}
 
 	//Set impassable terrain
-	dijkastraGrid2d[3][2] = CONSTANTS->WALL;
+	/*dijkastraGrid2d[3][2] = CONSTANTS->WALL;
 	dijkastraGrid2d[3][4] = CONSTANTS->WALL;
 	dijkastraGrid2d[4][5] = CONSTANTS->WALL;
 	dijkastraGrid2d[1][5] = CONSTANTS->WALL;
 	dijkastraGrid2d[7][7] = CONSTANTS->WALL;
-	dijkastraGrid2d[6][7] = CONSTANTS->WALL;
+	dijkastraGrid2d[6][7] = CONSTANTS->WALL;*/
 
 	//Set point of origin to 0
 	int x, y;
@@ -477,6 +477,11 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 		Ogre::Vector2 SquareIndex = gridIndexFinder(objectName);
 		for (std::vector<Unit>::iterator unit = units.begin(); unit != units.end(); ++unit) {
 			unit->finalDestination = SquareIndex;
+
+			//TODO temporary for flocking work. Remove or refactor
+			Ogre::Vector2 aPos = numericalCordFinder(SquareIndex);
+			Ogre::Vector3* nextCord = new Ogre::Vector3(aPos.x, 0, aPos.y);
+			unit->walkList.push_back(*nextCord);
 		}
 		generateDijkastraGrid2(SquareIndex);
 		generateFlowField();
@@ -577,7 +582,7 @@ void GameRunnable::setup(void)
 	mCam->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 
 	root->addFrameListener(this);
-
+	
 	Ogre::String robotName1 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
 	robotNumber++;
 	Ogre::String robotName2 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
@@ -586,16 +591,51 @@ void GameRunnable::setup(void)
 	robotNumber++;
 	Ogre::String robotName4 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
 	robotNumber++;
+	Ogre::String robotName5 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
+	robotNumber++;
+	Ogre::String robotName6 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
+	robotNumber++;
+	Ogre::String robotName7 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
+	robotNumber++;
+	Ogre::String robotName8 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
+	robotNumber++;
 	Unit* unit;
 	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 50.0f), robotName1);
+	unit->currentPos = Ogre::Vector2(0, 0);
 	units.push_back(*unit);
-	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 400.0f), robotName2);
+	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 100.0f), robotName2);
+	unit->currentPos = Ogre::Vector2(0, 1);
 	units.push_back(*unit);
-	unit = new Unit(mScnMgr, Ogre::Vector3(365.0f, 0.0f, 50.0f), robotName3);
+	unit = new Unit(mScnMgr, Ogre::Vector3(65.0f, 0.0f, 50.0f), robotName3);
+	unit->currentPos = Ogre::Vector2(1, 0);
 	units.push_back(*unit);
-	unit = new Unit(mScnMgr, Ogre::Vector3(365.0f, 0.0f, 400.0f), robotName4);
+	unit = new Unit(mScnMgr, Ogre::Vector3(65.0f, 0.0f, 100.0f), robotName4);
+	unit->currentPos = Ogre::Vector2(1, 1);
 	units.push_back(*unit);
+	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 150.0f), robotName5);
+	unit->currentPos = Ogre::Vector2(0, 0);
+	units.push_back(*unit);
+	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 200.0f), robotName6);
+	unit->currentPos = Ogre::Vector2(0, 1);
+	units.push_back(*unit);
+	unit = new Unit(mScnMgr, Ogre::Vector3(65.0f, 0.0f, 150.0f), robotName7);
+	unit->currentPos = Ogre::Vector2(1, 0);
+	units.push_back(*unit);
+	unit = new Unit(mScnMgr, Ogre::Vector3(65.0f, 0.0f, 200.0f), robotName8);
+	unit->currentPos = Ogre::Vector2(1, 1);
+	units.push_back(*unit);
+	unit->unitAnimState = unit->unitEntity->getAnimationState("Idle");
+	unit->unitAnimState->setLoop(true);
+	unit->unitAnimState->setEnabled(true);
 
+	/*
+	Ogre::String robotName1 = CONSTANTS->robotNode + Ogre::StringConverter::toString(robotNumber);
+	robotNumber++;
+	Unit* unit;
+	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 50.0f), robotName1);
+	unit->currentPos = Ogre::Vector2(0, 0);
+	units.push_back(*unit);
+	*/
 	createTileMap();
 
 	mScnMgr->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
@@ -616,7 +656,7 @@ void GameRunnable::setup(void)
 	/* TESTING ZONE */
 
 	//Ogre::Entity* ent = mScnMgr->getEntity("Ogre/MO60");
-	Ogre::Entity* ent0 = mScnMgr->getEntity("83");
+	/*Ogre::Entity* ent0 = mScnMgr->getEntity("83");
 	Ogre::Entity* ent1 = mScnMgr->getEntity("84");
 	Ogre::Entity* ent2 = mScnMgr->getEntity("25");
 	Ogre::Entity* ent3 = mScnMgr->getEntity("47");
@@ -627,12 +667,130 @@ void GameRunnable::setup(void)
 	ent2->setMaterialName("Examples/circuit");
 	ent3->setMaterialName("Examples/circuit");
 	ent4->setMaterialName("Examples/circuit");
-	ent5->setMaterialName("Examples/circuit");
+	ent5->setMaterialName("Examples/circuit");*/
 
 	/* END TESTING ZONE */
 }
 //----------------------------------------------------------------
 
+static int distanceTo(Ogre::Vector3 unit1, Ogre::Vector3 unit2) {
+	int a = unit1.x - unit2.x;
+	int b = unit1.z - unit2.z;
+
+	int c = std::sqrt(a*a + b*b);
+	return c;
+}
+
+static Ogre::Vector3* subtractVector(Ogre::Vector3 vec1, Ogre::Vector3 vec2) {
+	int x, y, z;
+	x = vec1.x - vec2.x;
+	y = vec1.y - vec2.y;
+	z = vec1.z - vec2.z;
+	Ogre::Vector3* vec3 = new Ogre::Vector3(x, y, z);
+	return vec3;
+}
+
+Ogre::Vector3* GameRunnable::seperation(Unit unit) {
+	Ogre::Vector3* totalForce = new Ogre::Vector3(0, 0, 0);
+	int neighborsCount = 0;
+
+	for (std::vector<Unit>::iterator u = units.begin(); u != units.end(); ++u) {
+		if (u->unitName != unit.unitName) {
+			int distance = distanceTo(unit.getPosition(), u->getPosition());
+
+			u->unitNode->getPosition();
+
+			if (distance < unit.minSeperation && distance > 0) {
+				Ogre::Vector3 vec1 = unit.getPosition();
+				vec1.operator+(vec1);
+				Ogre::Vector3 vec2 = u->getPosition();
+				vec2.operator+(vec2);
+				Ogre::Vector3* pushForce = subtractVector(unit.getPosition(), u->getPosition());
+				pushForce->operator+();
+				//pushForce = pushForce.operator+(vec1 - vec2);
+				totalForce->operator+=(pushForce->operator/(unit.radius));
+				neighborsCount++;
+				free(pushForce);
+			}
+		}
+	}
+
+	if (neighborsCount == 0) {
+		return totalForce;
+	}
+
+	totalForce->operator/=(neighborsCount);
+	totalForce->operator*=(unit.walkSpeed);
+
+	return totalForce;
+}
+
+Ogre::Vector3 GameRunnable::cohesion(Unit unit) {
+	Ogre::Vector3 centerOfMass = unit.getPosition();
+	int neighborsCount = 1;
+
+	for (std::vector<Unit>::iterator u = units.begin(); u != units.end(); ++u) {
+		if (u->unitName != unit.unitName) {
+			int distance = distanceTo(unit.getPosition(), u->getPosition());
+
+			if (distance < unit.maxCohesion) {
+				centerOfMass.operator+=(u->getPosition());
+				neighborsCount++;
+			}
+		}
+	}
+
+	if (neighborsCount == 1) {
+		return Ogre::Vector3::ZERO;
+	}
+
+	centerOfMass.operator/=(neighborsCount);
+	return seek(unit, centerOfMass);
+}
+
+Ogre::Vector3 GameRunnable::alignment(Unit unit) {
+	Ogre::Vector3* averageHeading = new Ogre::Vector3(0, 0, 0);
+	int neighborsCount = 0;
+
+	for (std::vector<Unit>::iterator u = units.begin(); u != units.end(); ++u) {
+		int distance = distanceTo(unit.getPosition(), u->getPosition());
+
+		if (distance < unit.maxCohesion && unit.velocity.length() > 0) {
+			averageHeading->operator+=(unit.velocity);
+			neighborsCount++;
+		}
+	}
+
+	if (neighborsCount == 0) {
+		return Ogre::Vector3::ZERO;
+	}
+
+	averageHeading->operator/=(neighborsCount);
+	averageHeading->y = 0;
+
+	//Steer towards that heading
+	Ogre::Vector3 desired = averageHeading->operator*=(unit.maxSpeed);
+	Ogre::Vector3 force = desired.operator-=(unit.velocity);
+	force.operator*=(unit.maxForce / unit.maxSpeed);
+	free(averageHeading);
+	return force;
+}
+
+Ogre::Vector3 GameRunnable::seek(Unit unit, Ogre::Vector3 destination) {
+	//Desired change of location
+	Ogre::Vector3 desired = destination.operator-=(unit.getPosition());
+
+	//unit.distance = desired.normalise();
+
+	//Desired velocity (move there at maximum speed)
+	desired.operator*=(unit.walkSpeed / desired.length()); //TODO: maybe use squaredLength
+																	 //The velocity change we want
+	Ogre::Vector3 force = desired - unit.velocity;
+	//Convert to a force
+	force.operator*=(unit.maxForce / unit.walkSpeed);
+	
+	return force;
+}
 
 void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 {
@@ -658,24 +816,70 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 	*/
 
 	/* Robot animation and movement */
+	for (std::vector<Unit>::iterator unit = units.begin(); unit != units.end(); ++unit) {
+		if (unit->unitAnimState->getAnimationName() == "Walk") {
+			Ogre::Vector3 seek = GameRunnable::seek(*unit, unit->destination);
+			Ogre::Vector3* seperation = GameRunnable::seperation(*unit);
+			Ogre::Vector3 cohesion = GameRunnable::cohesion(*unit);
+			Ogre::Vector3 alignment = GameRunnable::alignment(*unit);
+
+			//Ogre::Vector3 velocity = seek + seperation + (cohesion * 0.1) + alignment;
+			//Ogre::Vector3 velocity = seek + seperation;// +(cohesion * 0.1) + alignment;
+			//Ogre::Vector3 velocity = seek.operator+(seperation).operator+(cohesion.operator*(0.1)).operator+(alignment);
+			//Ogre::Vector3 velocity = seek.operator+=(seperation).operator+=(cohesion * 0.1);
+			//Ogre::Vector3 velocity = seek.operator+=(seperation).operator+(cohesion.operator*(0.1));
+
+			/*
+			if (alignment != Ogre::Vector3::ZERO) {
+				unit->velocity = seek.operator+=(*seperation).operator+=(cohesion.operator*=(0.1)).operator+=(alignment);
+			}
+			else {
+				unit->velocity = seek.operator+=(*seperation);
+			}*/
+
+			//
+			//unit->forceToApply = seek;
+			//unit->forceToApply = seek.operator+=(*seperation);
+			//unit->forceToApply = seek.operator+=(*seperation).operator+=(cohesion.operator*=(0.1));
+			unit->forceToApply = seek.operator+=(*seperation).operator+=(cohesion.operator*=(0.1)).operator+=(alignment);
+			//unit->forceToApply = seek.operator+=(*seperation).operator+=(alignment);
+			//unit->forceToApply = seek.operator+=(*seperation).operator+=(cohesion.operator*=(0.5)).operator+=(alignment);
+
+			//free(seperation);
+		}
+	}
+
 	Ogre::AnimationState* tempState;
 	for (std::vector<Unit>::iterator unit = units.begin(); unit != units.end(); ++unit) {
 
+		if (unit->nextLocation()) {
+			unit->animate("Walk");
+			unit->velocity = unit->direction;
+		}
+		if (unit->destination != Ogre::Vector3::ZERO) {
+			unit->velocity.operator+=(unit->forceToApply.operator*=(evt.timeSinceLastFrame));		//Delta Time
+			//unit->velocity.operator+=(unit->forceToApply.operator*=(0.0166666));					//Mocked Delta Time
+			float speed = unit->velocity.length();
+			if (speed > unit->maxSpeed) {
+				unit->velocity.operator*=(unit->maxSpeed / speed);
+			}
+
+			unit->rotate(unit->velocity);
+
+			
+			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.0166666));
+			Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(evt.timeSinceLastFrame));
+			unit->unitNode->setPosition(newPos);
+			unit->unitAnimState->addTime(evt.timeSinceLastEvent);
+		}
+		
+		
+		/*
 		if (unit->unitAnimState != NULL) {
 			if (unit->direction == Ogre::Vector3::ZERO) {
 				if (unit->nextLocation()) {
 
-					Ogre::Vector3 src = unit->unitNode->getOrientation() * Ogre::Vector3::UNIT_X;
-
-					/* Unit rotation code */
-					if ((1.0 + src.dotProduct(unit->direction)) < 0.0001) {
-						unit->unitNode->yaw(Ogre::Degree(180));
-					}
-					else {
-						Ogre::Quaternion quat = src.getRotationTo(unit->direction);
-						unit->unitNode->rotate(quat);
-					}
-					// TODO: replace with units vector
+					//unit->rotate(unit->direction);
 					unit->animate("Walk");
 					
 				}
@@ -698,43 +902,64 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 							nextCord = new Ogre::Vector3(nextPos.x, 0, nextPos.y);
 						}
 					}
-
 					unit->walkList.push_back(*nextCord);	
 				}
 			}
 			else {
-				//Ogre::Real move = mWalkSpeed * evt.timeSinceLastFrame;
-				//mDistance -= move;
+				
+				//Ogre::Real move = unit->walkSpeed * evt.timeSinceLastFrame;
+				unit->velocity.operator+=(unit->forceToApply.operator*=(evt.timeSinceLastFrame));
+				float speed = unit->velocity.length();
+				
+				
+				if (speed > unit->maxSpeed) {
+					unit->velocity.operator*=(4 / speed);
+				}
+				
+				//Ogre::Real amendedVelocity = unit->velocity.length() * evt.timeSinceLastFrame;
+				//move = amendedVelocity;
+				//move = move + amendedVelocity;
 
-				Ogre::Real move = unit->walkSpeed * evt.timeSinceLastFrame;
-				unit->distance -= move;
-				// New code related to flowField movement
-				/*if (mDistance <= 0.0f && robotEntity->getParentNode()->getPosition()) {
+				//unit->distance = unit->velocity.normalise();
+				
+				//Ogre::Real move = unit->walkSpeed * evt.timeSinceLastFrame;
+				unit->distance -= speed;
+				
+				//unit->direction = unit->velocity.operator*(evt.timeSinceLastFrame);
+				unit->direction = unit->direction.operator+(unit->velocity.operator*(evt.timeSinceLastFrame));
+				unit->rotate(unit->direction);
 
-				}*/
-				if (unit->distance <= 0.0f) {
+				//Ogre::Vector3 adjustedDirection = unit->direction + (velocity * evt.timeSinceLastFrame);
+				//unit->rotate(adjustedDirection);
 
-					unit->unitNode->setPosition(unit->destination);
+				//unit->distance -= move;
+
+				
+				if (unit->distance <= 5.0f) {
+
+					//unit->unitNode->setPosition(unit->destination);
 					unit->direction = Ogre::Vector3::ZERO;
 
 					// Consider adding rotation code (intermediate tutorial1)
 					unit->animate("Idle");
+					unit->velocity = Ogre::Vector3::ZERO;
 				}
 				else {
-					//mUnitNode->translate(move * mDirection);
-					
-					unit->unitNode->translate(move * unit->direction);
+					unit->unitNode->translate(speed * unit->direction);
 				}
 			}
 
 			unit->unitAnimState->addTime(evt.timeSinceLastEvent);
 			//robotAnimState->addTime(evt.timeSinceLastFrame);
 		}
+		*/
 	}
+
+	
+
 	mTrayMgr->frameRendered(evt);
 }
 //----------------------------------------------------------------
-
 
 Ogre::Vector3* GameRunnable::interpolateMovement(Ogre::Vector2 start, Ogre::Vector2 end) {
 	int x, y;

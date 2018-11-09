@@ -9,7 +9,14 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	: direction(0, 0, 0),
 	distance(0),
 	destination(0, 0, 0),
-	walkSpeed(35)
+	walkSpeed(35),
+	minSeperation(35),
+	maxCohesion(65),
+	radius(15),							// lower the radius, greater the seperation 
+	velocity(0, 0, 0),
+	forceToApply(0, 0, 0),
+	maxForce(55),
+	maxSpeed(35)		
 {
 	unitEntity = mScnMgr->createEntity("robot.mesh");
 	unitEntity->setCastShadows(true);
@@ -18,6 +25,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	unitAnimState = unitEntity->getAnimationState("Idle");
 	unitAnimState->setLoop(true);
 	unitAnimState->setEnabled(true);
+	unitName = BradsBitch;
 }
 
 
@@ -41,5 +49,26 @@ bool Unit::nextLocation()
 	direction = destination - unitNode->getPosition();
 	distance = direction.normalise();
 	return true;
+}
+//----------------------------------------------------------------
+
+Ogre::Vector3 Unit::getPosition() {
+	return unitNode->getPosition();
+}
+//----------------------------------------------------------------
+
+void Unit::rotate(Ogre::Vector3 mDirection) {
+	Ogre::Vector3 src = unitNode->getOrientation() * Ogre::Vector3::UNIT_X;
+
+	/* Unit rotation code */
+	/*if ((1.0 + src.dotProduct(mDirection)) < 0.0001) {
+		unitNode->yaw(Ogre::Degree(180));
+	}
+	else {
+		Ogre::Quaternion quat = src.getRotationTo(mDirection);
+		unitNode->rotate(quat);
+	}*/
+	Ogre::Quaternion quat = src.getRotationTo(mDirection);
+	unitNode->rotate(quat);
 }
 //----------------------------------------------------------------
