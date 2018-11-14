@@ -41,6 +41,7 @@ public:
 	virtual Ogre::Vector2 gridSquareCordFinder(std::string squareName);
 	virtual Ogre::Vector2 numericalCordFinder(Ogre::Vector2 cordinates);
 	virtual Ogre::Vector3 numericalCordFinder(Ogre::Vector3 cordinates);
+	virtual Ogre::Vector2 cordNumericalFinder(Ogre::Vector3 position);
 	virtual Ogre::Vector3 vector2dTo3d(Ogre::Vector2 squareIndex);
 	virtual Ogre::Vector2 gridIndexFinder(Ogre::String squareName);
 	virtual void generateDijkastraGrid2(Ogre::Vector2 point);
@@ -48,14 +49,11 @@ public:
 	virtual void steeringBehaviourFlowField(Ogre::Vector2 position);
 	virtual void findPath(Ogre::Vector2 origin, Unit unit);
 	virtual Ogre::Vector3* interpolateMovement(Ogre::Vector2 start, Ogre::Vector2 end);
-	Ogre::Vector3* seperation(Unit unit);
-	Ogre::Vector3 cohesion(Unit unit);
-	Ogre::Vector3 alignment(Unit unit);
-	Ogre::Vector3 seek(Unit unit, Ogre::Vector3 destination);
 
 	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color);
 	virtual void createTileMap(void);
 	virtual void generateFlowField(void);
+	virtual Ogre::Vector2 gridCordFinder(Ogre::Vector3 cords);
 
 	OgreBites::TrayManager*		mTrayMgr;
 	OgreBites::TextBox*			mCordPanel;			// Coordinates displayer
@@ -86,6 +84,9 @@ public:
 	std::vector<Unit>			units;
 	std::queue<Ogre::String>	robots;
 	int							robotNumber;
+	int							debugx;
+	int							debugy;
+	int							debugz;
 
 	Constants*					CONSTANTS;
 	Bezier*						Bezier;

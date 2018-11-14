@@ -9,14 +9,17 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	: direction(0, 0, 0),
 	distance(0),
 	destination(0, 0, 0),
-	walkSpeed(35),
+	//walkSpeed(35),
+	walkSpeed(2),
 	minSeperation(35),
 	maxCohesion(65),
 	radius(15),							// lower the radius, greater the seperation 
 	velocity(0, 0, 0),
 	forceToApply(0, 0, 0),
-	maxForce(55),
-	maxSpeed(35)		
+	//maxForce(55),
+	maxForce(3),
+	//maxSpeed(35)
+	maxSpeed(2)
 {
 	unitEntity = mScnMgr->createEntity("robot.mesh");
 	unitEntity->setCastShadows(true);

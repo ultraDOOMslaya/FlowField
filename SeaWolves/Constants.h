@@ -12,7 +12,7 @@ public:
 
 	const static int			gridWidth = 11;
 	const static int			gridHeight = 11;
-	const static int			edgeLength = 50;
+	const static int			edgeLength = 50; //was 50
 	const static int			dimension = gridWidth;	//TODO: not a good standard... should be fixed
 	const static int			WALL = std::numeric_limits<int>::max();
 
