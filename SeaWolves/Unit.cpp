@@ -13,13 +13,15 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	walkSpeed(2),
 	minSeperation(35),
 	maxCohesion(65),
-	radius(15),							// lower the radius, greater the seperation 
+	seperationRadius(0),							// lower the radius, greater the seperation 
+	physicsBodyRadius(7),
 	velocity(0, 0, 0),
 	forceToApply(0, 0, 0),
 	//maxForce(55),
 	maxForce(3),
 	//maxSpeed(35)
-	maxSpeed(2)
+	maxSpeed(2),
+	path(NULL)
 {
 	unitEntity = mScnMgr->createEntity("robot.mesh");
 	unitEntity->setCastShadows(true);
@@ -29,6 +31,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	unitAnimState->setLoop(true);
 	unitAnimState->setEnabled(true);
 	unitName = BradsBitch;
+	seperationRadius = physicsBodyRadius * 2;
 }
 
 
@@ -57,6 +60,21 @@ bool Unit::nextLocation()
 
 Ogre::Vector3 Unit::getPosition() {
 	return unitNode->getPosition();
+}
+//----------------------------------------------------------------
+
+std::vector<std::vector<Ogre::Vector2>>* Unit::getFlowField() {
+	return &path->flowField;
+}
+//----------------------------------------------------------------
+
+Ogre::Vector2* Unit::getCurrentFlowValue() {
+	return &path->flowField[currentPos.x][currentPos.y];
+}
+//----------------------------------------------------------------
+
+bool Unit::hasLos() {
+	return path->losGrid[currentPos.x][currentPos.y];
 }
 //----------------------------------------------------------------
 

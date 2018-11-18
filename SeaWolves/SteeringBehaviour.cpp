@@ -62,7 +62,7 @@ Ogre::Vector3 SteeringBehaviour::seperation(Unit unit, std::vector<Unit>* units)
 				Ogre::Vector3 vec2 = u->getPosition();
 				vec2.operator+(vec2);
 				Ogre::Vector3* pushForce = subtractVector(unit.getPosition(), u->getPosition());
-				totalForce.operator+=(pushForce->operator/(unit.radius));
+				totalForce.operator+=(pushForce->operator/(unit.seperationRadius));
 				neighborsCount++;
 				free(pushForce);
 			}

@@ -3,7 +3,11 @@
 #define __Unit_h_
 
 #include <Ogre.h>
+
 #include "Constants.h"
+#include "PathFinding.h"
+
+class PathFinding;  //Forward declaration
 
 class Unit
 {
@@ -13,6 +17,9 @@ public:
 	virtual void animate(Ogre::String animation);
 	virtual void rotate(Ogre::Vector3 mDirection);
 	virtual Ogre::Vector3 getPosition();
+	virtual std::vector<std::vector<Ogre::Vector2>>* getFlowField();
+	virtual Ogre::Vector2* getCurrentFlowValue();
+	virtual bool hasLos();
 	virtual bool nextLocation(void);
 
 	Ogre::AnimationState*		unitAnimState;
@@ -31,13 +38,16 @@ public:
 
 	int							minSeperation;
 	int							maxCohesion;
-	int							radius;
+	int							seperationRadius;
+	int							physicsBodyRadius;
 	Ogre::Real					maxForce;
 	Ogre::Real					maxSpeed;
 	Ogre::Real					walkSpeed;
 	Ogre::Vector3				velocity;
 	Ogre::Vector3				forceToApply;
 	Ogre::Vector3				tempSeek;
+
+	PathFinding*				path;
 
 };
 

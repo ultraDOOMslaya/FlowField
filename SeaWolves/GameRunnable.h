@@ -19,6 +19,7 @@
 #include "SquareNeighbor.h"
 #include "Unit.h"
 #include "SteeringBehaviour.h"
+#include "PathFinding.h"
 
 
 
@@ -32,9 +33,7 @@ public:
 	virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
 	virtual bool mouseMoved(const OgreBites::MouseMotionEvent &evt);
 	virtual bool mousePressed(const OgreBites::MouseButtonEvent &evt);
-	virtual bool nextLocation(void);
-	virtual void getNeighbors(SquareNeighbor point);
-	virtual void getAllNeighbors(SquareNeighbor point);
+	virtual void getAllNeighbors(Unit unit);
 	virtual void changeSquareColor(int num);
 
 	virtual void frameRendered(const Ogre::FrameEvent& evt);
@@ -42,18 +41,11 @@ public:
 	virtual Ogre::Vector2 numericalCordFinder(Ogre::Vector2 cordinates);
 	virtual Ogre::Vector3 numericalCordFinder(Ogre::Vector3 cordinates);
 	virtual Ogre::Vector2 cordNumericalFinder(Ogre::Vector3 position);
-	virtual Ogre::Vector3 vector2dTo3d(Ogre::Vector2 squareIndex);
 	virtual Ogre::Vector2 gridIndexFinder(Ogre::String squareName);
-	virtual void generateDijkastraGrid2(Ogre::Vector2 point);
-	virtual void calculateLos(SquareNeighbor at, SquareNeighbor pathEnd);
-	virtual void steeringBehaviourFlowField(Ogre::Vector2 position);
-	virtual void findPath(Ogre::Vector2 origin, Unit unit);
-	virtual Ogre::Vector3* interpolateMovement(Ogre::Vector2 start, Ogre::Vector2 end);
+	virtual Ogre::Vector3 GameRunnable::staticObjectCollisionForceApplier(Unit unit);
 
 	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color);
 	virtual void createTileMap(void);
-	virtual void generateFlowField(void);
-	virtual Ogre::Vector2 gridCordFinder(Ogre::Vector3 cords);
 
 	OgreBites::TrayManager*		mTrayMgr;
 	OgreBites::TextBox*			mCordPanel;			// Coordinates displayer
@@ -73,12 +65,8 @@ public:
 
 	std::deque<Ogre::Vector3>   mWalkList;
 	std::queue<SquareNeighbor*> squareNeighbors;
+	std::queue<SquareNeighbor*> unitNeighbors;
 	Ogre::Vector2				currentPos;
-
-	std::vector<std::vector<int>>				dijkastraGrid2d;
-	std::vector<std::vector<Ogre::Vector2>>		flowField;
-	bool										flowFieldLock;
-	std::vector<std::vector<bool>>				losGrid;
 	
 	bool						createUnitMode;
 	std::vector<Unit>			units;
@@ -87,12 +75,6 @@ public:
 	int							debugx;
 	int							debugy;
 	int							debugz;
-
-	Constants*					CONSTANTS;
-	Bezier*						Bezier;
-
-
-
 };
 
 #endif __GameRunnable_h_
