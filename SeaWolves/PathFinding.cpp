@@ -1,24 +1,33 @@
 #include "PathFinding.h"
 
 
-
-PathFinding::PathFinding(Ogre::Vector2 squareIndex)
+PathFinding::PathFinding(Ogre::Vector2 squareIndex, std::vector<Ogre::Vector2>* impassableTerrain, Ogre::SceneManager* mScnMgr)
 	: dijkastraGrid(Constants::dimension, std::vector<int>(Constants::dimension, NULL)),
 	flowField(Constants::dimension),
 	losGrid(Constants::dimension, std::vector<bool>(Constants::dimension, false)),
 	flowFieldLock(false),
-	pathingUnits(0)
+	pathingUnits(0),
+	pathLines(0),
+	hasPathed(false),
+	pathLineName("pathLine0")
 {
-	generateDijkastraGrid(squareIndex);
+	generateDijkastraGrid(squareIndex, impassableTerrain);
 	generateFlowField();
+	gameSceneManager = mScnMgr;
+
+	lineName = "pathLine";
+	pathLineName = "pathLine0";
 }
+
 
 PathFinding::PathFinding()
 	: dijkastraGrid(Constants::dimension, std::vector<int>(Constants::dimension, NULL)),
 	flowField(Constants::dimension),
 	losGrid(Constants::dimension, std::vector<bool>(Constants::dimension, false)),
 	flowFieldLock(false),
-	pathingUnits(0)
+	pathingUnits(0),
+	pathLines(0),
+	hasPathed(false)
 {
 }
 
@@ -73,7 +82,12 @@ void PathFinding::calculateLos(SquareNeighbor at, SquareNeighbor pathEnd) {
 }
 //----------------------------------------------------------------
 
-void PathFinding::generateDijkastraGrid(Ogre::Vector2 point) {
+bool PathFinding::isValid(int x, int y) {
+	return x >= 0 && y >= 0 && x < Constants::gridWidth && y < Constants::gridHeight && dijkastraGrid[x][y] != Constants::WALL;
+}
+//----------------------------------------------------------------
+
+void PathFinding::generateDijkastraGrid(Ogre::Vector2 point, std::vector<Ogre::Vector2>* impassableTerrain) {
 
 	//dijkastraGrid2d(11, std::vector<int>(11)) = new std::vector<std::vector<int>>(CONSTANTS->dimension, std::vector<int> (CONSTANTS->dimension, NULL));
 
@@ -87,16 +101,9 @@ void PathFinding::generateDijkastraGrid(Ogre::Vector2 point) {
 	}
 
 	//Set impassable terrain
-
-	dijkastraGrid[4][6] = Constants::WALL;
-	dijkastraGrid[4][4] = Constants::WALL;
-	dijkastraGrid[4][5] = Constants::WALL;
-	dijkastraGrid[1][5] = Constants::WALL;
-	dijkastraGrid[3][4] = Constants::WALL;
-	dijkastraGrid[6][7] = Constants::WALL;
-	dijkastraGrid[6][8] = Constants::WALL;
-	dijkastraGrid[5][7] = Constants::WALL;
-	dijkastraGrid[5][8] = Constants::WALL;
+	for (std::vector<Ogre::Vector2>::iterator terrain = impassableTerrain->begin(); terrain != impassableTerrain->end(); ++terrain) {
+		dijkastraGrid[terrain->x][terrain->y] = Constants::WALL;
+	}
 
 	//Set point of origin to 0
 	int x, y;
@@ -118,14 +125,14 @@ void PathFinding::generateDijkastraGrid(Ogre::Vector2 point) {
 			calculateLos(*start, *origin);
 		}
 
-		GridUtil::getNeighbors(*start, &squareNeighbors);
+		GridUtils::getNeighbors(*start, &squareNeighbors);
 
 		while (!squareNeighbors.empty()) {
 			SquareNeighbor* neighbor = squareNeighbors.front();
 			int x = neighbor->getPosition().x;
 			int y = neighbor->getPosition().y;
 
-			if ((x > -1 && y > -1) && (x < 11 && x < 11)) {
+			if ((x > -1 && y > -1) && (x < Constants::dimension && x < Constants::dimension)) {
 				if (dijkastraGrid[x][y] == 0) {
 					neighbor->setDistance(start->getDistance() + 1);
 					dijkastraGrid[x][y] = neighbor->getDistance();
@@ -171,7 +178,7 @@ void PathFinding::generateFlowField() {
 			//std::auto_ptr<Ogre::Vector2> pos(new Ogre::Vector2(x, y));
 			//std::auto_ptr<SquareNeighbor> pos(new SquareNeighbor(Ogre::Vector2(x, y), dijkastraGrid2d[x][y]));
 			SquareNeighbor pos = SquareNeighbor(Ogre::Vector2(x, y), 0);
-			GridUtil::getAllNeighbors(pos, &squareNeighbors);
+			GridUtils::getAllNeighbors(pos.getPosition(), &squareNeighbors, dijkastraGrid);
 
 			Ogre::Vector2 min = Ogre::Vector2::ZERO;
 			bool minAltered = false;
@@ -182,7 +189,7 @@ void PathFinding::generateFlowField() {
 				int nx = neighbor->getPosition().x;
 				int ny = neighbor->getPosition().y;
 
-				if (nx < 11 && ny < 11) {
+				if (nx < Constants::dimension && ny < Constants::dimension) {
 					int distance = dijkastraGrid[nx][ny] - dijkastraGrid[pos.getPosition().x][pos.getPosition().y];
 					if (distance < minDistance) {
 						min = Ogre::Vector2(nx, ny);
@@ -200,5 +207,90 @@ void PathFinding::generateFlowField() {
 		}
 	}
 	flowFieldLock = true;
+}
+//----------------------------------------------------------------
+
+void PathFinding::removeFlow(Ogre::SceneManager* mScnMgr) {
+	
+	//gameSceneManager->getRootSceneNode()->removeAndDestroyChild("pathLine0");
+	//gameSceneManager->getRootSceneNode()->detachObject("pathNode0");
+	/*
+	Ogre::Entity* line = gameSceneManager->getEntity(lineName);
+	Ogre::SceneNode* parent = line->getParentSceneNode();
+	parent->detachObject(line);
+	gameSceneManager->destroyEntity(line);
+	gameSceneManager->destroySceneNode(parent);
+	*/
+	int area = Constants::dimension * Constants::dimension;
+	for (int i = 0; i < area; i++) {
+		Ogre::ManualObject* lineMO = gameSceneManager->getManualObject(lineName + Ogre::StringConverter::toString(i));
+		Ogre::SceneNode* parent = lineMO->getParentSceneNode();
+		parent->detachObject(lineMO);
+		gameSceneManager->destroyManualObject(lineMO);
+	}
+}
+//----------------------------------------------------------------
+
+void PathFinding::showFlow(Ogre::SceneManager* mScnMgr) {
+	//int previousPathLine = 0;
+	//Ogre::String destroyThisLine = lineName + Ogre::StringConverter::toString(previousPathLine);
+	if (gameSceneManager->hasManualObject(pathLineName)) {
+		
+		removeFlow(mScnMgr);
+		/*
+		Ogre::ManualObject* lineMO = gameSceneManager->getManualObject(lineName + Ogre::StringConverter::toString(previousPathLine));
+		Ogre::SceneNode* parent = lineMO->getParentSceneNode();
+		parent->detachObject(lineMO);
+		gameSceneManager->destroyManualObject(lineMO);
+		*/
+	}
+	
+	/*
+	Ogre::Vector3 origin = GridUtils::numericalCordFinder(1, 1);
+	Ogre::Vector3 endpoint = GridUtils::numericalCordFinder(flowField[1][1].x, flowField[1][1].y);
+	Ogre::String pathLineName = lineName + Ogre::StringConverter::toString(previousPathLine);
+
+	Ogre::ManualObject* man = gameSceneManager->createManualObject(pathLineName);
+	man->begin("Examples/OgreLogo", Ogre::RenderOperation::OT_LINE_STRIP);
+
+	man->position(origin.x, 1, origin.z);
+	man->normal(0, 0, 1);
+
+	man->position(endpoint.x, 1, endpoint.z);
+	man->normal(0, 0, 1);
+
+	man->end();
+	gameSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(man);
+	*/
+
+	for (int x = 0; x < Constants::dimension; x++) {
+		for (int y = 0; y < Constants::dimension; y++) {
+			Ogre::Vector3 origin = GridUtils::numericalCordFinder(x, y);
+			Ogre::Vector3 endpoint;
+			if (flowField[x][y] == Ogre::Vector2::ZERO) {
+				endpoint = origin;
+			}
+			else {
+				endpoint = GridUtils::numericalCordFinder(flowField[x][y].x, flowField[x][y].y);
+			}
+				
+			Ogre::String pathLineName = lineName + Ogre::StringConverter::toString(pathLines);
+			Ogre::ManualObject* man = mScnMgr->createManualObject(pathLineName);
+			man->begin("Examples/OgreLogo", Ogre::RenderOperation::OT_LINE_STRIP);
+
+			man->position(origin.x, 1, origin.z);
+			man->normal(0, 0, 1);
+
+			int interpolateX = (std::abs(origin.x) + std::abs(endpoint.x)) / 2;
+			int interpolateY = (std::abs(origin.z) + std::abs(endpoint.z)) / 2;
+			man->position(interpolateX, 1, interpolateY);
+			man->normal(0, 0, 1);
+
+			man->end();
+			mScnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(man);
+			pathLines++;		
+		}
+	}
+	
 }
 //----------------------------------------------------------------

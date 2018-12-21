@@ -20,6 +20,12 @@
 #include "Unit.h"
 #include "SteeringBehaviour.h"
 #include "PathFinding.h"
+#include "PlayerManager.h"
+#include "SelectionCircle.h"
+#include "SelectionBox.h"
+#include "GridUtils.h"
+#include "GridEditor.h"
+#include "GenerateUnits.h"
 
 
 
@@ -33,22 +39,22 @@ public:
 	virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
 	virtual bool mouseMoved(const OgreBites::MouseMotionEvent &evt);
 	virtual bool mousePressed(const OgreBites::MouseButtonEvent &evt);
+	virtual bool mouseReleased(const OgreBites::MouseButtonEvent &evt);
+	virtual void performSelection(const Ogre::Vector2& first, const Ogre::Vector2& second);
 	virtual void getAllNeighbors(Unit unit);
 	virtual void changeSquareColor(int num);
 
 	virtual void frameRendered(const Ogre::FrameEvent& evt);
-	virtual Ogre::Vector2 gridSquareCordFinder(std::string squareName);
-	virtual Ogre::Vector2 numericalCordFinder(Ogre::Vector2 cordinates);
-	virtual Ogre::Vector3 numericalCordFinder(Ogre::Vector3 cordinates);
-	virtual Ogre::Vector2 cordNumericalFinder(Ogre::Vector3 position);
-	virtual Ogre::Vector2 gridIndexFinder(Ogre::String squareName);
-	virtual Ogre::Vector3 GameRunnable::staticObjectCollisionForceApplier(Unit unit);
+	virtual Ogre::Vector3 GameRunnable::staticObjectCollisionForceApplier(Unit* unit);
 
 	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color);
 	virtual void createTileMap(void);
 
 	OgreBites::TrayManager*		mTrayMgr;
 	OgreBites::TextBox*			mCordPanel;			// Coordinates displayer
+	OgreBites::CheckBox*		mModeCB;
+	OgreBites::CheckBox*		mUnitCB;
+	OgreBites::CheckBox*		mShowFlowPathCB;
 
 	Ogre::SceneManager*			mScnMgr;
 	Ogre::Camera*				mCam;
@@ -69,12 +75,22 @@ public:
 	Ogre::Vector2				currentPos;
 	
 	bool						createUnitMode;
-	std::vector<Unit>			units;
+	//std::vector<Unit>			units;
+	std::map<Ogre::String, Unit> units;
 	std::queue<Ogre::String>	robots;
 	int							robotNumber;
 	int							debugx;
 	int							debugy;
 	int							debugz;
+	int							pathLines;
+	Ogre::MaterialPtr			mat;
+
+	std::vector<Ogre::Vector2>	impassableTerrain;
+	std::vector<PlayerManager>	players;
+	PlayerManager				player1;
+	GridEditor*					gridEditor;
+	SelectionBox*				selectBox;
+	Ogre::PlaneBoundedVolumeListSceneQuery* volQuery;
 };
 
 #endif __GameRunnable_h_

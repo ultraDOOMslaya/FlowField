@@ -1,37 +1,47 @@
 #include "Unit.h"
 
 
-/* msScnmgr - scene reference used to manage this object
+/* mScnmgr - scene reference used to manage this object
 * startPos - starting coordinates in raw floats for this unit
 * BradsBitch - unique name identifier for this unit and a reference to the great Brad Gerhke
 */
-Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String BradsBitch)
+Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String BradsBitch, Ogre::String meshName, int ID)
 	: direction(0, 0, 0),
 	distance(0),
 	destination(0, 0, 0),
-	//walkSpeed(35),
-	walkSpeed(2),
-	minSeperation(35),
-	maxCohesion(65),
+	//walkSpeed(15),
+	walkSpeed(35),								// delta time
+	//walkSpeed(5),								// mocked time
+	minSeperation(40),
+	maxCohesion(100),
 	seperationRadius(0),							// lower the radius, greater the seperation 
 	physicsBodyRadius(7),
 	velocity(0, 0, 0),
 	forceToApply(0, 0, 0),
-	//maxForce(55),
-	maxForce(3),
-	//maxSpeed(35)
-	maxSpeed(2),
-	path(NULL)
+	maxForce(700),									// delta time (This needs to be x10 maxSpeed otherwise turns aren't very crisp)
+	//maxForce(15),									// mocked time
+	//maxSpeed(35),
+	maxSpeed(50),									// delta time
+	//maxSpeed(5),									// mocked time
+	path(NULL),
+	isSelected(false)
 {
-	unitEntity = mScnMgr->createEntity("robot.mesh");
+	//unitEntity = mScnMgr->createEntity("robot.mesh");
+	gameSceneManager = mScnMgr;
+	unitEntity = gameSceneManager->createEntity(meshName);
 	unitEntity->setCastShadows(true);
-	unitNode = mScnMgr->getRootSceneNode()->createChildSceneNode(BradsBitch, startPos);
+	unitNode = gameSceneManager->getRootSceneNode()->createChildSceneNode(BradsBitch, startPos);
+	unitNode->setScale(50, 50, 50);
 	unitNode->attachObject(unitEntity);
+
 	unitAnimState = unitEntity->getAnimationState("Idle");
 	unitAnimState->setLoop(true);
 	unitAnimState->setEnabled(true);
+
 	unitName = BradsBitch;
 	seperationRadius = physicsBodyRadius * 2;
+	unitEntity->setQueryFlags(Constants::unitQueryMask);
+	unitID = ID;
 }
 
 
@@ -40,10 +50,36 @@ Unit::~Unit()
 }
 
 
+void Unit::commandMove(Ogre::Vector3 position) {
+	unitNode->setPosition(position);
+	if (isSelected) {
+		selectionCircle->move(position);
+	}
+}
+//----------------------------------------------------------------
+
 void Unit::animate(Ogre::String animation) {
 	unitAnimState = unitEntity->getAnimationState(animation);
 	unitAnimState->setLoop(true);
 	unitAnimState->setEnabled(true);
+}
+//----------------------------------------------------------------
+
+void Unit::haltTheGroup() {
+	for (std::vector<Unit*>::iterator it = group->begin(); it != group->end(); it++) {
+		int distance = GridUtils::distanceTo(getPosition(), (*it)->getPosition());
+
+		if (distance < maxCohesion) {
+			(*it)->halt();
+		}
+	}
+}
+//----------------------------------------------------------------
+
+void Unit::halt() {
+	destination = Ogre::Vector3::ZERO;
+	forceToApply = Ogre::Vector3::ZERO;
+	animate("Idle");
 }
 //----------------------------------------------------------------
 
@@ -78,6 +114,19 @@ bool Unit::hasLos() {
 }
 //----------------------------------------------------------------
 
+bool Unit::hasArrived() {
+	int x, z;
+	Ogre::Vector3 distanceLeft = getPosition() - finalDestination;
+	x = distanceLeft.x;
+	z = distanceLeft.z;
+	if ((x < 1 && x > -1) && (z < 1 && z > -1)) {
+		halt();
+		return true;
+	}
+	return false;
+}
+//----------------------------------------------------------------
+
 void Unit::rotate(Ogre::Vector3 mDirection) {
 	Ogre::Vector3 src = unitNode->getOrientation() * Ogre::Vector3::UNIT_X;
 
@@ -91,5 +140,17 @@ void Unit::rotate(Ogre::Vector3 mDirection) {
 	}*/
 	Ogre::Quaternion quat = src.getRotationTo(mDirection);
 	unitNode->rotate(quat);
+}
+//----------------------------------------------------------------
+
+void Unit::selected() {
+	isSelected = true;
+	selectionCircle = new SelectionCircle(gameSceneManager, getPosition(), unitID);
+}
+//----------------------------------------------------------------
+
+void Unit::unselected() {
+	isSelected = false;
+	delete selectionCircle;
 }
 //----------------------------------------------------------------

@@ -46,11 +46,15 @@ Ogre::Vector3 SteeringBehaviour::seek(Unit unit, Ogre::Vector3 destination) {
 }
 //----------------------------------------------------------------
 
-Ogre::Vector3 SteeringBehaviour::seperation(Unit unit, std::vector<Unit>* units) {
+/*
+Seperation keeps units from treading on each other. High seperation will create very jumpy movement. Counteract with alignment.
+*/
+Ogre::Vector3 SteeringBehaviour::seperation(Unit unit, std::map<Ogre::String, Unit>* units) {
 	Ogre::Vector3 totalForce = Ogre::Vector3(0, 0, 0);
 	int neighborsCount = 0;
-
-	for (std::vector<Unit>::iterator u = units->begin(); u != units->end(); ++u) {
+	
+	for (std::map<Ogre::String, Unit>::iterator it = units->begin(); it != units->end(); ++it) {
+		Unit* u = &it->second;
 		if (u->unitName != unit.unitName) {
 			int distance = distanceTo(unit.getPosition(), u->getPosition());
 
@@ -80,11 +84,15 @@ Ogre::Vector3 SteeringBehaviour::seperation(Unit unit, std::vector<Unit>* units)
 }
 //----------------------------------------------------------------
 
-Ogre::Vector3 SteeringBehaviour::cohesion(Unit unit, std::vector<Unit>* units) {
+/*
+Keeps units clumped. Can easily overpower alignment and seperation.
+*/
+Ogre::Vector3 SteeringBehaviour::cohesion(Unit unit, std::vector<Unit*>* units) {
 	Ogre::Vector3 centerOfMass = unit.getPosition();
 	int neighborsCount = 1;
 
-	for (std::vector<Unit>::iterator u = units->begin(); u != units->end(); ++u) {
+	for (std::vector<Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
+		Unit* u = (*it);
 		if (u->unitName != unit.unitName) {
 			int distance = distanceTo(unit.getPosition(), u->getPosition());
 
@@ -104,11 +112,55 @@ Ogre::Vector3 SteeringBehaviour::cohesion(Unit unit, std::vector<Unit>* units) {
 }
 //----------------------------------------------------------------
 
-Ogre::Vector3 SteeringBehaviour::alignment(Unit unit, std::vector<Unit>* units) {
+bool SteeringBehaviour::halt(Unit* unit, std::vector<Unit*>* units) {
+	Ogre::Vector3 centerOfMass = unit->getPosition();
+	int neighborsCount = 1;
+
+	for (std::vector<Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
+		Unit* u = (*it);
+		if (u->unitName != unit->unitName) {
+			int distance = distanceTo(unit->getPosition(), u->getPosition());
+
+			if (distance < (unit->maxCohesion / 2)) {
+				centerOfMass.operator+=(u->getPosition());
+				neighborsCount++;
+			}
+
+			if (distance < (unit->maxCohesion / 4)) {
+				if (u->unitAnimState->getAnimationName() == "Idle") {
+					unit->haltTheGroup();
+					return true;
+				}
+			}
+		}
+	}
+
+	if (neighborsCount == 1) {
+		return unit->hasArrived();
+	}
+
+	centerOfMass.operator/=(neighborsCount);
+	Ogre::Vector2 position = GridUtils::cordNumericalFinder(centerOfMass);
+	unit->debugPos1 = position;
+	Ogre::Vector2 squareDest = GridUtils::cordNumericalFinder(unit->finalDestination);
+	unit->debugPos2 = squareDest;
+	if (position == squareDest) {
+		unit->haltTheGroup();
+		return true;
+	}
+	return false;
+}
+//----------------------------------------------------------------
+
+/*
+The higher alignment is, the smooth group movement will be. Alignment that is too high will result in wave like movement.
+*/
+Ogre::Vector3 SteeringBehaviour::alignment(Unit unit, std::vector<Unit*>* units) {
 	Ogre::Vector3* averageHeading = new Ogre::Vector3(0, 0, 0);
 	int neighborsCount = 0;
 
-	for (std::vector<Unit>::iterator u = units->begin(); u != units->end(); ++u) {
+	for (std::vector<Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
+		Unit* u = (*it);
 		int distance = distanceTo(unit.getPosition(), u->getPosition());
 
 		if (distance < unit.maxCohesion && unit.velocity.length() > 0) {
