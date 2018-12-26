@@ -19,6 +19,7 @@ public:
 	const static int			WALL = std::numeric_limits<int>::max();
 	const static int			terrainQueryMask = 1;
 	const static int			unitQueryMask = 2;
+	const static int			awareRadius = 500;
 
 	const Ogre::String			robot = "robot.mesh";
 	Ogre::String				robotNode = "RobotNode";

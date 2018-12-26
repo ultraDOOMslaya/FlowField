@@ -15,7 +15,6 @@
 #include <SDL.h>
 
 #include "Constants.h"
-#include "Bezier.h"
 #include "SquareNeighbor.h"
 #include "Unit.h"
 #include "SteeringBehaviour.h"
@@ -26,6 +25,7 @@
 #include "GridUtils.h"
 #include "GridEditor.h"
 #include "GenerateUnits.h"
+#include "PlayerRelationship.h"
 
 
 
@@ -76,7 +76,7 @@ public:
 	
 	bool						createUnitMode;
 	//std::vector<Unit>			units;
-	std::map<Ogre::String, Unit> units;
+	std::map<Ogre::String, Unit*> units;
 	std::queue<Ogre::String>	robots;
 	int							robotNumber;
 	int							debugx;
@@ -86,8 +86,10 @@ public:
 	Ogre::MaterialPtr			mat;
 
 	std::vector<Ogre::Vector2>	impassableTerrain;
-	std::vector<PlayerManager>	players;
+	std::vector<PlayerManager*>	players;
+	PlayerManager*				activePlayer;
 	PlayerManager				player1;
+	PlayerManager				player2;
 	GridEditor*					gridEditor;
 	SelectionBox*				selectBox;
 	Ogre::PlaneBoundedVolumeListSceneQuery* volQuery;

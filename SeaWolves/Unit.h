@@ -21,6 +21,9 @@ public:
 	virtual void rotate(Ogre::Vector3 mDirection);
 	virtual void haltTheGroup();
 	virtual void halt();
+	virtual bool attackTarget();
+	virtual void attack(Unit* target);
+	virtual void seekTarget(std::map<Ogre::String, Unit*>* units);
 
 	virtual Ogre::Vector3 getPosition();
 	virtual std::vector<std::vector<Ogre::Vector2>>* getFlowField();
@@ -30,6 +33,7 @@ public:
 	virtual bool nextLocation(void);
 	virtual void selected(void);
 	virtual void unselected(void);
+	virtual bool inRange(void);
 
 	Ogre::SceneManager*			gameSceneManager;
 	Ogre::AnimationState*		unitAnimState;
@@ -46,6 +50,7 @@ public:
 	Ogre::Vector2				realizedPosition;
 	Ogre::Vector2				debugPos1;
 	Ogre::Vector2				debugPos2;
+	int							debugInt1;
 	std::deque<Ogre::Vector3>   walkList;
 
 	int							minSeperation;
@@ -53,7 +58,12 @@ public:
 	int							seperationRadius;
 	int							physicsBodyRadius;
 	int							unitID;
+	int							attackRange;
+	int							distanceFromTarget;		//This is not continually updated and its state needs to be reset. Used while picking a target
+	int							seekTargetRadius;
 	bool						isSelected;
+	bool						attacking;		//While attacking, will attack any target in an area
+	Unit*						mTarget;			//Target this unit is attacking
 	Ogre::Real					maxForce;
 	Ogre::Real					maxSpeed;
 	Ogre::Real					walkSpeed;

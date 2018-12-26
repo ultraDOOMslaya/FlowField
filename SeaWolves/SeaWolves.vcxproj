@@ -158,17 +158,37 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Bezier.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="EditorUtil.h" />
     <ClInclude Include="GameRunnable.h" />
+    <ClInclude Include="GenerateUnits.h" />
+    <ClInclude Include="GridEditor.h" />
+    <ClInclude Include="GridUtils.h" />
+    <ClInclude Include="PathFinding.h" />
+    <ClInclude Include="PlayerManager.h" />
+    <ClInclude Include="PlayerRelationship.h" />
+    <ClInclude Include="PlayerRelationshipStatus.h" />
+    <ClInclude Include="SelectionBox.h" />
+    <ClInclude Include="SelectionCircle.h" />
     <ClInclude Include="SquareNeighbor.h" />
+    <ClInclude Include="SteeringBehaviour.h" />
     <ClInclude Include="Unit.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Bezier.cpp" />
     <ClCompile Include="Constants.cpp" />
+    <ClCompile Include="EditorUtil.cpp" />
     <ClCompile Include="GameRunnable.cpp" />
+    <ClCompile Include="GenerateUnits.cpp" />
+    <ClCompile Include="GridEditor.cpp" />
+    <ClCompile Include="GridUtils.cpp" />
+    <ClCompile Include="PathFinding.cpp" />
+    <ClCompile Include="PlayerManager.cpp" />
+    <ClCompile Include="PlayerRelationship.cpp" />
+    <ClCompile Include="PlayerRelationshipStatus.cpp" />
+    <ClCompile Include="SelectionBox.cpp" />
+    <ClCompile Include="SelectionCircle.cpp" />
     <ClCompile Include="SquareNeighbor.cpp" />
+    <ClCompile Include="SteeringBehaviour.cpp" />
     <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

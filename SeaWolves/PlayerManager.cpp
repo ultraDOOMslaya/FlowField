@@ -3,6 +3,7 @@
 
 
 PlayerManager::PlayerManager()
+	: queuedAttackMove(false)
 {
 }
 
@@ -11,7 +12,7 @@ PlayerManager::~PlayerManager()
 {
 }
 
-
+/*
 void PlayerManager::focusUnits(Ogre::SceneQueryResult& result, std::map<Ogre::String, Unit>* units) {
 	clearUnitQueue();
 
@@ -21,6 +22,23 @@ void PlayerManager::focusUnits(Ogre::SceneQueryResult& result, std::map<Ogre::St
 		if ((*it)->getQueryFlags() == Constants::unitQueryMask) {
 			itTree = units->find((*it)->getParentSceneNode()->getName());
 			addToQueue(&itTree->second);
+		}
+	}
+	assignToGroup();
+}*/
+//----------------------------------------------------------------
+
+void PlayerManager::focusUnits(Ogre::SceneQueryResult& result) {
+	clearUnitQueue();
+
+	std::map<Ogre::String, Unit*>::iterator itTree;
+	Ogre::SceneQueryResultMovableList::iterator it;
+	for (it = result.movables.begin(); it != result.movables.end(); ++it) {
+		if ((*it)->getQueryFlags() == Constants::unitQueryMask) {
+			if (hasUnitInArmy((*it)->getParentSceneNode()->getName())) {
+				itTree = myArmy.find((*it)->getParentSceneNode()->getName());
+				addToQueue(itTree->second);
+			}
 		}
 	}
 	assignToGroup();
@@ -61,5 +79,34 @@ void PlayerManager::clearUnitQueue() {
 		(*ia)->unselected();
 	}
 	unitQueue.clear();
+}
+//----------------------------------------------------------------
+
+bool PlayerManager::hasUnitInArmy(Ogre::String unitName) {
+	if (myArmy.find(unitName) != myArmy.end()) {
+		return true;
+	}
+	return false;
+}
+//----------------------------------------------------------------
+
+void PlayerManager::attack() {
+	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
+		(*unit)->attackTarget();
+	}
+}
+//----------------------------------------------------------------
+
+void PlayerManager::attack(Unit* target) {
+	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
+		(*unit)->attack(target);
+	}
+}
+//----------------------------------------------------------------
+
+void PlayerManager::attackMove() {
+	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
+		(*unit)->attacking = true;
+	}
 }
 //----------------------------------------------------------------

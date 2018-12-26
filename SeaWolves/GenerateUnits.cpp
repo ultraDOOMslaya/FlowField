@@ -26,7 +26,7 @@ void GenerateUnits::generateOneBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre
 	units->insert(std::make_pair(unit1, *unit));
 }
 
-void GenerateUnits::generateFourBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit>* units) {
+void GenerateUnits::generateFourBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy) {
 	int unitNumber = 0;
 	Unit* unit;
 	Constants constants;
@@ -44,16 +44,24 @@ void GenerateUnits::generateFourBronze(Ogre::SceneManager* mScnMgr, std::map<Ogr
 	unitNumber++;
 	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 150.0f), unit1, archerBronze, 1);
 	unit->currentPos = Ogre::Vector2(0, 2);
-	units->insert(std::make_pair(unit1, *unit));
+	unit->attackRange = 200;
+	units->insert(std::make_pair(unit1, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit1, unit));
 	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 100.0f), unit2, soldierBronze, 2);
 	unit->currentPos = Ogre::Vector2(0, 1);
-	units->insert(std::make_pair(unit2, *unit));
+	unit->attackRange = 50;
+	units->insert(std::make_pair(unit2, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit2, unit));
 	unit = new Unit(mScnMgr, Ogre::Vector3(65.0f, 0.0f, 50.0f), unit3, soldierBronze, 3);
 	unit->currentPos = Ogre::Vector2(1, 0);
-	units->insert(std::make_pair(unit3, *unit));
+	unit->attackRange = 50;
+	units->insert(std::make_pair(unit3, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit3, unit));
 	unit = new Unit(mScnMgr, Ogre::Vector3(65.0f, 0.0f, 100.0f), unit4, wizardBronze, 4);
 	unit->currentPos = Ogre::Vector2(1, 1);
-	units->insert(std::make_pair(unit4, *unit));
+	unit->attackRange = 150;
+	units->insert(std::make_pair(unit4, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit4, unit));
 }
 
 void GenerateUnits::generateEightBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit>* units) {
@@ -107,7 +115,7 @@ void GenerateUnits::generateEightBronze(Ogre::SceneManager* mScnMgr, std::map<Og
 	units->insert(std::make_pair(unit8, *unit));
 }
 
-void GenerateUnits::generateOneSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit>* units) {
+void GenerateUnits::generateOneSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy) {
 	int unitNumber = 100;
 	Unit* unit;
 	Constants constants;
@@ -119,10 +127,12 @@ void GenerateUnits::generateOneSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::S
 	unitNumber++;
 	unit = new Unit(mScnMgr, Ogre::Vector3(300.0f, 0.0f, 200.0f), unit1, soldierSky, 101);
 	unit->currentPos = Ogre::Vector2(2, 3);
-	units->insert(std::make_pair(unit1, *unit));
+	unit->attackRange = 50;
+	units->insert(std::make_pair(unit1, unit));
+	playerArmy->insert(std::make_pair(unit1, unit));
 }
 
-void GenerateUnits::generateFourSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit>* units) {
+void GenerateUnits::generateFourSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy) {
 	int unitNumber = 100;
 	Unit* unit;
 	Constants constants;
@@ -140,16 +150,20 @@ void GenerateUnits::generateFourSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::
 	unitNumber++;
 	unit = new Unit(mScnMgr, Ogre::Vector3(300.0f, 0.0f, 200.0f), unit1, soldierSky, 101);
 	unit->currentPos = Ogre::Vector2(11, 11);
-	units->insert(std::make_pair(unit1, *unit));
+	units->insert(std::make_pair(unit1, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit1, unit));
 	unit = new Unit(mScnMgr, Ogre::Vector3(300.0f, 0.0f, 250.0f), unit2, soldierSky, 102);
 	unit->currentPos = Ogre::Vector2(11, 12);
-	units->insert(std::make_pair(unit2, *unit));
+	units->insert(std::make_pair(unit2, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit2, unit));
 	unit = new Unit(mScnMgr, Ogre::Vector3(300.0f, 0.0f, 300.0f), unit3, soldierSky, 103);
 	unit->currentPos = Ogre::Vector2(12, 11);
-	units->insert(std::make_pair(unit3, *unit));
+	units->insert(std::make_pair(unit3, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit3, unit));
 	unit = new Unit(mScnMgr, Ogre::Vector3(300.0f, 0.0f, 350.0f), unit4, soldierSky, 104);
 	unit->currentPos = Ogre::Vector2(12, 12);
-	units->insert(std::make_pair(unit4, *unit));
+	units->insert(std::make_pair(unit4, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit4, unit));
 }
 
 void GenerateUnits::generateEightSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit>* units) {

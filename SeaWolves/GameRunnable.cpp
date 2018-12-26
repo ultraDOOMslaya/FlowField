@@ -161,6 +161,10 @@ bool GameRunnable::keyPressed(const OgreBites::KeyboardEvent& evt)
 	{
 		createUnitMode = true;
 	}
+	if (evt.keysym.sym == SDLK_a)
+	{
+		activePlayer->queuedAttackMove = !activePlayer->queuedAttackMove;
+	}
 	return true;
 }
 //----------------------------------------------------------------
@@ -190,47 +194,90 @@ bool GameRunnable::mouseMoved(const OgreBites::MouseMotionEvent &evt)
 }
 //----------------------------------------------------------------
 
+PlayerRelationshipStatus determineStatus(PlayerManager* activePlayer, std::vector<PlayerManager*> players, Unit* unit) {
+	if (activePlayer->hasUnitInArmy(unit->unitName)) {
+		return PlayerRelationshipStatus::ME;
+	}
+	else {
+		for (std::vector<PlayerManager*>::iterator it = players.begin(); it < players.end(); it++) {
+			PlayerManager* player = *it;
+			if (player->hasUnitInArmy(unit->unitName)) {
+				if (player->relationship->isFoe()) {
+					return PlayerRelationshipStatus::HOSTILE;
+				}
+			}
+		}
+	}
+	return PlayerRelationshipStatus::FRIENDLY;
+}
+//----------------------------------------------------------------
+
 bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 {
 	if (evt.button == SDL_BUTTON_LEFT) {
 		// Did we drag or did we click?
-			if (selectBox->mStop == selectBox->mStart) {
-				Ogre::String objectName = "";
-				Ogre::Ray mouseRay = mTrayMgr->getCursorRay(mCam);
+		if (selectBox->mStop == selectBox->mStart) {
+			Ogre::String objectName = "";
+			Ogre::Ray mouseRay = mTrayMgr->getCursorRay(mCam);
 
-				mRayScnQuery->setRay(mouseRay);
-				Ogre::RaySceneQueryResult& result = mRayScnQuery->execute();
-				Ogre::RaySceneQueryResult::iterator it = result.begin();
+			mRayScnQuery->setRay(mouseRay);
+			Ogre::RaySceneQueryResult& result = mRayScnQuery->execute();
+			Ogre::RaySceneQueryResult::iterator it = result.begin();
 
-				if (mModeCB->isChecked()) {
-					Ogre::String squareName;
-					for (; it != result.end(); it++) {
-						if (it->movable->getQueryFlags() == Constants::terrainQueryMask) {
-							gridEditor->addTerrainValue(it->movable->getName(), mat, &impassableTerrain);
-						}
+			if (mModeCB->isChecked()) {
+				Ogre::String squareName;
+				for (; it != result.end(); it++) {
+					if (it->movable->getQueryFlags() == Constants::terrainQueryMask) {
+						gridEditor->addTerrainValue(it->movable->getName(), mat, &impassableTerrain);
 					}
 				}
-				else if (result.size() > 1) {		//Found the floor object AND something else
-					Unit* unit;
-					for (; it != result.end(); it++) {
-						if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
-							std::map<Ogre::String, Unit>::iterator itTree = units.find(it->movable->getParentSceneNode()->getName());
-							unit = &itTree->second;
-							player1.focusUnit(unit);
-							break;
-						}
+			}
+			else if (result.size() > 1) {		//Found the floor object AND something else
+				Unit* unit;
+				for (; it != result.end(); it++) {
+					if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
+						std::map<Ogre::String, Unit*>::iterator itTree = units.find(it->movable->getParentSceneNode()->getName());
+						unit = itTree->second;
+						activePlayer->focusUnit(unit);
+						break;
 					}
 				}
-				else {								//Just the floor object
-					player1.clearUnitQueue();
-				}
 			}
-			else {
-				performSelection(selectBox->mStart, selectBox->mStop);
+			else {								//Just the floor object
+				activePlayer->clearUnitQueue();
 			}
-			selectBox->selecting = false;
-			selectBox->setVisible(false);
 		}
+		else {
+			performSelection(selectBox->mStart, selectBox->mStop);
+		}
+		selectBox->selecting = false;
+		selectBox->setVisible(false);
+	}
+	else { // Right click on an enemy player?
+		Ogre::String objectName = "";
+		Ogre::Ray mouseRay = mTrayMgr->getCursorRay(mCam);
+
+		mRayScnQuery->setRay(mouseRay);
+		Ogre::RaySceneQueryResult& result = mRayScnQuery->execute();
+		Ogre::RaySceneQueryResult::iterator it = result.begin();
+		
+		if (result.size() > 1) {		//Found the floor object AND something else
+			Unit* unit;
+			for (; it != result.end(); it++) {
+				if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
+					std::map<Ogre::String, Unit*>::iterator itTree = units.find(it->movable->getParentSceneNode()->getName());
+					unit = itTree->second;
+					switch (determineStatus(activePlayer, players, unit)) 
+					{
+					case PlayerRelationshipStatus::HOSTILE: activePlayer->attack(unit);
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		}
+	}
 	
 	return true;
 }
@@ -271,7 +318,7 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 
 		// TODO refactor to allow an active player and unit movement for multiple players
 		//for(std::map<Ogre::String, Unit>::iterator it = units.begin(); it != units.end(); ++it) {
-		for (std::vector<Unit*>::iterator unit = player1.unitQueue.begin(); unit != player1.unitQueue.end(); ++unit) {
+		for (std::vector<Unit*>::iterator unit = activePlayer->unitQueue.begin(); unit != activePlayer->unitQueue.end(); ++unit) {
 
 			//TODO temporary for flocking work. Remove or refactor. Would like to see a single method with code the render loop uses.
 			Ogre::Vector2 aPos = GridUtils::numericalCordFinder(path->flowField[(*unit)->currentPos.x][(*unit)->currentPos.y]);
@@ -281,7 +328,14 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 			Ogre::Vector2 finalPosition = GridUtils::numericalCordFinder(SquareIndex);
 			Ogre::Vector3* finalCord = new Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
 			(*unit)->finalDestination = *finalCord;
+
+			/* Reset all unit behaviours */
 			(*unit)->halt();
+			(*unit)->attacking = false;
+
+			if (activePlayer->queuedAttackMove) {
+				activePlayer->attackMove();
+			}
 
 			//TODO encapsulate this
 			if ((*unit)->path != NULL) {
@@ -386,7 +440,8 @@ void GameRunnable::performSelection(
 	volQuery->setVolumes(volList);
 	Ogre::SceneQueryResult& result = volQuery->execute();
 
-	player1.focusUnits(result, &units);
+	//activePlayer->focusUnits(result, &units);
+	activePlayer->focusUnits(result);
 }
 //----------------------------------------------------------------
 
@@ -429,12 +484,22 @@ void GameRunnable::setup(void)
 
 	root->addFrameListener(this);
 	
+	player1 = PlayerManager();
+	player2 = PlayerManager();
+	PlayerRelationship* relationship = new PlayerRelationship(1, PlayerRelationshipStatus::HOSTILE);
+	player1.relationship = relationship;
+	player2.relationship = relationship;
+
+	activePlayer = &player1;
+	players.push_back(&player1);
+	players.push_back(&player2);
+
 	//GenerateUnits::generateOneBronze(mScnMgr, &units);
-	GenerateUnits::generateFourBronze(mScnMgr, &units);
+	GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy);
 	//GenerateUnits::generateEightBronze(mScnMgr, &units);
 
-	//GenerateUnits::generateOneSky(mScnMgr, &units);
-	//GenerateUnits::generateFourSky(mScnMgr, &units);
+	//GenerateUnits::generateOneSky(mScnMgr, &units, &player2.myArmy);
+	GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy);
 	
 	createTileMap();
 
@@ -460,9 +525,6 @@ void GameRunnable::setup(void)
 
 	volQuery = mScnMgr->createPlaneBoundedVolumeQuery(Ogre::PlaneBoundedVolumeList());
 	gridEditor = new GridEditor(mScnMgr);
-
-	player1 = PlayerManager();
-	players.push_back(player1);
 
 	/* END TESTING ZONE */
 }
@@ -601,8 +663,25 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 	mScnMgr->getSceneNode("camNode")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);*/
 	
 
-	for (std::map<Ogre::String, Unit>::iterator it = units.begin(); it != units.end(); ++it) {
-		Unit* unit = &it->second;
+	for (std::map<Ogre::String, Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+		Unit* unit = it->second;
+
+		if (unit->attacking) {
+			if (!unit->attackTarget()) {
+				unit->distanceFromTarget = unit->seekTargetRadius;
+				for (std::map<Ogre::String, Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+					Unit* potentialTarget = it->second;
+					int distance = distanceTo(unit->getPosition(), potentialTarget->getPosition());
+					if (distance < unit->seekTargetRadius && distance < unit->distanceFromTarget) {
+						if (determineStatus(activePlayer, players, potentialTarget) == PlayerRelationshipStatus::HOSTILE) {
+							unit->mTarget = potentialTarget;
+							unit->distanceFromTarget = distance;
+						}
+					}
+				}
+			}
+		}
+
 		if (unit->unitAnimState->getAnimationName() == "Walk") {
 		//if (unit->unitAnimState->getAnimationName() == "Run") {
 		//if (unit->nextLocation()) {
@@ -627,13 +706,14 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			}
 			
 			/* Physics applied to everyone */
-			
-			Ogre::Vector3 seek = SteeringBehaviour::seek(*unit, cords);
-			Ogre::Vector3 seperation = SteeringBehaviour::seperation(*unit, &units);
+			unit->debugPos2 = Ogre::Vector2(cords.x, cords.z);
+
+			Ogre::Vector3 seek = SteeringBehaviour::seek(unit, cords);
+			Ogre::Vector3 seperation = SteeringBehaviour::seperation(unit, &units);
 
 			/* Physics applied to groups */
-			Ogre::Vector3 cohesion = SteeringBehaviour::cohesion(*unit, unit->group);
-			Ogre::Vector3 alignment = SteeringBehaviour::alignment(*unit, unit->group);
+			Ogre::Vector3 cohesion = SteeringBehaviour::cohesion(unit, unit->group);
+			Ogre::Vector3 alignment = SteeringBehaviour::alignment(unit, unit->group);
 			Ogre::Vector3 collision = staticObjectCollisionForceApplier(unit);
 			//collision.operator*=(2);
 
@@ -649,16 +729,17 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 
 	
 	Ogre::AnimationState* tempState;
-	for (std::map<Ogre::String, Unit>::iterator it = units.begin(); it != units.end(); ++it) {
-		Unit* unit = &it->second;
+	for (std::map<Ogre::String, Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+		Unit* unit = it->second;
 	
 		if (unit->nextLocation()) {
 			unit->animate("Walk");
 			unit->velocity = unit->direction;
 		}
 		if (unit->destination != Ogre::Vector3::ZERO) {
-			unit->velocity.operator+=(unit->forceToApply.operator*=(evt.timeSinceLastFrame));		//Delta Time
+			//unit->velocity.operator+=(unit->forceToApply.operator*=(evt.timeSinceLastFrame));		//Delta Time
 			//unit->velocity.operator+=(unit->forceToApply.operator*=(0.0166666));					//Mocked Delta Time
+			unit->velocity.operator+=(unit->forceToApply.operator*=(0.00166666));					//Mocked Delta Time
 			float speed = unit->velocity.length();
 			if (speed > unit->maxSpeed) {
 				unit->velocity.operator*=(unit->maxSpeed / speed);
@@ -668,7 +749,8 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 
 			
 			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.0166666));
-			Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(evt.timeSinceLastFrame));
+			Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.00166666));
+			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(evt.timeSinceLastFrame));
 			unit->commandMove(newPos);
 		}
 		unit->unitAnimState->addTime(evt.timeSinceLastEvent);		

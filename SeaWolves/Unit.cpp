@@ -24,7 +24,12 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	maxSpeed(50),									// delta time
 	//maxSpeed(5),									// mocked time
 	path(NULL),
-	isSelected(false)
+	isSelected(false),
+	attacking(false),
+	mTarget(NULL),
+	attackRange(0),
+	distanceFromTarget(0),
+	seekTargetRadius(0)
 {
 	//unitEntity = mScnMgr->createEntity("robot.mesh");
 	gameSceneManager = mScnMgr;
@@ -40,6 +45,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 
 	unitName = BradsBitch;
 	seperationRadius = physicsBodyRadius * 2;
+	seekTargetRadius = 500;
 	unitEntity->setQueryFlags(Constants::unitQueryMask);
 	unitID = ID;
 }
@@ -49,7 +55,9 @@ Unit::~Unit()
 {
 }
 
-
+/*
+ Called every frame for moving units.
+*/
 void Unit::commandMove(Ogre::Vector3 position) {
 	unitNode->setPosition(position);
 	if (isSelected) {
@@ -80,6 +88,48 @@ void Unit::halt() {
 	destination = Ogre::Vector3::ZERO;
 	forceToApply = Ogre::Vector3::ZERO;
 	animate("Idle");
+}
+//----------------------------------------------------------------
+
+bool Unit::attackTarget() {
+	if (mTarget) {
+		finalDestination = mTarget->getPosition();
+		if (inRange()) {
+			halt();
+			animate("Attack");
+		}
+		return true;
+	}
+	return false;
+}
+//----------------------------------------------------------------
+
+void Unit::attack(Unit* target) {
+	mTarget = target;
+	attacking = true;
+}
+//----------------------------------------------------------------
+
+void Unit::seekTarget(std::map<Ogre::String, Unit*>* units) {
+	
+}
+//----------------------------------------------------------------
+
+static int distanceTo(Ogre::Vector3 unit1, Ogre::Vector3 unit2) {
+	int a = unit1.x - unit2.x;
+	int b = unit1.z - unit2.z;
+
+	int c = std::sqrt(a*a + b*b);
+	return c;
+}
+//----------------------------------------------------------------
+
+bool Unit::inRange() {
+	int distance = distanceTo(mTarget->getPosition(), getPosition());
+	if (distance < attackRange) {
+		return true;
+	}
+	return false;
 }
 //----------------------------------------------------------------
 
