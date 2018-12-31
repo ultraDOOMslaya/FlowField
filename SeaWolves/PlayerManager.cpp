@@ -92,14 +92,14 @@ bool PlayerManager::hasUnitInArmy(Ogre::String unitName) {
 
 void PlayerManager::attack() {
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
-		(*unit)->attackTarget();
+		(*unit)->attackingTarget();
 	}
 }
 //----------------------------------------------------------------
 
 void PlayerManager::attack(Unit* target) {
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
-		(*unit)->attack(target);
+		(*unit)->setTarget(target);
 	}
 }
 //----------------------------------------------------------------
@@ -107,6 +107,7 @@ void PlayerManager::attack(Unit* target) {
 void PlayerManager::attackMove() {
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
 		(*unit)->attacking = true;
+		(*unit)->hunting = true;
 	}
 }
-//----------------------------------------------------------------
+//-----------------------------------------------------=-----------

@@ -44,7 +44,7 @@ void PathFinding::calculateLos(SquareNeighbor at, SquareNeighbor pathEnd) {
 	float xDifAbs = std::abs(xDif);
 	float yDifAbs = std::abs(yDif);
 
-	bool hasLos = false;
+	bool lineOfSight = false;
 
 	float xDifOne = (xDif > 0) ? 1 : ((xDif < 0) ? -1 : 0);
 	float yDifOne = (yDif > 0) ? 1 : ((yDif < 0) ? -1 : 0);;
@@ -53,14 +53,14 @@ void PathFinding::calculateLos(SquareNeighbor at, SquareNeighbor pathEnd) {
 	if (xDifAbs >= yDifAbs) {
 
 		if (losGrid[at.getPosition().x + xDifOne][at.getPosition().y]) {
-			hasLos = true;
+			lineOfSight = true;
 		}
 	}
 	//Check in the y direction
 	if (yDifAbs >= xDifAbs) {
 
 		if (losGrid[at.getPosition().x][at.getPosition().y + yDifOne]) {
-			hasLos = true;
+			lineOfSight = true;
 		}
 	}
 
@@ -68,17 +68,17 @@ void PathFinding::calculateLos(SquareNeighbor at, SquareNeighbor pathEnd) {
 	if (yDifAbs > 0 && xDifAbs > 0) {
 		//If the diagonal doesn't have LOS, we don't
 		if (!losGrid[at.getPosition().x + xDifOne][at.getPosition().y + yDifOne]) {
-			hasLos = false;
+			lineOfSight = false;
 		}
 		else if (yDifAbs == xDifAbs) {
 			//If we are an exact diagonal and either straight direction is a wall, we don't have LOS
 			if (dijkastraGrid[at.getPosition().x + xDifOne][at.getPosition().y] == Constants::WALL || dijkastraGrid[at.getPosition().x][at.getPosition().y + yDifOne] == Constants::WALL) {
-				hasLos = false;
+				lineOfSight = false;
 			}
 		}
 	}
 	//It's a definite now
-	losGrid[at.getPosition().x][at.getPosition().y] = hasLos;
+	losGrid[at.getPosition().x][at.getPosition().y] = lineOfSight;
 }
 //----------------------------------------------------------------
 

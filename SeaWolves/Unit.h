@@ -21,19 +21,28 @@ public:
 	virtual void rotate(Ogre::Vector3 mDirection);
 	virtual void haltTheGroup();
 	virtual void halt();
-	virtual bool attackTarget();
-	virtual void attack(Unit* target);
-	virtual void seekTarget(std::map<Ogre::String, Unit*>* units);
+	virtual bool attackingTarget();
+	virtual bool isHunting();
+	virtual bool isAttacking();
+	virtual bool isAggressive();
+	virtual bool isAtEndOfAnimation();
+	virtual bool hasTarget();
+	virtual void setTarget(Unit* target);
+	virtual void attack();
 
 	virtual Ogre::Vector3 getPosition();
 	virtual std::vector<std::vector<Ogre::Vector2>>* getFlowField();
 	virtual Ogre::Vector2* getCurrentFlowValue();
 	virtual bool hasLos();
+	virtual bool losTo(Unit* unit);
 	virtual bool hasArrived();
 	virtual bool nextLocation(void);
 	virtual void selected(void);
 	virtual void unselected(void);
 	virtual bool inRange(void);
+	virtual void setLooseTarget(Unit* unit, int distance);
+	virtual void setHardTarget(void);
+	virtual void seekTarget(std::map<Ogre::String, Unit*>* units);
 
 	Ogre::SceneManager*			gameSceneManager;
 	Ogre::AnimationState*		unitAnimState;
@@ -60,9 +69,10 @@ public:
 	int							unitID;
 	int							attackRange;
 	int							distanceFromTarget;		//This is not continually updated and its state needs to be reset. Used while picking a target
-	int							seekTargetRadius;
+	int							targetRadius;
 	bool						isSelected;
 	bool						attacking;		//While attacking, will attack any target in an area
+	bool						hunting;
 	Unit*						mTarget;			//Target this unit is attacking
 	Ogre::Real					maxForce;
 	Ogre::Real					maxSpeed;

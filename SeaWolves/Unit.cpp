@@ -29,7 +29,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	mTarget(NULL),
 	attackRange(0),
 	distanceFromTarget(0),
-	seekTargetRadius(0)
+	targetRadius(0)
 {
 	//unitEntity = mScnMgr->createEntity("robot.mesh");
 	gameSceneManager = mScnMgr;
@@ -45,7 +45,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 
 	unitName = BradsBitch;
 	seperationRadius = physicsBodyRadius * 2;
-	seekTargetRadius = 500;
+	targetRadius = 500;
 	unitEntity->setQueryFlags(Constants::unitQueryMask);
 	unitID = ID;
 }
@@ -91,12 +91,11 @@ void Unit::halt() {
 }
 //----------------------------------------------------------------
 
-bool Unit::attackTarget() {
+bool Unit::attackingTarget() {
 	if (mTarget) {
 		finalDestination = mTarget->getPosition();
 		if (inRange()) {
-			halt();
-			animate("Attack");
+			attack();
 		}
 		return true;
 	}
@@ -104,9 +103,21 @@ bool Unit::attackTarget() {
 }
 //----------------------------------------------------------------
 
-void Unit::attack(Unit* target) {
+void Unit::setTarget(Unit* target) {
 	mTarget = target;
 	attacking = true;
+}
+//----------------------------------------------------------------
+
+void Unit::attack() {
+	halt();
+	rotate((mTarget->getPosition() - getPosition()));
+	animate("Attack");
+}
+//----------------------------------------------------------------
+
+bool Unit::isAtEndOfAnimation() {
+	return unitAnimState->hasEnded();
 }
 //----------------------------------------------------------------
 
@@ -115,17 +126,8 @@ void Unit::seekTarget(std::map<Ogre::String, Unit*>* units) {
 }
 //----------------------------------------------------------------
 
-static int distanceTo(Ogre::Vector3 unit1, Ogre::Vector3 unit2) {
-	int a = unit1.x - unit2.x;
-	int b = unit1.z - unit2.z;
-
-	int c = std::sqrt(a*a + b*b);
-	return c;
-}
-//----------------------------------------------------------------
-
 bool Unit::inRange() {
-	int distance = distanceTo(mTarget->getPosition(), getPosition());
+	int distance = GridUtils::distanceTo(mTarget->getPosition(), getPosition());
 	if (distance < attackRange) {
 		return true;
 	}
@@ -164,6 +166,12 @@ bool Unit::hasLos() {
 }
 //----------------------------------------------------------------
 
+bool Unit::losTo(Unit* unit) {
+	Ogre::Vector2 cords = GridUtils::cordNumericalFinder(unit->getPosition());
+	return path->losGrid[cords.x][cords.y];
+}
+//----------------------------------------------------------------
+
 bool Unit::hasArrived() {
 	int x, z;
 	Ogre::Vector3 distanceLeft = getPosition() - finalDestination;
@@ -181,15 +189,15 @@ void Unit::rotate(Ogre::Vector3 mDirection) {
 	Ogre::Vector3 src = unitNode->getOrientation() * Ogre::Vector3::UNIT_X;
 
 	/* Unit rotation code */
-	/*if ((1.0 + src.dotProduct(mDirection)) < 0.0001) {
+	if ((1.0 + src.dotProduct(mDirection)) < 0.0001) {
 		unitNode->yaw(Ogre::Degree(180));
 	}
 	else {
 		Ogre::Quaternion quat = src.getRotationTo(mDirection);
 		unitNode->rotate(quat);
-	}*/
-	Ogre::Quaternion quat = src.getRotationTo(mDirection);
-	unitNode->rotate(quat);
+	}
+	//Ogre::Quaternion quat = src.getRotationTo(mDirection);
+	//unitNode->rotate(quat);
 }
 //----------------------------------------------------------------
 
@@ -202,5 +210,50 @@ void Unit::selected() {
 void Unit::unselected() {
 	isSelected = false;
 	delete selectionCircle;
+}
+//----------------------------------------------------------------
+
+void Unit::setLooseTarget(Unit* potentialTarget, int distance) {
+	mTarget = potentialTarget;
+	distanceFromTarget = distance;
+	attacking = true;
+}
+//----------------------------------------------------------------
+
+void Unit::setHardTarget() {
+
+}
+//----------------------------------------------------------------
+
+bool Unit::isHunting() {
+	//if (attacking && hunting) {
+	if (hunting) {
+		return true;
+	}
+	return false;
+}
+//----------------------------------------------------------------
+
+bool Unit::isAttacking() {
+	if (attacking) {
+		return true;
+	}
+	return false;
+}
+//----------------------------------------------------------------
+
+bool Unit::isAggressive() {
+	if (isHunting() || isAttacking()) {
+		return true;
+	}
+	return false;
+}
+//----------------------------------------------------------------
+
+bool Unit::hasTarget() {
+	if (mTarget) {
+		return true;
+	}
+	return false;
 }
 //----------------------------------------------------------------

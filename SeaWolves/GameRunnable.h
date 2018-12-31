@@ -26,7 +26,9 @@
 #include "GridEditor.h"
 #include "GenerateUnits.h"
 #include "PlayerRelationship.h"
-
+#include "PlayerRelationshipStatus.h"
+#include "PlayerUtils.h"
+#include "CombatBehaviour.h"
 
 
 class GameRunnable : public OgreBites::ApplicationContext, public OgreBites::InputListener
@@ -45,7 +47,6 @@ public:
 	virtual void changeSquareColor(int num);
 
 	virtual void frameRendered(const Ogre::FrameEvent& evt);
-	virtual Ogre::Vector3 GameRunnable::staticObjectCollisionForceApplier(Unit* unit);
 
 	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color);
 	virtual void createTileMap(void);

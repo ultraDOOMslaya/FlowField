@@ -194,24 +194,6 @@ bool GameRunnable::mouseMoved(const OgreBites::MouseMotionEvent &evt)
 }
 //----------------------------------------------------------------
 
-PlayerRelationshipStatus determineStatus(PlayerManager* activePlayer, std::vector<PlayerManager*> players, Unit* unit) {
-	if (activePlayer->hasUnitInArmy(unit->unitName)) {
-		return PlayerRelationshipStatus::ME;
-	}
-	else {
-		for (std::vector<PlayerManager*>::iterator it = players.begin(); it < players.end(); it++) {
-			PlayerManager* player = *it;
-			if (player->hasUnitInArmy(unit->unitName)) {
-				if (player->relationship->isFoe()) {
-					return PlayerRelationshipStatus::HOSTILE;
-				}
-			}
-		}
-	}
-	return PlayerRelationshipStatus::FRIENDLY;
-}
-//----------------------------------------------------------------
-
 bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 {
 	if (evt.button == SDL_BUTTON_LEFT) {
@@ -267,7 +249,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 				if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
 					std::map<Ogre::String, Unit*>::iterator itTree = units.find(it->movable->getParentSceneNode()->getName());
 					unit = itTree->second;
-					switch (determineStatus(activePlayer, players, unit)) 
+					switch (PlayerUtils::determineStatus(activePlayer, players, unit)) 
 					{
 					case PlayerRelationshipStatus::HOSTILE: activePlayer->attack(unit);
 						break;
@@ -332,6 +314,7 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 			/* Reset all unit behaviours */
 			(*unit)->halt();
 			(*unit)->attacking = false;
+			(*unit)->hunting = false;
 
 			if (activePlayer->queuedAttackMove) {
 				activePlayer->attackMove();
@@ -349,6 +332,8 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 			(*unit)->path = path;
 			(*unit)->path->pathingUnits++;
 		}
+		/* Reset state player state */
+		activePlayer->queuedAttackMove = false;
 
 		//mWalkList.push_back(Ogre::Vector3(cords.x, 0, cords.y));
 	}
@@ -530,13 +515,6 @@ void GameRunnable::setup(void)
 }
 //----------------------------------------------------------------
 
-int pythagoreanCalculation(int a, int b) {
-	int cSquared = (a * a) + (b * b);
-	int c = std::sqrt(cSquared);
-	return c;
-}
-//----------------------------------------------------------------
-
 static Ogre::Vector3* subtractVector(Ogre::Vector3 vec1, Ogre::Vector3 vec2) {
 	int x, y, z;
 	x = vec1.x - vec2.x;
@@ -553,90 +531,6 @@ static int distanceTo(Ogre::Vector3 unit1, Ogre::Vector3 unit2) {
 
 	int c = std::sqrt(a*a + b*b);
 	return c;
-}
-
-Ogre::Vector3 GameRunnable::staticObjectCollisionForceApplier(Unit* unit) {
-	Ogre::Vector3 totalForce = Ogre::Vector3(0, 0, 0);
-
-	unit->path->squareNeighbors = GridUtils::getTerrainNeighbors(unit->currentPos, unit->path->squareNeighbors, &unit->path->dijkastraGrid);
-	//getAllNeighbors(*unit);
-
-	int terrainBoundry = ((Constants::edgeLength * 0.7) / 2) + unit->seperationRadius;
-	int neighborsCount = 0;
-	int x = 0;
-	int z = 0;
-	bool xMod, zMod;
-
-	while (!unit->path->squareNeighbors.empty()) {
-		SquareNeighbor* neighbor = unit->path->squareNeighbors.front();
-		if (neighbor->getDistance() == Constants::WALL) {
-			Ogre::Vector2 cords = GridUtils::numericalCordFinder(neighbor->getPosition());
-			Ogre::Vector3 terrain(cords.x, 0, cords.y);
-			int a, b;
-			a = std::abs(terrain.x - unit->getPosition().x);
-			b = std::abs(terrain.z - unit->getPosition().z);
-			// Utilizing Pythagorean theorm:
-			// *** Terrain ***
-			
-			int terrainHypotenuse = pythagoreanCalculation(terrainBoundry, terrainBoundry);
-			int unitHypotenuse = pythagoreanCalculation(a, b);
-
-			if (unitHypotenuse < terrainHypotenuse) {
-				Ogre::Vector3* pushForce = subtractVector(unit->getPosition(), terrain);
-
-				totalForce.operator+=(pushForce->operator/(unit->seperationRadius));
-
-				unit->debugPos2 = Ogre::Vector2(totalForce.x, totalForce.z);
-
-				/*
-				if (unit->currentPos.x == neighbor->getPosition().x) {
-					totalForce.x = 0;
-				}
-				else if (unit->currentPos.y == neighbor->getPosition().y) {
-					totalForce.y = 0;
-				}
-				else {
-					totalForce.y = 0;
-				}
-				*/
-
-				neighborsCount++;
-				free(pushForce);
-			}
-		}
-		free(neighbor);
-		unit->path->squareNeighbors.pop();
-	}
-
-	if (neighborsCount == 0) {
-		return totalForce;
-	}
-
-	totalForce.operator/=(neighborsCount);
-	totalForce.operator*=(unit->maxForce);
-
-	for (std::vector<Unit*>::iterator it = unit->group->begin(); it != unit->group->end(); ++it) {
-		Unit* u = (*it);
-		if (u->unitName != unit->unitName) {
-			int distance = distanceTo(unit->getPosition(), u->getPosition());
-
-			if (distance < (unit->maxCohesion / 2)) {
-				totalForce.operator+=(totalForce);
-			}
-		}
-	}
-
-	/*if (xMod) {
-		unit->forceToApply.x = 0;
-		unit->velocity.x = 1;
-	}
-
-	if (zMod) {
-		unit->forceToApply.z = 0;
-		unit->velocity.z = 1;
-	}*/
-
-	return totalForce;
 }
 
 
@@ -666,25 +560,30 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 	for (std::map<Ogre::String, Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
 		Unit* unit = it->second;
 
-		if (unit->attacking) {
-			if (!unit->attackTarget()) {
-				unit->distanceFromTarget = unit->seekTargetRadius;
-				for (std::map<Ogre::String, Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-					Unit* potentialTarget = it->second;
-					int distance = distanceTo(unit->getPosition(), potentialTarget->getPosition());
-					if (distance < unit->seekTargetRadius && distance < unit->distanceFromTarget) {
-						if (determineStatus(activePlayer, players, potentialTarget) == PlayerRelationshipStatus::HOSTILE) {
-							unit->mTarget = potentialTarget;
-							unit->distanceFromTarget = distance;
-						}
+		if (unit->isAggressive()) {
+			if (unit->hasTarget()) {
+				unit->distanceFromTarget = unit->getPosition().squaredLength() - unit->mTarget->getPosition().squaredLength();
+				if (unit->inRange()) {
+					unit->attack();
+				}
+				else {
+					if (unit->isHunting()) {
+						CombatBehaviour::huntForTarget(&units, activePlayer, players, unit);
+					}
+					if (unit->unitAnimState->getAnimationName() != "Walk") {
+						unit->walkList.push_back(unit->mTarget->getPosition());
+					}
+					else {
+						unit->finalDestination = unit->mTarget->getPosition();
 					}
 				}
+			}
+			else {
+				CombatBehaviour::seekTarget(&units, activePlayer, players, unit);
 			}
 		}
 
 		if (unit->unitAnimState->getAnimationName() == "Walk") {
-		//if (unit->unitAnimState->getAnimationName() == "Run") {
-		//if (unit->nextLocation()) {
 			
 			/* Realtime directing */
 		
@@ -709,12 +608,12 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			unit->debugPos2 = Ogre::Vector2(cords.x, cords.z);
 
 			Ogre::Vector3 seek = SteeringBehaviour::seek(unit, cords);
-			Ogre::Vector3 seperation = SteeringBehaviour::seperation(unit, &units);
+			Ogre::Vector3 seperation = SteeringBehaviour::seperation(unit, &units, activePlayer, players);
 
 			/* Physics applied to groups */
 			Ogre::Vector3 cohesion = SteeringBehaviour::cohesion(unit, unit->group);
 			Ogre::Vector3 alignment = SteeringBehaviour::alignment(unit, unit->group);
-			Ogre::Vector3 collision = staticObjectCollisionForceApplier(unit);
+			Ogre::Vector3 collision = SteeringBehaviour::staticObjectCollisionForceApplier(unit);
 			//collision.operator*=(2);
 
 			//unit->forceToApply = seek.operator*=(0.75).operator+=(seperation.operator*=(15)).operator+=(cohesion.operator*=(0.5)).operator+=(alignment.operator/=(3)).operator+=(collision.operator*=(3));
@@ -737,9 +636,9 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			unit->velocity = unit->direction;
 		}
 		if (unit->destination != Ogre::Vector3::ZERO) {
-			//unit->velocity.operator+=(unit->forceToApply.operator*=(evt.timeSinceLastFrame));		//Delta Time
+			unit->velocity.operator+=(unit->forceToApply.operator*=(evt.timeSinceLastFrame));		//Delta Time
 			//unit->velocity.operator+=(unit->forceToApply.operator*=(0.0166666));					//Mocked Delta Time
-			unit->velocity.operator+=(unit->forceToApply.operator*=(0.00166666));					//Mocked Delta Time
+			//unit->velocity.operator+=(unit->forceToApply.operator*=(0.00166666));					//Mocked Delta Time
 			float speed = unit->velocity.length();
 			if (speed > unit->maxSpeed) {
 				unit->velocity.operator*=(unit->maxSpeed / speed);
@@ -749,8 +648,8 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 
 			
 			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.0166666));
-			Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.00166666));
-			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(evt.timeSinceLastFrame));
+			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.00166666));
+			Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(evt.timeSinceLastFrame));
 			unit->commandMove(newPos);
 		}
 		unit->unitAnimState->addTime(evt.timeSinceLastEvent);		

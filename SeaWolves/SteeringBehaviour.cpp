@@ -29,6 +29,13 @@ static Ogre::Vector3* subtractVector(Ogre::Vector3 vec1, Ogre::Vector3 vec2) {
 }
 //----------------------------------------------------------------
 
+int pythagoreanCalculation(int a, int b) {
+	int cSquared = (a * a) + (b * b);
+	int c = std::sqrt(cSquared);
+	return c;
+}
+//----------------------------------------------------------------
+
 Ogre::Vector3 SteeringBehaviour::seek(Unit* unit, Ogre::Vector3 destination) {
 	//Desired change of location
 	Ogre::Vector3 desired = destination.operator-=(unit->getPosition());
@@ -49,7 +56,7 @@ Ogre::Vector3 SteeringBehaviour::seek(Unit* unit, Ogre::Vector3 destination) {
 /*
 Seperation keeps units from treading on each other. High seperation will create very jumpy movement. Counteract with alignment.
 */
-Ogre::Vector3 SteeringBehaviour::seperation(Unit* unit, std::map<Ogre::String, Unit*>* units) {
+Ogre::Vector3 SteeringBehaviour::seperation(Unit* unit, std::map<Ogre::String, Unit*>* units, PlayerManager* activePlayer, std::vector<PlayerManager*> players) {
 	Ogre::Vector3 totalForce = Ogre::Vector3(0, 0, 0);
 	int neighborsCount = 0;
 	
@@ -69,6 +76,9 @@ Ogre::Vector3 SteeringBehaviour::seperation(Unit* unit, std::map<Ogre::String, U
 				totalForce.operator+=(pushForce->operator/(unit->seperationRadius));
 				neighborsCount++;
 				free(pushForce);
+				if (PlayerUtils::determineStatus(activePlayer, players, unit) == PlayerRelationshipStatus::HOSTILE) {
+					totalForce.operator*=(8);
+				}
 			}
 		}
 	}
@@ -184,3 +194,87 @@ Ogre::Vector3 SteeringBehaviour::alignment(Unit* unit, std::vector<Unit*>* units
 	return force;
 }
 //----------------------------------------------------------------
+
+Ogre::Vector3 SteeringBehaviour::staticObjectCollisionForceApplier(Unit* unit) {
+	Ogre::Vector3 totalForce = Ogre::Vector3(0, 0, 0);
+
+	unit->path->squareNeighbors = GridUtils::getTerrainNeighbors(unit->currentPos, unit->path->squareNeighbors, &unit->path->dijkastraGrid);
+	//getAllNeighbors(*unit);
+
+	int terrainBoundry = ((Constants::edgeLength * 0.7) / 2) + unit->seperationRadius;
+	int neighborsCount = 0;
+	int x = 0;
+	int z = 0;
+	bool xMod, zMod;
+
+	while (!unit->path->squareNeighbors.empty()) {
+		SquareNeighbor* neighbor = unit->path->squareNeighbors.front();
+		if (neighbor->getDistance() == Constants::WALL) {
+			Ogre::Vector2 cords = GridUtils::numericalCordFinder(neighbor->getPosition());
+			Ogre::Vector3 terrain(cords.x, 0, cords.y);
+			int a, b;
+			a = std::abs(terrain.x - unit->getPosition().x);
+			b = std::abs(terrain.z - unit->getPosition().z);
+			// Utilizing Pythagorean theorm:
+			// *** Terrain ***
+
+			int terrainHypotenuse = pythagoreanCalculation(terrainBoundry, terrainBoundry);
+			int unitHypotenuse = pythagoreanCalculation(a, b);
+
+			if (unitHypotenuse < terrainHypotenuse) {
+				Ogre::Vector3* pushForce = subtractVector(unit->getPosition(), terrain);
+
+				totalForce.operator+=(pushForce->operator/(unit->seperationRadius));
+
+				unit->debugPos2 = Ogre::Vector2(totalForce.x, totalForce.z);
+
+				/*
+				if (unit->currentPos.x == neighbor->getPosition().x) {
+				totalForce.x = 0;
+				}
+				else if (unit->currentPos.y == neighbor->getPosition().y) {
+				totalForce.y = 0;
+				}
+				else {
+				totalForce.y = 0;
+				}
+				*/
+
+				neighborsCount++;
+				free(pushForce);
+			}
+		}
+		free(neighbor);
+		unit->path->squareNeighbors.pop();
+	}
+
+	if (neighborsCount == 0) {
+		return totalForce;
+	}
+
+	totalForce.operator/=(neighborsCount);
+	totalForce.operator*=(unit->maxForce);
+
+	for (std::vector<Unit*>::iterator it = unit->group->begin(); it != unit->group->end(); ++it) {
+		Unit* u = (*it);
+		if (u->unitName != unit->unitName) {
+			int distance = distanceTo(unit->getPosition(), u->getPosition());
+
+			if (distance < (unit->maxCohesion / 2)) {
+				totalForce.operator+=(totalForce);
+			}
+		}
+	}
+
+	/*if (xMod) {
+	unit->forceToApply.x = 0;
+	unit->velocity.x = 1;
+	}
+
+	if (zMod) {
+	unit->forceToApply.z = 0;
+	unit->velocity.z = 1;
+	}*/
+
+	return totalForce;
+}
