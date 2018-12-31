@@ -73,7 +73,7 @@ Ogre::Vector3 SteeringBehaviour::seperation(Unit* unit, std::map<Ogre::String, U
 				Ogre::Vector3 vec2 = u->getPosition();
 				vec2.operator+(vec2);
 				Ogre::Vector3* pushForce = subtractVector(unit->getPosition(), u->getPosition());
-				totalForce.operator+=(pushForce->operator/(unit->seperationRadius));
+				totalForce.operator+=(pushForce->operator/(unit->physicsBodyRadius));
 				neighborsCount++;
 				free(pushForce);
 				if (PlayerUtils::determineStatus(activePlayer, players, unit) == PlayerRelationshipStatus::HOSTILE) {

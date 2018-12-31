@@ -484,7 +484,7 @@ void GameRunnable::setup(void)
 	//GenerateUnits::generateEightBronze(mScnMgr, &units);
 
 	//GenerateUnits::generateOneSky(mScnMgr, &units, &player2.myArmy);
-	GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy);
+	//GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy);
 	
 	createTileMap();
 
@@ -619,7 +619,7 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			//unit->forceToApply = seek.operator*=(0.75).operator+=(seperation.operator*=(15)).operator+=(cohesion.operator*=(0.5)).operator+=(alignment.operator/=(3)).operator+=(collision.operator*=(3));
 			//unit->forceToApply = seek.operator+=(seperation.operator*=(10)).operator+=(cohesion.operator*=(0.1)).operator+=(alignment).operator+=(collision);
 			//unit->forceToApply = seek.operator+=(seperation.operator*=(10)).operator+=(cohesion.operator*=(0.1)).operator+=(alignment);
-			unit->forceToApply = seek.operator*=(2).operator+=(seperation.operator*=(30)).operator+=(cohesion.operator*=(0.1)).operator+=(alignment.operator*=(2)).operator+=(collision);
+			unit->forceToApply = seek.operator*=(6).operator+=(seperation.operator*=(30)).operator+=(cohesion.operator*=(0.1)).operator+=(alignment.operator*=(2)).operator+=(collision.operator*=(2));
 
 			//Ogre::Vector3 collision = staticObjectCollisionForceApplier(unit);
 			SteeringBehaviour::halt(unit, unit->group);
