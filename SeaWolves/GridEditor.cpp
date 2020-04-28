@@ -2,9 +2,10 @@
 
 
 
-GridEditor::GridEditor(Ogre::SceneManager* mScnMgr)
+GridEditor::GridEditor(Ogre::SceneManager* mScnMgr, std::vector<std::vector<GridSquare*>>* mGridMap)
 {
 	gameSceneManager = mScnMgr;
+	gridMap = mGridMap;
 }
 
 
@@ -18,7 +19,7 @@ void setSquareColor(Ogre::Entity* entity, Ogre::MaterialPtr mat, Ogre::ColourVal
 }
 //----------------------------------------------------------------
 
-void GridEditor::addTerrainValue(Ogre::String squareName, Ogre::MaterialPtr	mat, std::vector<Ogre::Vector2>* impassableTerrain) {
+void GridEditor::addTerrainValue(Ogre::String squareName, Ogre::MaterialPtr	mat, std::vector<GridSquare*>* impassableTerrain, b2World* world) {
 	int squareNumber = stoi(squareName);
 	int xcount = 0;
 	int ycount = 0;
@@ -59,7 +60,15 @@ void GridEditor::addTerrainValue(Ogre::String squareName, Ogre::MaterialPtr	mat,
 	setSquareColor(entity, mat, Ogre::ColourValue::Red);
 
 	//Set the value according to color
-	Ogre::Vector2 terrain = Ogre::Vector2(xcount, ycount);
-	impassableTerrain->push_back(terrain);
-	
+	//Ogre::Vector2 terrain = Ogre::Vector2(xcount, ycount);
+	GridSquare* gridSquare = new GridSquare(world, xcount, ycount);
+	impassableTerrain->push_back(gridSquare);
+}
+
+void GridEditor::changeTileColor(int x, int y, Ogre::MaterialPtr mat, Ogre::ColourValue color) {
+	//Ogre::MaterialPtr greenMat = gameSceneManager->getEntity("1")->getSubEntity(0)->getMaterial()->clone("BaseGreenNoLighting");
+	Ogre::Entity* entity = gameSceneManager->getEntity((*gridMap)[x][y]->entityName);
+
+
+	setSquareColor(entity, mat, color);
 }

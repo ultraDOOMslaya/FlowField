@@ -19,6 +19,22 @@ static int distanceTo(Ogre::Vector3 unit1, Ogre::Vector3 unit2) {
 	return c;
 }
 
+static int distanceTo(b2Vec2 unit1, b2Vec2 unit2) {
+	int a = unit1.x - unit2.x;
+	int b = unit1.y - unit2.y;
+
+	int c = std::sqrt(a*a + b*b);
+	return c;
+}
+
+static int dist(Ogre::Vector3 unit1, Ogre::Vector3 unit2) {
+	int a = unit1.x - unit2.x;
+	int b = unit1.z - unit2.z;
+
+	int c = std::sqrt(a*a + b*b);
+	return c;
+}
+
 static Ogre::Vector3* subtractVector(Ogre::Vector3 vec1, Ogre::Vector3 vec2) {
 	int x, y, z;
 	x = vec1.x - vec2.x;
@@ -26,6 +42,15 @@ static Ogre::Vector3* subtractVector(Ogre::Vector3 vec1, Ogre::Vector3 vec2) {
 	z = vec1.z - vec2.z;
 	Ogre::Vector3* vec3 = new Ogre::Vector3(x, y, z);
 	return vec3;
+}
+//----------------------------------------------------------------
+
+static b2Vec2 divideVector(b2Vec2 force, int radius) {
+	float32 x, y;
+	x = force.x / radius;
+	y = force.y / radius;
+	b2Vec2 quotientForce = b2Vec2::b2Vec2(x, y);
+	return quotientForce;
 }
 //----------------------------------------------------------------
 
@@ -50,6 +75,69 @@ Ogre::Vector3 SteeringBehaviour::seek(Unit* unit, Ogre::Vector3 destination) {
 	force.operator*=(unit->maxForce / unit->walkSpeed);
 
 	return force;
+}
+//----------------------------------------------------------------
+
+b2Vec2 SteeringBehaviour::seek(Unit* unit, b2Vec2 destination) {
+	//Desired change of location
+	b2Vec2 desired = destination - unit->getB2DPosition();
+
+	//unit.distance = desired.normalise();
+
+	//Desired velocity (move there at maximum speed)
+	desired.operator*=(unit->walkSpeed / desired.Length()); //TODO: maybe use squaredLength
+															//The velocity change we want
+	b2Vec2 force = desired - unit->b2Velocity;
+	//Convert to a force
+	force.operator*=(unit->maxForce / unit->walkSpeed);
+
+	return force;
+}
+//----------------------------------------------------------------
+
+b2Vec2 SteeringBehaviour::b2seperation(Unit* unit, std::map<Ogre::String, Unit*>* units, PlayerManager* activePlayer, std::vector<PlayerManager*> players) {
+	//Ogre::Vector3 totalForce = Ogre::Vector3(0, 0, 0);
+	b2Vec2 totalForce = b2Vec2::b2Vec2(0, 0);
+	int neighborsCount = 0;
+
+	for (std::map<Ogre::String, Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
+		Unit* u = it->second;
+		if (u->unitName != unit->unitName) {
+			//int distance = distanceTo(unit->getPosition(), u->getPosition());
+			int distance = distanceTo(unit->getB2DPosition(), u->getB2DPosition());
+
+			u->unitNode->getPosition();
+
+			if (distance < unit->minSeperation && distance > 0) {
+				//Ogre::Vector3 vec1 = unit->getPosition();
+				b2Vec2 vec1 = unit->getB2DPosition();
+				//vec1.operator+(vec1);
+				vec1.operator+=(vec1);
+				//Ogre::Vector3 vec2 = u->getPosition();
+				b2Vec2 vec2 = u->getB2DPosition();
+				//vec2.operator+(vec2);
+				vec2.operator+=(vec2);
+				//Ogre::Vector3* pushForce = subtractVector(unit->getPosition(), u->getPosition());
+				b2Vec2 pushForce = unit->getB2DPosition() - u->getB2DPosition();
+				//totalForce.operator+=(pushForce->operator/(unit->physicsBodyRadius));
+				totalForce = divideVector(pushForce, unit->physicsBodyRadius);
+				neighborsCount++;
+				if (PlayerUtils::determineStatus(activePlayer, players, unit) == PlayerRelationshipStatus::HOSTILE) {
+					totalForce.operator*=(8);
+				}
+			}
+		}
+	}
+
+	if (neighborsCount == 0) {
+		return totalForce;
+	}
+
+	//totalForce.operator/=(neighborsCount);
+	totalForce = divideVector(totalForce, neighborsCount);
+	totalForce.operator*=(unit->walkSpeed);
+
+	return totalForce;
 }
 //----------------------------------------------------------------
 
@@ -94,6 +182,34 @@ Ogre::Vector3 SteeringBehaviour::seperation(Unit* unit, std::map<Ogre::String, U
 }
 //----------------------------------------------------------------
 
+Ogre::Vector3 SteeringBehaviour::seperation(Unit* unit, std::map<Ogre::String, Unit*>* units) {
+	float desiredSeperation = unit->physicsBodyRadius * 2;
+	Ogre::Vector3 totalForce = Ogre::Vector3(0, 0, 0);
+	int count = 0;
+	for (std::map<Ogre::String, Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
+		Unit* u = it->second;
+		Ogre::Real dist = unit->getPosition().distance(u->getPosition());
+		
+		if ((dist > 0) && dist < unit->minSeperation) {
+			Ogre::Vector3 diff = unit->getPosition() - u->getPosition();
+			diff = diff.normalisedCopy();
+			diff /= dist;
+			totalForce += diff;
+			count++;
+		}
+	}
+
+	if (count > 0) {
+		totalForce /= count;
+		totalForce = totalForce.normalisedCopy();
+		totalForce *= unit->maxSpeed;
+		Ogre::Vector3 steer = seek(unit, totalForce);
+		return steer;
+	}
+	return totalForce;
+}
+//----------------------------------------------------------------
+
 /*
 Keeps units clumped. Can easily overpower alignment and seperation.
 */
@@ -129,14 +245,16 @@ bool SteeringBehaviour::halt(Unit* unit, std::vector<Unit*>* units) {
 	for (std::vector<Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
 		Unit* u = (*it);
 		if (u->unitName != unit->unitName) {
-			int distance = distanceTo(unit->getPosition(), u->getPosition());
+			//unit->getB2DPosition()
+			int squaredDistance = unit->getB2DPosition().LengthSquared() - unit->getB2DPosition().LengthSquared();
+			//int distance = distanceTo(unit->getPosition(), u->getPosition());
 
-			if (distance < (unit->maxCohesion / 2)) {
+			if (squaredDistance < ((unit->maxCohesion / 2) * (unit->maxCohesion / 2))) {
 				centerOfMass.operator+=(u->getPosition());
 				neighborsCount++;
 			}
 
-			if (distance < (unit->maxCohesion / 4)) {
+			if (squaredDistance < ((unit->maxCohesion / 4) * (unit->maxCohesion / 4))) {
 				if (u->unitAnimState->getAnimationName() == "Idle") {
 					unit->haltTheGroup();
 					return true;
@@ -152,7 +270,7 @@ bool SteeringBehaviour::halt(Unit* unit, std::vector<Unit*>* units) {
 	centerOfMass.operator/=(neighborsCount);
 	Ogre::Vector2 position = GridUtils::cordNumericalFinder(centerOfMass);
 	unit->debugPos1 = position;
-	Ogre::Vector2 squareDest = GridUtils::cordNumericalFinder(unit->finalDestination);
+	Ogre::Vector2 squareDest = GridUtils::b2CordNumericalFinder(unit->b2FinalDestination);
 	unit->debugPos2 = squareDest;
 	if (position == squareDest) {
 		unit->haltTheGroup();
@@ -277,4 +395,23 @@ Ogre::Vector3 SteeringBehaviour::staticObjectCollisionForceApplier(Unit* unit) {
 	}*/
 
 	return totalForce;
+}
+//----------------------------------------------------------------
+
+/*
+Find the average of the given unit queues position
+*/
+Ogre::Vector3 SteeringBehaviour::unitGroupConglomerate(std::vector<Unit*>* units) {
+	float x = 0;
+	float y = 0;
+
+	for (std::vector<Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
+		x += (*it)->getB2DPosition().x;
+		y += (*it)->getB2DPosition().y;
+	}
+
+	x /= units->size();
+	y /= units->size();
+	Ogre::Vector3 conglomerate = Ogre::Vector3(x, 0, y);
+	return conglomerate;
 }

@@ -24,12 +24,27 @@
 #include "SelectionBox.h"
 #include "GridUtils.h"
 #include "GridEditor.h"
+#include "GridSquare.h"
 #include "GenerateUnits.h"
 #include "PlayerRelationship.h"
 #include "PlayerRelationshipStatus.h"
 #include "PlayerUtils.h"
 #include "CombatBehaviour.h"
+#include "GameObjectManager.h"
 
+//Net Code
+#include "RakPeerInterface.h"
+#include "MessageIdentifiers.h"
+#include "BitStream.h"
+#include "RakNetTypes.h"  // MessageID
+
+#include "Box2D\Box2D.h"
+
+enum GameMessages
+{
+	ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM + 1,
+	ID_GAME_UNIT_VELOCITY = ID_USER_PACKET_ENUM + 2
+};
 
 class GameRunnable : public OgreBites::ApplicationContext, public OgreBites::InputListener
 {
@@ -48,8 +63,12 @@ public:
 
 	virtual void frameRendered(const Ogre::FrameEvent& evt);
 
-	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color);
+	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color, Ogre::MaterialPtr defaultMaterial);
 	virtual void createTileMap(void);
+
+	//virtual void sendPacket(Unit* unit);
+
+	#define SERVER_PORT 60000
 
 	OgreBites::TrayManager*		mTrayMgr;
 	OgreBites::TextBox*			mCordPanel;			// Coordinates displayer
@@ -85,8 +104,14 @@ public:
 	int							debugz;
 	int							pathLines;
 	Ogre::MaterialPtr			mat;
+	Ogre::MaterialPtr			mapTileMat1;
+	Ogre::MaterialPtr			mapTileMat2;
+	Ogre::MaterialPtr			greenMat;
+	Ogre::MaterialPtr			redMat;
 
+	std::vector<std::vector<GridSquare*>> gridMap;
 	std::vector<Ogre::Vector2>	impassableTerrain;
+	std::vector<GridSquare*>		impassableTerrainSquares;
 	std::vector<PlayerManager*>	players;
 	PlayerManager*				activePlayer;
 	PlayerManager				player1;
@@ -94,6 +119,14 @@ public:
 	GridEditor*					gridEditor;
 	SelectionBox*				selectBox;
 	Ogre::PlaneBoundedVolumeListSceneQuery* volQuery;
+
+	//Net Code
+	RakNet::Packet*				packet;
+	RakNet::RakPeerInterface*	peer;
+	RakNet::SocketDescriptor	sd;
+
+	//Box2d Physics
+	b2World*					mWorld;
 };
 
 #endif __GameRunnable_h_

@@ -64,6 +64,17 @@ Ogre::Vector2 GridUtils::numericalCordFinder(Ogre::Vector2 cordinates) {
 }
 //----------------------------------------------------------------
 
+b2Vec2 GridUtils::b2NumericalCordFinder(Ogre::Vector2 cordinates) {
+	int x = 0;
+	int y = 0;
+	float fedge = Constants::edgeLength * 0.7f;
+	x = _CMATH_::abs(cordinates.x * fedge) + (fedge * 0.5);
+	y = _CMATH_::abs(cordinates.y * fedge) + (fedge * 1.5);
+	b2Vec2 cords(x, y);
+	return cords;
+}
+//----------------------------------------------------------------
+
 Ogre::Vector3 GridUtils::numericalCordFinder(int x, int y) {
 	float fedge = Constants::edgeLength * 0.7f;
 	x = (x * fedge) + (fedge * 0.5);
@@ -93,6 +104,19 @@ Ogre::Vector2 GridUtils::cordNumericalFinder(Ogre::Vector3 position) {
 	x = (position.x - (fedge * 0.5) + 1) / fedge;		//+1 is a round up to help the int division math
 	z = (position.z - (fedge * 1.5) + 1) / fedge;		//otherwise end up with cases where unit movement falls short
 	Ogre::Vector2 cords(x, z);
+	return cords;
+}
+//----------------------------------------------------------------
+
+/* Converts box2D position into square cordinates
+*/
+Ogre::Vector2 GridUtils::b2CordNumericalFinder(b2Vec2 position) {
+	float x = 0;
+	float y = 0;
+	float fedge = Constants::edgeLength * 0.7f;
+	x = (position.x - (fedge * 0.5) + 1) / fedge;		//+1 is a round up to help the int division math
+	y = (position.y - (fedge * 1.5) + 1) / fedge;		//otherwise end up with cases where unit movement falls short
+	Ogre::Vector2 cords(_CMATH_::round(x), _CMATH_::round(y));
 	return cords;
 }
 //----------------------------------------------------------------
@@ -389,6 +413,24 @@ void GridUtils::getAllNeighbors(Ogre::Vector2 point, std::queue<SquareNeighbor*>
 
 		squareNeighbors->push(squareNeighbor);
 		neighbors.pop();
+	}
+}
+//----------------------------------------------------------------
+
+void GridUtils::getBasicFormationLocations(int width, int height, int unitCount, std::queue<Ogre::Vector2*>* formationLocations, std::vector<std::vector<int>> dijkastraGrid) {
+	int groupSize = 1;
+	int iterations = 0;
+	while (groupSize < unitCount) {
+		groupSize = groupSize + 2;
+		groupSize = groupSize * groupSize;
+		iterations++;
+	}
+
+	for (int x = (iterations * -1); x <= iterations; x++) {
+		for (int y = (iterations * -1); y <= iterations; y++) {
+			Ogre::Vector2* formationLocation = new Ogre::Vector2((width+x), (height+y));
+			formationLocations->push(formationLocation);
+		}
 	}
 }
 //----------------------------------------------------------------

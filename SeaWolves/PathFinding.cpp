@@ -1,7 +1,7 @@
 #include "PathFinding.h"
 
 
-PathFinding::PathFinding(Ogre::Vector2 squareIndex, std::vector<Ogre::Vector2>* impassableTerrain, Ogre::SceneManager* mScnMgr)
+PathFinding::PathFinding(Ogre::Vector2 squareIndex, std::vector<GridSquare*>* impassableTerrain, Ogre::SceneManager* mScnMgr)
 	: dijkastraGrid(Constants::dimension, std::vector<int>(Constants::dimension, NULL)),
 	flowField(Constants::dimension),
 	losGrid(Constants::dimension, std::vector<bool>(Constants::dimension, false)),
@@ -87,7 +87,7 @@ bool PathFinding::isValid(int x, int y) {
 }
 //----------------------------------------------------------------
 
-void PathFinding::generateDijkastraGrid(Ogre::Vector2 point, std::vector<Ogre::Vector2>* impassableTerrain) {
+void PathFinding::generateDijkastraGrid(Ogre::Vector2 point, std::vector<GridSquare*>* impassableTerrain) {
 
 	//dijkastraGrid2d(11, std::vector<int>(11)) = new std::vector<std::vector<int>>(CONSTANTS->dimension, std::vector<int> (CONSTANTS->dimension, NULL));
 
@@ -101,8 +101,8 @@ void PathFinding::generateDijkastraGrid(Ogre::Vector2 point, std::vector<Ogre::V
 	}
 
 	//Set impassable terrain
-	for (std::vector<Ogre::Vector2>::iterator terrain = impassableTerrain->begin(); terrain != impassableTerrain->end(); ++terrain) {
-		dijkastraGrid[terrain->x][terrain->y] = Constants::WALL;
+	for (std::vector<GridSquare*>::iterator terrain = impassableTerrain->begin(); terrain != impassableTerrain->end(); ++terrain) {
+		dijkastraGrid[(*terrain)->x][(*terrain)->y] = Constants::WALL;
 	}
 
 	//Set point of origin to 0
@@ -169,10 +169,9 @@ void PathFinding::generateFlowField() {
 		for (int y = 0; y < Constants::dimension; y++) {
 
 			//obstacles have no flow value
-			//TODO
-			/*if (flowField[x][y] == std::numeric_limits<int>::max()) {
-			continue;
-			}*/
+			if (dijkastraGrid[x][y] == Constants::WALL) {
+				continue;
+			}
 
 			//TODO read on resource acquisition is initilization
 			//std::auto_ptr<Ogre::Vector2> pos(new Ogre::Vector2(x, y));
@@ -207,6 +206,12 @@ void PathFinding::generateFlowField() {
 		}
 	}
 	flowFieldLock = true;
+}
+//----------------------------------------------------------------
+
+void PathFinding::alterDijkastraGrid(int x, int y, int value) {
+	dijkastraGrid[x][y] = dijkastraGrid[x][y] + value;
+	generateFlowField();
 }
 //----------------------------------------------------------------
 
@@ -294,3 +299,130 @@ void PathFinding::showFlow(Ogre::SceneManager* mScnMgr) {
 	
 }
 //----------------------------------------------------------------
+
+void PathFinding::assignUnitFormationLocations(int width, int height, int numUnits, Ogre::Vector3 conglomerate) {
+	//GridUtils::getBasicFormationLocations(x, y, numUnits, &formationLocations, dijkastraGrid);
+	int rowSize = 1;
+	int groupSize = 1;
+	int iterations = 0;
+	while (groupSize < numUnits) {
+		rowSize = rowSize + 2;
+		groupSize = rowSize * rowSize;
+		iterations++;
+	}
+
+
+	
+	Ogre::Radian angle = conglomerate.angleBetween(GridUtils::numericalCordFinder(Ogre::Vector3(width, 0, height)));
+	Ogre::Real degree = angle.valueDegrees();
+	std::map<int, Ogre::Vector2*> distanceLocations;
+
+	/*for (int x = (iterations * -1); x <= iterations; x++) {
+		for (int y = (iterations * -1); y <= iterations; y++) {
+			Ogre::Vector2* formationLocation = new Ogre::Vector2((width + x), (height + y));
+			//formationLocations.push_back(formationLocation);
+			int distance = GridUtils::distanceTo(GridUtils::numericalCordFinder(formationLocation->x, formationLocation->y), conglomerate);
+			distanceLocations.insert(std::pair<int, Ogre::Vector2*>(distance, formationLocation));
+			mappedFormation.insert(std::pair<int, int>(x, y));
+		}
+	}*/
+	/*
+	//TODO: Or just use a stack instead of a queue
+	for (std::map<int, Ogre::Vector2*>::reverse_iterator riter = distanceLocations.rbegin(); riter != distanceLocations.rend(); riter++) {
+	//for (std::map<int, Ogre::Vector2*>::iterator iter = distanceLocations.begin(); iter != distanceLocations.end(); iter++) {
+		formationLocations.push_back(riter->second);
+	}*/
+
+	bool boxFormation = false;
+	if ((degree < 31.0f) || (degree > 60.0f)) {
+		boxFormation = true;
+	}
+	if ((degree < 31.0f) || (degree > 60.0f)) {
+		Ogre::Vector3 pointToMoveTo = GridUtils::numericalCordFinder(Ogre::Vector3(width, 0, height));
+		int xOffset = 2;
+		int yOffset = 2;
+		int offset = 2;
+		bool leftRight = false;
+		bool topDown = false;
+		if (pointToMoveTo.x < conglomerate.x) {
+			xOffset = -2;
+		}
+		if (pointToMoveTo.z < conglomerate.z) {
+			yOffset = -2;
+		}
+
+		if (std::abs(pointToMoveTo.x - conglomerate.x) < std::abs(pointToMoveTo.z - conglomerate.z)) {
+			xOffset = 0;
+			topDown = true;
+		}
+		else {
+			yOffset = 0;
+			leftRight = true;
+		}
+
+		int startingOffset = rowSize * 0.5; //Works as intended
+		int pointToMoveToOffsetX = width + (startingOffset * xOffset);
+		int pointToMoveToOffsetY = height + (startingOffset * yOffset);
+
+		for (int a = 1; a <= rowSize; a++) {
+			for (int b = 0; b <= iterations; b++) {
+				if (b == 0) {
+					formationLocations.push_back(new Ogre::Vector2(pointToMoveToOffsetX, pointToMoveToOffsetY));
+					mappedFormation.insert(std::pair<int, Ogre::Vector2>(a, Ogre::Vector2(pointToMoveToOffsetX, pointToMoveToOffsetY)));
+				}
+				else if (topDown){
+					formationLocations.push_back(new Ogre::Vector2((pointToMoveToOffsetX + offset), pointToMoveToOffsetY));
+					formationLocations.push_back(new Ogre::Vector2((pointToMoveToOffsetX - offset), pointToMoveToOffsetY));
+
+					mappedFormation.insert(std::pair<int, Ogre::Vector2>(a, Ogre::Vector2((pointToMoveToOffsetX + offset), pointToMoveToOffsetY)));
+					mappedFormation.insert(std::pair<int, Ogre::Vector2>(a, Ogre::Vector2((pointToMoveToOffsetX - offset), pointToMoveToOffsetY)));
+				}
+				else if (leftRight) {
+					formationLocations.push_back(new Ogre::Vector2(pointToMoveToOffsetX, (pointToMoveToOffsetY - offset)));
+					formationLocations.push_back(new Ogre::Vector2(pointToMoveToOffsetX, (pointToMoveToOffsetY + offset)));
+
+					mappedFormation.insert(std::pair<int, Ogre::Vector2>(a, Ogre::Vector2(pointToMoveToOffsetX, (pointToMoveToOffsetY - offset))));
+					mappedFormation.insert(std::pair<int, Ogre::Vector2>(a, Ogre::Vector2(pointToMoveToOffsetX, (pointToMoveToOffsetY + offset))));
+				}
+			}
+			pointToMoveToOffsetX -= xOffset;
+			pointToMoveToOffsetY -= yOffset;
+		}
+	}
+	else {
+		Ogre::Vector3 pointToMoveTo = GridUtils::numericalCordFinder(Ogre::Vector3(width, 0, height));
+		int xOffset = -1;
+		int yOffset = -1;
+		if ((pointToMoveTo.x - conglomerate.x) > 0) {
+			xOffset = 1;
+		}
+		if ((pointToMoveTo.z - conglomerate.z) > 0) {
+			yOffset = 1;
+		}
+
+		int startingOffset = rowSize * 0.5; //Works as intended
+		int pointToMoveToOffsetX = width + (startingOffset * xOffset);
+		int pointToMoveToOffsetY = height + (startingOffset * yOffset);
+
+		for (int a = 1; a <= rowSize; a++) {
+			for (int b = 0; b <= iterations; b++) {
+				if (b == 0) {
+					formationLocations.push_back(new Ogre::Vector2(pointToMoveToOffsetX, pointToMoveToOffsetY));
+					mappedFormation.insert(std::pair<int, Ogre::Vector2>(a, Ogre::Vector2(pointToMoveToOffsetX, pointToMoveToOffsetY)));
+				}
+				else {
+					formationLocations.push_back(new Ogre::Vector2((pointToMoveToOffsetX + (iterations * xOffset)), (pointToMoveToOffsetY - (iterations * yOffset))));
+					formationLocations.push_back(new Ogre::Vector2((pointToMoveToOffsetX - (iterations * xOffset)), (pointToMoveToOffsetY + (iterations * yOffset))));
+
+					mappedFormation.insert(std::pair<int, Ogre::Vector2>(a, Ogre::Vector2((pointToMoveToOffsetX + (iterations * xOffset)), (pointToMoveToOffsetY - (iterations * yOffset)))));
+					mappedFormation.insert(std::pair<int, Ogre::Vector2>(a, Ogre::Vector2((pointToMoveToOffsetX - (iterations * xOffset)), (pointToMoveToOffsetY + (iterations * yOffset)))));
+				}
+			}
+			pointToMoveToOffsetX -= xOffset;
+			pointToMoveToOffsetY -= yOffset;
+		}
+	}
+}
+//----------------------------------------------------------------
+
+
