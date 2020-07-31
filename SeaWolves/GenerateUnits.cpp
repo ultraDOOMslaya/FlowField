@@ -89,6 +89,10 @@ void GenerateUnits::generateEightBronze(Ogre::SceneManager* mScnMgr, std::map<Og
 	unitNumber++;
 	Ogre::String unit8 = "UnitNode" + Ogre::StringConverter::toString(unitNumber);
 	unitNumber++;
+	/*Ogre::String unit9 = "UnitNode" + Ogre::StringConverter::toString(unitNumber);
+	unitNumber++;*/
+	/*Ogre::String unit10 = "UnitNode" + Ogre::StringConverter::toString(unitNumber);
+	unitNumber++;*/
 
 	unit = new Unit(mScnMgr, GridUtils::numericalCordFinder(0, 1), unit2, soldierBronze, "HeavyArmor", 2, world);
 	unit->currentPos = Ogre::Vector2(0, 1);
@@ -111,7 +115,7 @@ void GenerateUnits::generateEightBronze(Ogre::SceneManager* mScnMgr, std::map<Og
 	units->insert(std::make_pair(unit6, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit6, unit));
 	unit = new Unit(mScnMgr, GridUtils::numericalCordFinder(0, 3), unit7, archerBronze, "LightArmor", 7, world);
-	unit->currentPos = Ogre::Vector2(1, 3);
+	unit->currentPos = Ogre::Vector2(0, 3);
 	units->insert(std::make_pair(unit7, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit7, unit));
 	unit = new Unit(mScnMgr, GridUtils::numericalCordFinder(1, 3), unit8, wizardBronze, "LightArmor", 8, world);
@@ -122,6 +126,14 @@ void GenerateUnits::generateEightBronze(Ogre::SceneManager* mScnMgr, std::map<Og
 	unit->currentPos = Ogre::Vector2(0, 4);
 	units->insert(std::make_pair(unit1, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit1, unit));
+	/*unit = new Unit(mScnMgr, GridUtils::numericalCordFinder(1, 5), unit9, soldierBronze, "HeavyArmor", 9, world);
+	unit->currentPos = Ogre::Vector2(1, 5);
+	units->insert(std::make_pair(unit9, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit9, unit));*/
+	/*unit = new Unit(mScnMgr, GridUtils::numericalCordFinder(1, 6), unit10, soldierBronze, "HeavyArmor", 10, world);
+	unit->currentPos = Ogre::Vector2(1, 6);
+	units->insert(std::make_pair(unit10, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit10, unit));*/
 }
 
 void GenerateUnits::generateOneSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world) {

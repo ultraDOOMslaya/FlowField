@@ -358,7 +358,7 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 				prevPath->formationLocations.clear();
 			}
 		}
-		gom->assignUnitToFormationLocation(SquareIndex.x, SquareIndex.y, activePlayer->unitQueue, path);
+		gom->fullLocationFormation(SquareIndex.x, SquareIndex.y, activePlayer->unitQueue, path);
 
 		int finalCordListPos = 0;
 		// TODO refactor to allow an active player and unit movement for multiple players
@@ -424,12 +424,12 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 		int armoredUnitCount = 0;
 		Constants constants;
 		//Find amount of armored units
-		for (std::vector<Unit*>::iterator unit = activePlayer->unitQueue.begin(); unit != activePlayer->unitQueue.end(); ++unit) {
+		/*for (std::vector<Unit*>::iterator unit = activePlayer->unitQueue.begin(); unit != activePlayer->unitQueue.end(); ++unit) {
 			if ((*unit)->mUnitClass == constants.heavyArmor) {
 				armoredUnitCount++;
 				std::rotate(activePlayer->unitQueue.begin(), unit, unit + 1);
 			}
-		}
+		}*/
 
 		/* --- Moving final destination code to the GameObjectManager ---
 		//Place units in formation due to their pecking order and closest distance to position being evaluated.
@@ -828,8 +828,9 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 
 		if (unit->b2Destination != b2Vec2_zero) {
 
-			if ((unit->mUnitClass != "HeavyArmor" && !unit->clearToMove()) || unit->groupHasLos()) {
+			//if ((unit->mUnitClass != "HeavyArmor" && !unit->clearToMove()) || unit->groupHasLos()) {
 			//if (unit->mUnitClass != "HeavyArmor" && !unit->clearToMove()) {
+			if (unit->groupHasLos()) {
 				unit->b2Velocity(0.0f);
 				unit->mBody->SetLinearVelocity(b2Vec2_zero);
 			}
