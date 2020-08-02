@@ -32,6 +32,9 @@
 #include "CombatBehaviour.h"
 #include "GameObjectManager.h"
 
+//Manager Singletons
+#include "PlayerInputManager.h"
+
 //Net Code
 #include "RakPeerInterface.h"
 #include "MessageIdentifiers.h"
@@ -57,7 +60,7 @@ public:
 	virtual bool mouseMoved(const OgreBites::MouseMotionEvent &evt);
 	virtual bool mousePressed(const OgreBites::MouseButtonEvent &evt);
 	virtual bool mouseReleased(const OgreBites::MouseButtonEvent &evt);
-	virtual void performSelection(const Ogre::Vector2& first, const Ogre::Vector2& second);
+	//virtual void performSelection(const Ogre::Vector2& first, const Ogre::Vector2& second);
 	virtual void getAllNeighbors(Unit unit);
 	virtual void changeSquareColor(int num);
 
@@ -119,6 +122,10 @@ public:
 	GridEditor*					gridEditor;
 	SelectionBox*				selectBox;
 	Ogre::PlaneBoundedVolumeListSceneQuery* volQuery;
+
+	//Manager Singletons
+	GameObjectManager*			gom;
+	PlayerInputManager*			pim;
 
 	//Net Code
 	RakNet::Packet*				packet;

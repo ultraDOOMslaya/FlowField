@@ -323,6 +323,7 @@
     <ClInclude Include="GridSquare.h" />
     <ClInclude Include="GridUtils.h" />
     <ClInclude Include="PathFinding.h" />
+    <ClInclude Include="PlayerInputManager.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayerRelationship.h" />
     <ClInclude Include="PlayerRelationshipStatus.h" />
@@ -454,6 +455,7 @@
     <ClCompile Include="GridSquare.cpp" />
     <ClCompile Include="GridUtils.cpp" />
     <ClCompile Include="PathFinding.cpp" />
+    <ClCompile Include="PlayerInputManager.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="PlayerRelationship.cpp" />
     <ClCompile Include="PlayerRelationshipStatus.cpp" />

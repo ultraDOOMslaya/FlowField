@@ -193,14 +193,6 @@ bool GameRunnable::keyPressed(const OgreBites::KeyboardEvent& evt)
 }
 //----------------------------------------------------------------
 
-void swap(float& x, float& y)
-{
-	float temp = x;
-	x = y;
-	y = temp;
-}
-//----------------------------------------------------------------
-
 bool GameRunnable::mouseMoved(const OgreBites::MouseMotionEvent &evt)
 {
 	//mTrayMgr->refreshCursor();
@@ -271,7 +263,8 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			}
 		}
 		else {
-			performSelection(selectBox->mStart, selectBox->mStop);
+			pim->performSelection(selectBox->mStart, selectBox->mStop, activePlayer, gridMap);
+			//performSelection(selectBox->mStart, selectBox->mStop);
 		}
 		selectBox->selecting = false;
 		selectBox->setVisible(false);
@@ -344,9 +337,6 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 			path->showFlow(mScnMgr);
 		}
 
-		GameObjectManager* gom = new GameObjectManager();
-
-		
 
 		//TODO make this DRY
 		if (activePlayer->unitQueue.size() > 0) {
@@ -358,7 +348,7 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 				prevPath->formationLocations.clear();
 			}
 		}
-		gom->fullLocationFormation(SquareIndex.x, SquareIndex.y, activePlayer->unitQueue, path);
+		gom->proximityLocationFormation(SquareIndex.x, SquareIndex.y, activePlayer->unitQueue, path);
 
 		int finalCordListPos = 0;
 		// TODO refactor to allow an active player and unit movement for multiple players
@@ -511,82 +501,6 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 }*/
 //----------------------------------------------------------------
 
-void GameRunnable::performSelection(
-	const Ogre::Vector2& first,
-	const Ogre::Vector2& second)
-{
-	float left = first.x, right = second.x;
-	float top = first.y, bottom = second.y;
-
-	if (left > right)
-		swap(left, right);
-
-	if (top > bottom)
-		swap(top, bottom);
-
-	if ((right - left) * (bottom - top) < 0.0001)
-		return;
-
-	Ogre::Ray topLeft = mCam->getCameraToViewportRay(left, top);
-	Ogre::Ray topRight = mCam->getCameraToViewportRay(right, top);
-	Ogre::Ray bottomLeft = mCam->getCameraToViewportRay(left, bottom);
-	Ogre::Ray bottomRight = mCam->getCameraToViewportRay(right, bottom);
-
-	Ogre::Plane frontPlane, topPlane, leftPlane, bottomPlane, rightPlane;
-
-	frontPlane = Ogre::Plane(
-		topLeft.getOrigin(),
-		topRight.getOrigin(),
-		bottomRight.getOrigin());
-
-	topPlane = Ogre::Plane(
-		topLeft.getOrigin(),
-		topLeft.getPoint(10),
-		topRight.getPoint(10));
-
-	leftPlane = Ogre::Plane(
-		topLeft.getOrigin(),
-		bottomLeft.getPoint(10),
-		topLeft.getPoint(10));
-
-	bottomPlane = Ogre::Plane(
-		bottomLeft.getOrigin(),
-		bottomRight.getPoint(10),
-		bottomLeft.getPoint(10));
-
-	rightPlane = Ogre::Plane(
-		topRight.getOrigin(),
-		topRight.getPoint(10),
-		bottomRight.getPoint(10));
-
-	Ogre::PlaneBoundedVolume vol;
-
-	vol.planes.push_back(frontPlane);
-	vol.planes.push_back(topPlane);
-	vol.planes.push_back(leftPlane);
-	vol.planes.push_back(bottomPlane);
-	vol.planes.push_back(rightPlane);
-
-	Ogre::PlaneBoundedVolumeList volList;
-	volList.push_back(vol);
-
-	volQuery->setVolumes(volList);
-	Ogre::SceneQueryResult& result = volQuery->execute();
-
-	//activePlayer->focusUnits(result, &units);
-	//TODO make this DRY
-	if (activePlayer->unitQueue.size() > 0) {
-		PathFinding* path = activePlayer->unitQueue.front()->path;
-		for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
-			gridMap[(*it)->x][(*it)->y]->defaultColor(mScnMgr);
-		}
-		path->formationLocations.clear();
-	}
-	activePlayer->focusUnits(result);
-
-}
-//----------------------------------------------------------------
-
 void GameRunnable::setup(void)
 {
 	// do not forget to call the base first
@@ -636,7 +550,6 @@ void GameRunnable::setup(void)
 	players.push_back(&player1);
 	players.push_back(&player2);
 
-	
 	//gridMap = new std::vector<std::vector<GridSquare*>>();
 	createTileMap();
 
@@ -680,6 +593,10 @@ void GameRunnable::setup(void)
 	int32 positionIterations = 8;
 
 	/* END TESTING ZONE */
+
+	/** Initialize Singletons **/
+	pim = new PlayerInputManager(mCam, volQuery, mScnMgr);
+	gom = new GameObjectManager();
 }
 //----------------------------------------------------------------
 

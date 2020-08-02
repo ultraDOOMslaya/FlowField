@@ -300,6 +300,8 @@ void PathFinding::showFlow(Ogre::SceneManager* mScnMgr) {
 }
 //----------------------------------------------------------------
 
+/** Find location formation coords for a given number of units based on a width and height coord. **/
+//TODO: Now that we have code to actually assign a unit its final coords, rework this so it can handle more than 9 locations
 void PathFinding::assignUnitFormationLocations(int width, int height, int numUnits, Ogre::Vector3 conglomerate) {
 	//GridUtils::getBasicFormationLocations(x, y, numUnits, &formationLocations, dijkastraGrid);
 	int rowSize = 1;

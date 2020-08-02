@@ -67,49 +67,11 @@ static void permutations(std::vector<Unit*>* items, std::stack<Unit*>* permutati
 		permutation->pop();
 
 	}
-	/*do {
-
-		for (std::vector<std::vector<Unit*>*>::iterator unitPermutation = unitCombinations->begin(); unitPermutation != unitCombinations->end(); ++unitPermutation) {
-
-			std::vector<PotentialUnitLocation*>* unitFormation = new std::vector<PotentialUnitLocation*>();
-			std::vector<Ogre::Vector2>::iterator position = rowLocations.begin();
-			int maxDistance = 0;
-			int minDistance = 0;
-			int totalProximity = 0;
-			for (std::vector<Unit*>::iterator unitsInPermutation = (*unitPermutation)->begin(); unitsInPermutation != (*unitPermutation)->end(); ++unitsInPermutation) {
-				int proximity_x = std::pow(((*unitsInPermutation)->currentPos.x - position->x), 2);
-				int proximity_y = std::pow(((*unitsInPermutation)->currentPos.y - position->y), 2);
-
-				int proximity = proximity_x + proximity_y;
-
-				PotentialUnitLocation * unitLocation = new PotentialUnitLocation();
-				unitLocation->unit = (*unitsInPermutation);
-				unitLocation->potentialLocation = (*position);
-				unitLocation->distance = proximity;
-
-				unitFormation->push_back(unitLocation);
-				totalProximity += proximity;
-
-				position++;
-			}
-			unitLocMaps.insert(std::pair<int, std::vector<PotentialUnitLocation*>*>(totalProximity, unitFormation));
-
-		}
-
-	} while (std::next_permutation(items, items + size));*/
-
 }
-
-//Todo make this private
-//void GameObjectManager::insertNewRowPriorityMap(std::vector<std::vector<std::multimap<int, PotentialUnitLocation*>>>* rowPermutationPriorityQueue) {
-//	std::vector<std::multimap<int, PotentialUnitLocation*>> rowPriorityMap;
-//	rowPermutationPriorityQueue->push_back(rowPriorityMap);
-//}
 
 /** by row impl. Efficient but not as good as the shotgun approach **/
 void GameObjectManager::priorityQueueFormation(int width, int height, std::vector<Unit*> units, PathFinding* path) {
 	int rowSize = 4;
-	int groupSize = 1;
 	int iterations = (units.size() + (rowSize - 1)) / rowSize;
 	int totalUnits = units.size();
 	int allUnitsAssigned = 0;
@@ -233,12 +195,11 @@ void GameObjectManager::priorityQueueFormation(int width, int height, std::vecto
 
 }
 
+/** Assign locations by row. The is the impl we are using. best compromise between accuracy and performance. **/
 void GameObjectManager::proximityLocationFormation(int width, int height, std::vector<Unit*> units, PathFinding* path) {
-	int rowSize = 3;
-	int groupSize = 1;
-	int iterations = (units.size() + (rowSize - 1)) / rowSize;
 	int totalUnits = units.size();
-	int allUnitsAssigned = 0;
+	int rowSize = ceil(std::sqrt(totalUnits));
+	int groupSize = 1;	
 
 	int totalProximity = 0;
 	std::multimap<int, Unit*> unitProximityOrder = std::multimap<int, Unit*>();
