@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommand>\\Mac\Home\Desktop\OgreSDK11\bin\$(ProjectName).exe</LocalDebuggerCommand>
-    <LocalDebuggerWorkingDirectory>\\Mac\Home\Desktop\OgreSDK11\bin</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerCommand>C:\Users\Ben\Desktop\Ogre_workspace\Ogre-1.11.6-SDK\bin\debug\$(ProjectName).exe</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>C:\Users\Ben\Desktop\Ogre_workspace\Ogre-1.11.6-SDK\bin\debug</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommand>\\Mac\Home\Desktop\OgreSDK11\bin\$(ProjectName).exe</LocalDebuggerCommand>
-    <LocalDebuggerWorkingDirectory>\\Mac\Home\Desktop\OgreSDK11\bin</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerCommand>$(OGRE_HOME)\bin\$(ProjectName).exe</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>$(OGRE_HOME)\bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>
