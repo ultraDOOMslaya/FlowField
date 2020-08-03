@@ -25,6 +25,7 @@ public:
 	virtual void haltTheGroup();
 	virtual bool clearToMove();
 	virtual bool groupHasLos();
+	virtual bool assignedPathLosDiscovered();
 	virtual void halt();
 	virtual bool attackingTarget();
 	virtual bool isHunting();

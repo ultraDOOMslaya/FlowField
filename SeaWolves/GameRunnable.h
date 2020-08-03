@@ -60,16 +60,12 @@ public:
 	virtual bool mouseMoved(const OgreBites::MouseMotionEvent &evt);
 	virtual bool mousePressed(const OgreBites::MouseButtonEvent &evt);
 	virtual bool mouseReleased(const OgreBites::MouseButtonEvent &evt);
-	//virtual void performSelection(const Ogre::Vector2& first, const Ogre::Vector2& second);
-	virtual void getAllNeighbors(Unit unit);
 	virtual void changeSquareColor(int num);
 
 	virtual void frameRendered(const Ogre::FrameEvent& evt);
 
 	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color, Ogre::MaterialPtr defaultMaterial);
 	virtual void createTileMap(void);
-
-	//virtual void sendPacket(Unit* unit);
 
 	#define SERVER_PORT 60000
 

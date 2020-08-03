@@ -348,7 +348,7 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 				prevPath->formationLocations.clear();
 			}
 		}
-		gom->proximityLocationFormation(SquareIndex.x, SquareIndex.y, activePlayer->unitQueue, path);
+		//gom->proximityLocationFormation(SquareIndex.x, SquareIndex.y, activePlayer->unitQueue, path);
 
 		int finalCordListPos = 0;
 		// TODO refactor to allow an active player and unit movement for multiple players
@@ -421,9 +421,10 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 			}
 		}*/
 
-		/* --- Moving final destination code to the GameObjectManager ---
+		// --- Moving final destination code to the GameObjectManager ---
 		//Place units in formation due to their pecking order and closest distance to position being evaluated.
 		for (std::vector<Unit*>::iterator unit = activePlayer->unitQueue.begin(); unit != activePlayer->unitQueue.end(); ++unit) {
+			/*
 			std::multimap<int, Ogre::Vector2>::iterator position = path->mappedFormation.begin();
 			int rowColumnKey = position->first;
 			float shortestDistance = 0.0;
@@ -444,13 +445,12 @@ bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 			(*unit)->debugPos1 = shortestDestinationCord;
 			b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder(shortestDestinationCord);
 			/** End Experimental Code **/
-		/*
-			//b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder(SquareIndex);
-			//Ogre::Vector3* finalCord = new Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
+		
+			b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder(SquareIndex);
+			Ogre::Vector3* finalCord = new Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
 			(*unit)->b2FinalDestination = finalPosition;
 			(*unit)->finalDestination = Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
 		}
-		*/
 
 		/* Reset state player state */
 		activePlayer->queuedAttackMove = false;
@@ -680,13 +680,17 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			Ogre::Vector2 b4Position = GridUtils::cordNumericalFinder(unit->getPosition());
 			unit->debugB2Pos1 = unit->getB2DPosition();
 			//Ogre::Vector2 position = GridUtils::cordNumericalFinder(unit->getPosition()); // Temporary to see if this works over the next line.
-			Ogre::Vector2 position = GridUtils::b2CordNumericalFinder(unit->getB2DPosition()); //<------ On a second click y value ends up being -6000 or something
+			Ogre::Vector2 position = GridUtils::b2CordNumericalFinder(unit->getB2DPosition());
 			if (position != unit->currentPos) {
 				unit->currentPos = position;
 			}
 
+			/** If the group has LOS, assign the most final destination **/
+			if (unit->assignedPathLosDiscovered()) {
+				gom->proximityLocationFormation(unit->path->origin.x, unit->path->origin.y, activePlayer->unitQueue, unit->path);
+			}
+
 			b2Vec2 cords;
-			//Ogre::Vector3 cords = Ogre::Vector3::ZERO;
 			if (unit->hasLos()) {
 				cords = unit->b2FinalDestination;
 			}
@@ -704,25 +708,8 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			unit->debugPos2 = Ogre::Vector2(cords.x, cords.y);
 
 			b2Vec2 seek = SteeringBehaviour::seek(unit, cords);
-			//b2Vec2 seperation = SteeringBehaviour::b2seperation(unit, &units, activePlayer, players);
-			//seperation.operator*=(3);
-			//Ogre::Vector3 seperation = SteeringBehaviour::seperation(unit, &units, activePlayer, players);
-			
-
-			/* Physics applied to groups */
-			//Ogre::Vector3 cohesion = SteeringBehaviour::cohesion(unit, unit->group);
-			//Ogre::Vector3 alignment = SteeringBehaviour::alignment(unit, unit->group);
-			//Ogre::Vector3 collision = SteeringBehaviour::staticObjectCollisionForceApplier(unit);
-			//collision.operator*=(2);
-
-			//unit->forceToApply = seek.operator*=(0.75).operator+=(seperation.operator*=(15)).operator+=(cohesion.operator*=(0.5)).operator+=(alignment.operator/=(3)).operator+=(collision.operator*=(3));
-			//unit->forceToApply = seek.operator+=(seperation.operator*=(10)).operator+=(cohesion.operator*=(0.1)).operator+=(alignment).operator+=(collision);
-			//unit->forceToApply = seek.operator+=(seperation.operator*=(10)).operator+=(cohesion.operator*=(0.1)).operator+=(alignment);
-			//unit->forceToApply = seek.operator*=(6).operator+=(seperation.operator*=(30)).operator+=(cohesion.operator*=(0.1)).operator+=(alignment.operator*=(2)).operator+=(collision.operator*=(2));
 			unit->b2ForceToApply = seek;
-			
-			//Ogre::Vector3 collision = staticObjectCollisionForceApplier(unit);
-			//SteeringBehaviour::halt(unit, unit->group); //expr
+
 
 			//TODO put this somewhere... do it as soon as you see this!
 			if (unit->hasArrived()) {
@@ -737,7 +724,6 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 
 		if (unit->nextLocation()) {
 			unit->animate("Walk");
-			//unit->velocity = unit->direction;
 			unit->b2Velocity = unit->b2Direction;
 			unit->mBody->SetType(b2_dynamicBody);
 		}
@@ -745,185 +731,42 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 
 		if (unit->b2Destination != b2Vec2_zero) {
 
-			//if ((unit->mUnitClass != "HeavyArmor" && !unit->clearToMove()) || unit->groupHasLos()) {
-			//if (unit->mUnitClass != "HeavyArmor" && !unit->clearToMove()) {
-			if (unit->groupHasLos()) {
-				unit->b2Velocity(0.0f);
-				unit->mBody->SetLinearVelocity(b2Vec2_zero);
+			unit->b2ForceToApply.operator*=(evt.timeSinceLastFrame);								//Real Time
+			//unit->b2ForceToApply.operator*=(0.0166666);
+			unit->b2Velocity.operator+=(unit->b2ForceToApply);
+
+			float speed = unit->b2Velocity.Length();
+			if (speed > unit->maxSpeed) {
+				unit->b2Velocity.operator*=(unit->maxSpeed / speed);
 			}
-			else {
-				//unit->velocity.operator+=(unit->forceToApply.operator*=(evt.timeSinceLastFrame));		//Delta Time
-				//unit->b2ForceToApply.operator*=(evt.timeSinceLastFrame);								//Real Time
-				unit->b2ForceToApply.operator*=(0.0166666);
-				unit->b2Velocity.operator+=(unit->b2ForceToApply);
-				//unit->velocity.operator+=(unit->forceToApply.operator*=(0.0166666));					//Mocked Delta Time
-				//unit->velocity.operator+=(unit->forceToApply.operator*=(0.00166666));					//Mocked Delta Time
-				float speed = unit->b2Velocity.Length();
-				if (speed > unit->maxSpeed) {
-					unit->b2Velocity.operator*=(unit->maxSpeed / speed);
-				}
-			}// clearPoint logic
 
 			unit->rotate(unit->b2Velocity);
 
-			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.0166666));
-			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.00166666));			
-			Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.00166666));			//Mocked Delta Time
-			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(evt.timeSinceLastFrame));		//Real Time
-			//unit->commandMove(newPos);
+			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.0166666));			//Mocked Delta Time
+			Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(evt.timeSinceLastFrame));		//Real Time
 
 			unit->mBody->SetLinearVelocity(unit->b2Velocity);
 			Ogre::Vector3 moveGraphic = Ogre::Vector3(unit->getB2DPosition().x, 0, unit->getB2DPosition().y);
+			unit->debugPos2 = Ogre::Vector2(moveGraphic.x, moveGraphic.z);
 			unit->commandMove(moveGraphic);
 
-			//unit->mBody->SetLinearVelocity(b2Vec2(newPos.x, newPos.z));
-			//unit->mBody->SetAngularVelocity(unit->velocity.length());
 		}
 		else {
+			/** Code responsible for stopping unit movement **/
+			//TODO Consider throwing this in a method
 			unit->b2Velocity(0.0f);
 			unit->mBody->SetLinearVelocity(b2Vec2_zero);
 			unit->mBody->SetType(b2_staticBody);
 		}
-
-		// I'm not sure what this code is doing... Commenting it out doesn't seem to break anything
-		//Ogre::Vector3 moveGraphic = Ogre::Vector3(unit->getB2DPosition().x, 0, unit->getB2DPosition().y);
-		//unit->commandMove(moveGraphic);
 		
 		/** Advance Unit Animations **/
+		//unit->unitAnimState->addTime(0.0166666);
 		unit->unitAnimState->addTime(evt.timeSinceLastEvent);
 	}
 	
-	/*
-	Ogre::AnimationState* tempState;
-	for (std::map<Ogre::String, Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-		Unit* unit = it->second;
-	
-		if (unit->nextLocation()) {
-			unit->animate("Walk");
-			unit->velocity = unit->direction;
-		}
-		if (unit->destination != Ogre::Vector3::ZERO) {
-			Ogre::Real x, z;
-			x = unit->mBody->GetPosition().x;
-			z = unit->mBody->GetPosition().y;
-			Ogre::Vector3 correctPos = Ogre::Vector3(x, 0, z);
-			unit->unitNode->setPosition(correctPos);
-			if (unit->isSelected) {
-				unit->selectionCircle->move(correctPos);
-			}
-
-			unit->velocity.operator+=(unit->forceToApply.operator*=(evt.timeSinceLastFrame));		//Delta Time
-			//unit->velocity.operator+=(unit->forceToApply.operator*=(0.0166666));					//Mocked Delta Time
-			//unit->velocity.operator+=(unit->forceToApply.operator*=(0.00166666));					//Mocked Delta Time
-			float speed = unit->velocity.length();
-			if (speed > unit->maxSpeed) {
-				unit->velocity.operator*=(unit->maxSpeed / speed);
-			}
-
-			unit->rotate(unit->velocity);
-
-			
-			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.0166666));
-			//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.00166666));
-			Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(evt.timeSinceLastFrame));
-			unit->commandMove(newPos);
-		}
-		unit->unitAnimState->addTime(evt.timeSinceLastEvent);		
-	}
-	*/
 	mTrayMgr->frameRendered(evt);
 }
 //----------------------------------------------------------------
-
- void GameRunnable::getAllNeighbors(Unit unit) {
-	int num = 0;
-	int x, y;
-	x = unit.currentPos.x;
-	y = unit.currentPos.y;
-	bool topEdge = false;
-	bool bottomEdge = false;
-	bool leftEdge = false;
-	bool rightEdge = false;
-	std::queue<Ogre::Vector2> neighbors;
-	if ((x - 1) < 0) {
-		leftEdge = true;
-	}
-	else if ((x + 1) > Constants::dimension) {
-		rightEdge = true;
-	}
-
-	if ((y - 1) < 0) {
-		topEdge = true;
-	}
-	else if ((y + 1) > Constants::dimension) {
-		bottomEdge = true;
-	}
-	if (topEdge && leftEdge) {
-		//neighbors = new Ogre::Vector2[3];
-		neighbors.push(Ogre::Vector2(x, y + 1));
-		neighbors.push(Ogre::Vector2(x + 1, y));
-	}
-	else if (topEdge && rightEdge) {
-		//neighbors = new Ogre::Vector2[3];
-		neighbors.push(Ogre::Vector2(x, y + 1));
-		neighbors.push(Ogre::Vector2(x - 1, y));
-	}
-	else if (bottomEdge && leftEdge) {
-		//neighbors = new Ogre::Vector2[3];
-		neighbors.push(Ogre::Vector2(x, y - 1));
-		neighbors.push(Ogre::Vector2(x + 1, y));
-	}
-	else if (bottomEdge && rightEdge) {
-		//neighbors = new Ogre::Vector2[3];
-		neighbors.push(Ogre::Vector2(x, y - 1));
-		neighbors.push(Ogre::Vector2(x - 1, y));
-	}
-	else if (topEdge) {
-		//neighbors = new Ogre::Vector2[5];
-		neighbors.push(Ogre::Vector2(x - 1, y));
-		neighbors.push(Ogre::Vector2(x, y + 1));
-		neighbors.push(Ogre::Vector2(x + 1, y));
-	}
-	else if (bottomEdge) {
-		//neighbors = new Ogre::Vector2[5];
-		neighbors.push(Ogre::Vector2(x - 1, y));
-		neighbors.push(Ogre::Vector2(x, y - 1));
-		neighbors.push(Ogre::Vector2(x + 1, y));
-	}
-	else if (leftEdge) {
-		//neighbors = new Ogre::Vector2[5];
-		neighbors.push(Ogre::Vector2(x, y - 1));
-		neighbors.push(Ogre::Vector2(x + 1, y));
-		neighbors.push(Ogre::Vector2(x, y + 1));
-	}
-	else if (rightEdge) {
-		//neighbors = new Ogre::Vector2[5];
-		neighbors.push(Ogre::Vector2(x, y - 1));
-		neighbors.push(Ogre::Vector2(x - 1, y));
-		neighbors.push(Ogre::Vector2(x, y + 1));
-	}
-	else {
-		//all neighbors are valid
-		//neighbors = new Ogre::Vector2[9];
-		neighbors.push(Ogre::Vector2(x, y - 1));
-		neighbors.push(Ogre::Vector2(x - 1, y));
-		neighbors.push(Ogre::Vector2(x, y + 1));
-		neighbors.push(Ogre::Vector2(x + 1, y));
-	}
-
-	while (!neighbors.empty()) {
-		Ogre::Vector2 neighbor = neighbors.front();
-		int x, y;
-		x = neighbor.x;
-		y = neighbor.y;
-		Ogre::Vector2 neighborPoint = Ogre::Vector2(x, y);
-		int distance = unit.path->dijkastraGrid[x][y];
-		SquareNeighbor* unitNeighbor = new SquareNeighbor(neighborPoint, distance);
-
-		unitNeighbors.push(unitNeighbor);
-		neighbors.pop();
-	}
-}
 
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

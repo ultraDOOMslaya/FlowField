@@ -9,8 +9,10 @@ PathFinding::PathFinding(Ogre::Vector2 squareIndex, std::vector<GridSquare*>* im
 	pathingUnits(0),
 	pathLines(0),
 	hasPathed(false),
+	losDiscovered(false),
 	pathLineName("pathLine0")
 {
+	origin = squareIndex;
 	generateDijkastraGrid(squareIndex, impassableTerrain);
 	generateFlowField();
 	gameSceneManager = mScnMgr;
@@ -27,7 +29,8 @@ PathFinding::PathFinding()
 	flowFieldLock(false),
 	pathingUnits(0),
 	pathLines(0),
-	hasPathed(false)
+	hasPathed(false),
+	losDiscovered(false)
 {
 }
 

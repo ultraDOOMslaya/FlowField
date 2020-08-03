@@ -32,6 +32,7 @@ public:
 	virtual void assignUnitFormationLocations(int x, int y, int numUnits, Ogre::Vector3 conglomerate);
 	virtual bool isValid(int x, int y);
 
+	Ogre::Vector2									   origin;
 	std::vector<std::vector<int>>				dijkastraGrid;
 	std::vector<std::vector<Ogre::Vector2>>		flowField;
 	bool										flowFieldLock;
@@ -44,6 +45,7 @@ public:
 	int											pathingUnits;
 	int											pathLines;
 	bool										hasPathed;
+	bool										losDiscovered;
 	Ogre::String								lineName;
 	Ogre::String								pathLineName;
 

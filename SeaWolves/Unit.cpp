@@ -94,13 +94,27 @@ void Unit::animate(Ogre::String animation) {
 bool Unit::groupHasLos() {
 	if (group != NULL) {
 		for (std::vector<Unit*>::iterator it = group->begin(); it != group->end(); it++) {
-			if ((*it)->hasLos()) {
+			if (!(*it)->hasLos()) {
 				return false;
 			}
 		}
 	}
 
 	return true;
+}
+//----------------------------------------------------------------
+
+/** Impl is a bit strange. We only want this to return true once since its called in the framerenderer. **/
+bool Unit::assignedPathLosDiscovered() {
+	if (path->losDiscovered)
+		return false;
+
+	if (groupHasLos() && (path->losDiscovered == false)) {
+		path->losDiscovered = true;
+		return true;
+	}
+
+	return false;
 }
 //----------------------------------------------------------------
 
