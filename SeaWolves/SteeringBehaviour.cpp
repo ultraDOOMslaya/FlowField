@@ -397,21 +397,3 @@ Ogre::Vector3 SteeringBehaviour::staticObjectCollisionForceApplier(Unit* unit) {
 	return totalForce;
 }
 //----------------------------------------------------------------
-
-/*
-Find the average of the given unit queues position
-*/
-Ogre::Vector3 SteeringBehaviour::unitGroupConglomerate(std::vector<Unit*>* units) {
-	float x = 0;
-	float y = 0;
-
-	for (std::vector<Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
-		x += (*it)->getB2DPosition().x;
-		y += (*it)->getB2DPosition().y;
-	}
-
-	x /= units->size();
-	y /= units->size();
-	Ogre::Vector3 conglomerate = Ogre::Vector3(x, 0, y);
-	return conglomerate;
-}

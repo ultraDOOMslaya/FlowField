@@ -38,6 +38,7 @@ void SelectionBox::setCorners(float left, float top, float right, float bottom)
 	end();
 	setBoundingBox(Ogre::AxisAlignedBox::BOX_INFINITE);
 }
+//----------------------------------------------------------------
 
 void SelectionBox::setCorners(
 	const Ogre::Vector2& topLeft,
@@ -45,3 +46,44 @@ void SelectionBox::setCorners(
 {
 	setCorners(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
 }
+//----------------------------------------------------------------
+
+/*
+* Activate the selection box and set starting bounds.
+*/
+void SelectionBox::enable(int width, int height) {
+	clear();
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+	mStart.x = (float)x / width;
+	mStart.y = (float)y / height;
+	mStop = mStart;
+
+	selecting = true;
+	setVisible(true);
+}
+//----------------------------------------------------------------
+
+/*
+* Disable the selection box.
+*/
+void SelectionBox::disable() {
+	selecting = false;
+	setVisible(false);
+}
+//----------------------------------------------------------------
+
+/*
+* On mouse drag event, update the bounds of the select box.
+*/
+void SelectionBox::checkAndUpdate(int width, int height) {
+	if (selecting) {
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		mStop.x = (float)x / width;
+		mStop.y = (float)y / height;
+
+		setCorners(mStart, mStop);
+	}
+}
+//----------------------------------------------------------------

@@ -7,8 +7,6 @@
 #include "GridUtils.h"
 #include "SquareNeighbor.h"
 
-#include "Unit.h"
-
 #include <map>
 
 #define PI 3.14159265
@@ -20,7 +18,7 @@ class PathFinding
 	void PathFinding::calculateLos(SquareNeighbor at, SquareNeighbor pathEnd);
 
 public:
-	PathFinding(Ogre::Vector2 squareIndex, std::vector<GridSquare*>* impassableTerrain, Ogre::SceneManager* mScnMgr);
+	PathFinding(Ogre::Vector2 squareIndex, std::vector<GridSquare*>* impassableTerrain, Ogre::SceneManager* mScnMgr, int queueSize, Ogre::Vector3 conglomerate);
 	PathFinding();
 	~PathFinding();
 

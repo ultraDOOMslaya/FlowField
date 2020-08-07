@@ -1,7 +1,8 @@
 #include "PathFinding.h"
 
 
-PathFinding::PathFinding(Ogre::Vector2 squareIndex, std::vector<GridSquare*>* impassableTerrain, Ogre::SceneManager* mScnMgr)
+PathFinding::PathFinding(Ogre::Vector2 squareIndex, std::vector<GridSquare*>* impassableTerrain, Ogre::SceneManager* mScnMgr, int queueSize, Ogre::Vector3 conglomerate)
+//PathFinding::PathFinding(Ogre::Vector2 squareIndex, std::vector<GridSquare*>* impassableTerrain, Ogre::SceneManager* mScnMgr)
 	: dijkastraGrid(Constants::dimension, std::vector<int>(Constants::dimension, NULL)),
 	flowField(Constants::dimension),
 	losGrid(Constants::dimension, std::vector<bool>(Constants::dimension, false)),
@@ -16,6 +17,8 @@ PathFinding::PathFinding(Ogre::Vector2 squareIndex, std::vector<GridSquare*>* im
 	generateDijkastraGrid(squareIndex, impassableTerrain);
 	generateFlowField();
 	gameSceneManager = mScnMgr;
+
+	assignUnitFormationLocations(squareIndex.x, squareIndex.y, queueSize, conglomerate);
 
 	lineName = "pathLine";
 	pathLineName = "pathLine0";
@@ -429,5 +432,3 @@ void PathFinding::assignUnitFormationLocations(int width, int height, int numUni
 	}
 }
 //----------------------------------------------------------------
-
-
