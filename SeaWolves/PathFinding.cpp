@@ -2,7 +2,6 @@
 
 
 PathFinding::PathFinding(Ogre::Vector2 squareIndex, std::vector<GridSquare*>* impassableTerrain, Ogre::SceneManager* mScnMgr, int queueSize, Ogre::Vector3 conglomerate)
-//PathFinding::PathFinding(Ogre::Vector2 squareIndex, std::vector<GridSquare*>* impassableTerrain, Ogre::SceneManager* mScnMgr)
 	: dijkastraGrid(Constants::dimension, std::vector<int>(Constants::dimension, NULL)),
 	flowField(Constants::dimension),
 	losGrid(Constants::dimension, std::vector<bool>(Constants::dimension, false)),
