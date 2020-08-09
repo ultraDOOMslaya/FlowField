@@ -195,16 +195,7 @@ bool GameRunnable::keyPressed(const OgreBites::KeyboardEvent& evt)
 
 bool GameRunnable::mouseMoved(const OgreBites::MouseMotionEvent &evt)
 {
-	//mTrayMgr->refreshCursor();
-
-	if (selectBox->selecting) {
-		int x, y;
-		SDL_GetMouseState(&x, &y);
-		selectBox->mStop.x = (float)x / getRenderWindow()->getWidth();
-		selectBox->mStop.y = (float)y / getRenderWindow()->getHeight();
-
-		selectBox->setCorners(selectBox->mStart, selectBox->mStop);
-	}
+	selectBox->checkAndUpdate(getRenderWindow()->getWidth(), getRenderWindow()->getHeight());
 
 	return true;
 }
@@ -212,72 +203,121 @@ bool GameRunnable::mouseMoved(const OgreBites::MouseMotionEvent &evt)
 
 bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 {
+	selectBox->disable();
+
+	Ogre::String objectName = "";
+	Ogre::Ray mouseRay = mTrayMgr->getCursorRay(mCam);
+
+	mRayScnQuery->setRay(mouseRay);
+	Ogre::RaySceneQueryResult& result = mRayScnQuery->execute();
+	Ogre::RaySceneQueryResult::iterator it = result.begin();
+	int rayQuerySize = result.size();
+
 	if (evt.button == SDL_BUTTON_LEFT) {
 		// Did we drag or did we click?
 		if (selectBox->mStop == selectBox->mStart) {
-			Ogre::String objectName = "";
-			Ogre::Ray mouseRay = mTrayMgr->getCursorRay(mCam);
-
-			mRayScnQuery->setRay(mouseRay);
-			Ogre::RaySceneQueryResult& result = mRayScnQuery->execute();
-			Ogre::RaySceneQueryResult::iterator it = result.begin();
-
-			if (mModeCB->isChecked()) {
-				Ogre::String squareName;
-				for (; it != result.end(); it++) {
-					if (it->movable->getQueryFlags() == Constants::terrainQueryMask) {
-						//gridEditor->addTerrainValue(it->movable->getName(), mat, &impassableTerrain);
-						gridEditor->addTerrainValue(it->movable->getName(), redMat, &impassableTerrainSquares, mWorld);
-					}
-				}
-			}
-			else if (result.size() > 1) {		//Found the floor object AND something else
-				Unit* unit;
+			if (rayQuerySize > 1) {
+				//Found the floor object AND something else
+				Unit* unit; //TODO eventually we will have buildings and resources. Make this a gameobject and have unit inherit from it.
 				for (; it != result.end(); it++) {
 					if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
 						std::map<Ogre::String, Unit*>::iterator itTree = units.find(it->movable->getParentSceneNode()->getName());
 						unit = itTree->second;
-						//TODO make this DRY
-						if (activePlayer->unitQueue.size() > 0) {
-							PathFinding* path = activePlayer->unitQueue.front()->path;
-							for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
-								gridMap[(*it)->x][(*it)->y]->defaultColor(mScnMgr);
-							}
-							path->formationLocations.clear(); // <-- add this to the path method where the units queue is reset
-						}
+
+						pim->clearFocusedLocations(activePlayer, gridMap);
 						activePlayer->focusUnit(unit);
 						break;
 					}
 				}
 			}
-			else {								//Just the floor object
-				//TODO make this DRY
-				if (activePlayer->unitQueue.size() > 0) {
-					PathFinding* path = activePlayer->unitQueue.front()->path;
-					for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
-						gridMap[(*it)->x][(*it)->y]->defaultColor(mScnMgr);
-					}
-					path->formationLocations.clear(); // <-- add this to the path method where the units queue is reset
-				}
+			else {
+				//Just the floor object
+				pim->clearFocusedLocations(activePlayer, gridMap);
 				activePlayer->clearUnitQueue();
 			}
 		}
 		else {
 			pim->performSelection(selectBox->mStart, selectBox->mStop, activePlayer, gridMap);
-			//performSelection(selectBox->mStart, selectBox->mStop);
 		}
-		selectBox->selecting = false;
-		selectBox->setVisible(false);
+		selectBox->disable();
 	}
-	else { // Right click on an enemy player?
-		Ogre::String objectName = "";
-		Ogre::Ray mouseRay = mTrayMgr->getCursorRay(mCam);
 
-		mRayScnQuery->setRay(mouseRay);
-		Ogre::RaySceneQueryResult& result = mRayScnQuery->execute();
-		Ogre::RaySceneQueryResult::iterator it = result.begin();
-		
-		if (result.size() > 1) {		//Found the floor object AND something else
+	if (evt.button == SDL_BUTTON_RIGHT) {
+
+		if (result.size() == 0)
+			return true;
+
+		for (; it != result.end(); it++)
+		{
+			objectName = it->movable->getName();
+		}
+		// Used for right click movement... basic click to move
+		Ogre::Vector2 SquareIndex = GridUtils::gridIndexFinder(objectName);
+
+		//cordinate debugging
+		std::ostringstream oss;
+		oss << objectName;
+		mCordPanel->setText(oss.str());
+
+		PathFinding* path = new PathFinding(SquareIndex, &impassableTerrainSquares, mScnMgr, activePlayer->unitQueue.size(), activePlayer->unitGroupConglomerate());
+
+		//TODO move this to a UI manager that path will then check on creation
+		if (mShowFlowPathCB->isChecked()) {
+			path->showFlow(mScnMgr);
+		}
+
+		pim->clearFocusedLocations(activePlayer, gridMap);
+
+		for (std::vector<Unit*>::iterator unit = activePlayer->unitQueue.begin(); unit != activePlayer->unitQueue.end(); ++unit) {
+			/* Reset all unit behaviours */
+			(*unit)->halt();
+			(*unit)->attacking = false;
+			(*unit)->hunting = false;
+
+			//TODO temporary for flocking work. Remove or refactor. Would like to see a single method with code the render loop uses.
+			Ogre::Vector2 aPos = GridUtils::numericalCordFinder(path->flowField[(*unit)->currentPos.x][(*unit)->currentPos.y]);
+			b2Vec2* nextCord = new b2Vec2(aPos.x, aPos.y);
+			(*unit)->b2WalkList.push_back(*nextCord);
+
+			b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder(SquareIndex);
+			Ogre::Vector3* finalCord = new Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
+			(*unit)->b2FinalDestination = finalPosition;
+			(*unit)->finalDestination = Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
+
+			if (activePlayer->queuedAttackMove) {
+				activePlayer->attackMove();
+			}
+
+			//TODO encapsulate this
+			if ((*unit)->path != NULL) {
+				if ((*unit)->path->pathingUnits <= 1) {
+					delete (*unit)->path;
+				}
+				else {
+					(*unit)->path->pathingUnits--;
+				}
+			}
+
+			(*unit)->path = path;
+			(*unit)->path->pathingUnits++;
+		}
+
+		/* Reset state player state */
+		activePlayer->queuedAttackMove = false;
+
+		if (activePlayer->unitQueue.size() > 0) {
+			for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
+				Ogre::Vector2* point = *it;
+				mat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::Green);
+
+				gridEditor->changeTileColor(point->x, point->y, mat, Ogre::ColourValue::Green);
+
+			}
+		}
+
+		// Right click on an enemy player?
+		if (rayQuerySize > 1) {
+			//Found the floor object AND something else
 			Unit* unit;
 			for (; it != result.end(); it++) {
 				if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
@@ -294,6 +334,18 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			}
 		}
 	}
+
+	if (evt.button == SDL_BUTTON_LEFT) {
+		//Editor stuff
+		if (mModeCB->isChecked()) {
+			Ogre::String squareName;
+			for (; it != result.end(); it++) {
+				if (it->movable->getQueryFlags() == Constants::terrainQueryMask) {
+					gridEditor->addTerrainValue(it->movable->getName(), redMat, &impassableTerrainSquares, mWorld);
+				}
+			}
+		}
+	}
 	
 	return true;
 }
@@ -301,204 +353,10 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 
 bool GameRunnable::mousePressed(const OgreBites::MouseButtonEvent &evt)
 {
-	bool mbRight = false;
-
-	if (evt.button == SDL_BUTTON_RIGHT) {
-		mbRight = true;
-	}
-	
-	if (mbRight) {
-
-		Ogre::String objectName = "";
-		Ogre::Ray mouseRay = mTrayMgr->getCursorRay(mCam);
-
-		mRayScnQuery->setRay(mouseRay);
-		Ogre::RaySceneQueryResult& result = mRayScnQuery->execute();
-		Ogre::RaySceneQueryResult::iterator it = result.begin();
-
-		for (; it != result.end(); it++)
-		{
-			objectName = it->movable->getName();
-		}
-
-		std::ostringstream oss;
-		oss << objectName;
-		mCordPanel->setText(oss.str());
-
-		// Used for right click movement... basic click to move
-		Ogre::Vector2 SquareIndex = GridUtils::gridIndexFinder(objectName);
-		PathFinding* path = new PathFinding(SquareIndex, &impassableTerrainSquares, mScnMgr);
-		int shortestClearDistance = 0;
-		// Forget this crap just pick the first F'in unit in the queue...
-		Ogre::Vector3 conglomerate = SteeringBehaviour::unitGroupConglomerate(&activePlayer->unitQueue);
-		//
-		path->assignUnitFormationLocations(SquareIndex.x, SquareIndex.y, activePlayer->unitQueue.size(), conglomerate);		//Should probably add this to the constructor of PathFinding
-		if (mShowFlowPathCB->isChecked()) {
-			path->showFlow(mScnMgr);
-		}
-
-
-		//TODO make this DRY
-		if (activePlayer->unitQueue.size() > 0) {
-			PathFinding* prevPath = activePlayer->unitQueue.front()->path;
-			if (prevPath != NULL) {
-				for (std::vector<Ogre::Vector2*>::iterator it = prevPath->formationLocations.begin(); it != prevPath->formationLocations.end(); ++it) {
-					gridMap[(*it)->x][(*it)->y]->defaultColor(mScnMgr);
-				}
-				prevPath->formationLocations.clear();
-			}
-		}
-		//gom->proximityLocationFormation(SquareIndex.x, SquareIndex.y, activePlayer->unitQueue, path);
-
-		int finalCordListPos = 0;
-		// TODO refactor to allow an active player and unit movement for multiple players
-		//for(std::map<Ogre::String, Unit>::iterator it = units.begin(); it != units.end(); ++it) {
-		for (std::vector<Unit*>::iterator unit = activePlayer->unitQueue.begin(); unit != activePlayer->unitQueue.end(); ++unit) {
-
-			//TODO temporary for flocking work. Remove or refactor. Would like to see a single method with code the render loop uses.
-			Ogre::Vector2 aPos = GridUtils::numericalCordFinder(path->flowField[(*unit)->currentPos.x][(*unit)->currentPos.y]);
-			b2Vec2* nextCord = new b2Vec2(aPos.x, aPos.y);
-
-			(*unit)->b2WalkList.push_back(*nextCord);
-
-			/** Experimental Code **/
-			Ogre::Vector2 finalCord = *(path->formationLocations[finalCordListPos]);
-			(*unit)->debugPos1 = finalCord;
-			
-			/** End Experimental Code **/
-
-			//b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder(SquareIndex);
-			//Ogre::Vector3* finalCord = new Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
-
-			//Working code before more sucienct formation code
-			//b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder(finalCord);
-			//(*unit)->b2FinalDestination = finalPosition;
-			//(*unit)->finalDestination = Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
-
-			/* Reset all unit behaviours */
-			(*unit)->halt();
-			(*unit)->attacking = false;
-			(*unit)->hunting = false;
-
-			if (activePlayer->queuedAttackMove) {
-				activePlayer->attackMove();
-			}
-
-			//TODO encapsulate this
-			if ((*unit)->path != NULL) {
-				if ((*unit)->path->pathingUnits <= 1) {
-					delete (*unit)->path;
-				}
-				else {
-					(*unit)->path->pathingUnits--;
-				}
-			}
-
-			int distanceToDestination = (*unit)->getPosition().squaredDistance(GridUtils::numericalCordFinder(finalCord.x, finalCord.y));
-
-			if (path->clearPointDistance == 0) {
-				path->clearPointDistance = distanceToDestination;
-			}
-			else if (path->clearPointDistance > distanceToDestination){
-				path->clearPointDistance = distanceToDestination;
-			}
-
-			(*unit)->path = path;
-			(*unit)->path->pathingUnits++;
-				
-			++finalCordListPos;
-		}
-
-		
-		int placed = 0;
-		int armoredUnitCount = 0;
-		Constants constants;
-		//Find amount of armored units
-		/*for (std::vector<Unit*>::iterator unit = activePlayer->unitQueue.begin(); unit != activePlayer->unitQueue.end(); ++unit) {
-			if ((*unit)->mUnitClass == constants.heavyArmor) {
-				armoredUnitCount++;
-				std::rotate(activePlayer->unitQueue.begin(), unit, unit + 1);
-			}
-		}*/
-
-		// --- Moving final destination code to the GameObjectManager ---
-		//Place units in formation due to their pecking order and closest distance to position being evaluated.
-		for (std::vector<Unit*>::iterator unit = activePlayer->unitQueue.begin(); unit != activePlayer->unitQueue.end(); ++unit) {
-			/*
-			std::multimap<int, Ogre::Vector2>::iterator position = path->mappedFormation.begin();
-			int rowColumnKey = position->first;
-			float shortestDistance = 0.0;
-			Ogre::Vector2 shortestDestinationCord = position->second;;
-			while (position->first == rowColumnKey) {
-				if (shortestDistance = 0) {
-					shortestDistance = (*unit)->getPosition().squaredDistance(GridUtils::numericalCordFinder(Ogre::Vector3(position->second.x, 0, position->second.y)));
-					shortestDestinationCord = position->second;
-				}
-				else if (shortestDistance > (*unit)->getPosition().squaredDistance(GridUtils::numericalCordFinder(Ogre::Vector3(position->second.x, 0, position->second.y)))) {
-					shortestDistance = (*unit)->getPosition().squaredDistance(GridUtils::numericalCordFinder(Ogre::Vector3(position->second.x, 0, position->second.y)));
-					shortestDestinationCord = position->second;
-				}
-				
-				position++;
-			}
-			path->mappedFormation.erase(path->mappedFormation.begin());
-			(*unit)->debugPos1 = shortestDestinationCord;
-			b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder(shortestDestinationCord);
-			/** End Experimental Code **/
-		
-			b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder(SquareIndex);
-			Ogre::Vector3* finalCord = new Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
-			(*unit)->b2FinalDestination = finalPosition;
-			(*unit)->finalDestination = Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
-		}
-
-		/* Reset state player state */
-		activePlayer->queuedAttackMove = false;
-		
-		if (activePlayer->unitQueue.size() > 0) {
-			for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
-				Ogre::Vector2* point = *it;
-				mat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::Green);
-
-				gridEditor->changeTileColor(point->x, point->y, mat, Ogre::ColourValue::Green);
-
-			}
-		}
-		
-		//mWalkList.push_back(Ogre::Vector3(cords.x, 0, cords.y));
-	}
-	else {
-		selectBox->clear();
-		int x, y;
-		SDL_GetMouseState(&x, &y);
-		selectBox->mStart.x = (float)x / getRenderWindow()->getWidth();
-		selectBox->mStart.y = (float)y / getRenderWindow()->getHeight();
-		selectBox->mStop = selectBox->mStart;
-
-		selectBox->selecting = true;
-		selectBox->setVisible(true);
-		
-		/*
-		Ogre::Vector3 clickableSquareCords = Ogre::Vector3(startpos.x, 0.0f, startpos.y);
-
-		std::ostringstream oss;
-		oss << " for " << xcount << "," << ycount;
-		mCordPanel->setText(oss.str());
-		*/
-	}
-	//}
+	selectBox->enable(getRenderWindow()->getWidth(), getRenderWindow()->getHeight());	
 	
 	return true;
 }
-//----------------------------------------------------------------
-
-/*void AssignGridFormation(PlayerManager* activePlayer) {
-	for (std::vector<Unit*>::iterator unit = activePlayer->unitQueue.begin(); unit != activePlayer->unitQueue.end(); ++unit) {
-		if ((*unit)->mUnitClass == "HeavyArmor") {
-			int furthestDistance = (*unit)->path->formationLocations
-		}
-	}
-}*/
 //----------------------------------------------------------------
 
 void GameRunnable::setup(void)

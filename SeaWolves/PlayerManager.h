@@ -21,6 +21,7 @@ public:
 	virtual void attack(Unit* target);
 	virtual void attackMove();
 	virtual bool hasUnitInArmy(Ogre::String unitName);
+	virtual Ogre::Vector3 unitGroupConglomerate();
 	
 
 	std::vector<Unit*>					unitQueue;		//Actively being controlled

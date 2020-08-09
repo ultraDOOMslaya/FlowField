@@ -111,3 +111,22 @@ void PlayerManager::attackMove() {
 	}
 }
 //-----------------------------------------------------=-----------
+
+//TODO move this to a generic util class
+/*
+ *Find the average of the given unit queues position
+ */
+Ogre::Vector3 PlayerManager::unitGroupConglomerate() {
+	float x = 0;
+	float y = 0;
+
+	for (std::vector<Unit*>::iterator it = unitQueue.begin(); it != unitQueue.end(); ++it) {
+		x += (*it)->getB2DPosition().x;
+		y += (*it)->getB2DPosition().y;
+	}
+
+	x /= unitQueue.size();
+	y /= unitQueue.size();
+	Ogre::Vector3 conglomerate = Ogre::Vector3(x, 0, y);
+	return conglomerate;
+}
