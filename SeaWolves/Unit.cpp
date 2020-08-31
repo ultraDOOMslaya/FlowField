@@ -15,8 +15,9 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	minSeperation(40),
 	maxCohesion(300),
 	seperationRadius(0),							// lower the radius, greater the seperation 
-	physicsBodyRadius(6),
-	velocity(0, 0, 0),
+	//physicsBodyRadius(6),						
+	physicsBodyRadius(8),
+	velocity(0, 0, 0), //TODO Determine if we need this? Maybe for 3d movement?
 	b2Velocity(0, 0),
 	forceToApply(0, 0, 0),
 	maxForce(700),									// delta time (This needs to be x10 maxSpeed otherwise turns aren't very crisp)
@@ -33,6 +34,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	targetRadius(0)
 {
 	gameSceneManager = mScnMgr;
+	mWorld = world;
 	unitEntity = gameSceneManager->createEntity(meshName);
 	unitEntity->setCastShadows(true);
 	unitNode = gameSceneManager->getRootSceneNode()->createChildSceneNode(BradsBitch, startPos);
@@ -46,9 +48,11 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 
 	unitName = BradsBitch;
 	seperationRadius = physicsBodyRadius * 2;
-	targetRadius = 500;
+	targetRadius = 100;
+	attackRange = 100;
 	unitEntity->setQueryFlags(Constants::unitQueryMask);
 	unitID = ID;
+	currentUnitState = Constants::UnitStates::Idle;
 
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(startPos.x, startPos.z);
@@ -64,11 +68,22 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	fixtureDef.friction = 0.4f;
 	fixtureDef.restitution = 0.2f;
 	mBody->CreateFixture(&fixtureDef);
+
+	hunting = true;
 }
 
 
 Unit::~Unit()
 {
+	// Remove physics representation
+	mBody->GetWorld()->DestroyBody(mBody);
+	// Remove graphics
+	Ogre::String objName = unitName;
+	gameSceneManager->destroySceneNode(objName);
+
+	if (selectionCircle != NULL) {
+		delete selectionCircle;
+	}
 }
 
 /*
@@ -84,9 +99,25 @@ void Unit::commandMove(Ogre::Vector3 position) {
 }
 //----------------------------------------------------------------
 
+bool Unit::isAnimation(Ogre::String animation) {
+	//TODO Seperate game object from unit
+	if (unitAnimState->getAnimationName() == animation) {
+		return true;
+	}
+
+	return false;
+}
+
 void Unit::animate(Ogre::String animation) {
 	unitAnimState = unitEntity->getAnimationState(animation);
 	unitAnimState->setLoop(true);
+	unitAnimState->setEnabled(true);
+}
+//----------------------------------------------------------------
+
+void Unit::animateSingle(Ogre::String animation) {
+	unitAnimState = unitEntity->getAnimationState(animation);
+	unitAnimState->setLoop(false);
 	unitAnimState->setEnabled(true);
 }
 //----------------------------------------------------------------
@@ -106,6 +137,9 @@ bool Unit::groupHasLos() {
 
 /** Impl is a bit strange. We only want this to return true once since its called in the framerenderer. **/
 bool Unit::assignedPathLosDiscovered() {
+	if (path == NULL)
+		return false;
+
 	if (path->losDiscovered)
 		return false;
 
@@ -179,7 +213,12 @@ void Unit::setTarget(Unit* target) {
 void Unit::attack() {
 	halt();
 	rotate((mTarget->getPosition() - getPosition()));
-	animate("Attack");
+	animateSingle("Attack");
+	if (unitAnimState->hasEnded()) {
+		unitAnimState->setTimePosition(0);
+		hasAttacked = false;
+		animateSingle("Attack");
+	}
 }
 //----------------------------------------------------------------
 
@@ -193,9 +232,21 @@ void Unit::seekTarget(std::map<Ogre::String, Unit*>* units) {
 }
 //----------------------------------------------------------------
 
+void Unit::doDamage() {
+	if (mTarget != NULL) {
+		mTarget->takeDamage(mAttackDamage);
+	}
+}
+//----------------------------------------------------------------
+
+void Unit::takeDamage(int damage) {
+	mHitPoints -= damage;
+}
+//----------------------------------------------------------------
+
 bool Unit::inRange() {
 	int distance = GridUtils::distanceTo(mTarget->getPosition(), getPosition());
-	if (distance < attackRange) {
+	if (distance <= attackRange) {
 		return true;
 	}
 	return false;
@@ -234,6 +285,9 @@ Ogre::Vector2* Unit::getCurrentFlowValue() {
 //----------------------------------------------------------------
 
 bool Unit::hasLos() {
+	if (path == NULL)
+		return false;
+
 	return path->losGrid[currentPos.x][currentPos.y];
 }
 //----------------------------------------------------------------
@@ -268,8 +322,6 @@ void Unit::rotate(Ogre::Vector3 mDirection) {
 		Ogre::Quaternion quat = src.getRotationTo(mDirection);
 		unitNode->rotate(quat);
 	}
-	//Ogre::Quaternion quat = src.getRotationTo(mDirection);
-	//unitNode->rotate(quat);
 }
 //----------------------------------------------------------------
 
@@ -303,6 +355,7 @@ void Unit::setLooseTarget(Unit* potentialTarget, int distance) {
 	mTarget = potentialTarget;
 	distanceFromTarget = distance;
 	attacking = true;
+	b2WalkList.push_back(potentialTarget->getB2DPosition());
 }
 //----------------------------------------------------------------
 
@@ -337,9 +390,40 @@ bool Unit::isAggressive() {
 //----------------------------------------------------------------
 
 bool Unit::hasTarget() {
-	if (mTarget) {
+	if (mTarget != NULL) {
 		return true;
 	}
 	return false;
+}
+//----------------------------------------------------------------
+
+bool Unit::hasPath() {
+	if (path != NULL) {
+		return true;
+	}
+	return false;
+}
+//----------------------------------------------------------------
+
+void Unit::resetTarget() {
+	if (group == NULL)
+		return;
+
+	for (std::vector<Unit*>::iterator unit = group->begin(); unit != group->end(); ++unit) {
+		if ((*unit)->mHitPoints > 0) {
+			(*unit)->mTarget = NULL;
+			(*unit)->attacking = false;
+		}
+	}
+}
+//----------------------------------------------------------------
+
+int Unit::getUnitState() {
+	return currentUnitState;
+}
+//----------------------------------------------------------------
+
+void Unit::setUnitState(int unitState) {
+	currentUnitState = unitState;
 }
 //----------------------------------------------------------------

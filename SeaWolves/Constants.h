@@ -12,6 +12,13 @@ public:
 	Constants();
 	~Constants();
 
+	enum UnitStates {
+		Idle = 1,
+		Marching = 2,
+		Attacking = 3,
+		Hunting = 4
+	};
+
 	const static int			gridWidth = 15;
 	const static int			gridHeight = 15;
 	const static int			edgeLength = 60; //was 50
@@ -30,6 +37,7 @@ public:
 	const Ogre::String			bronzeSoldierMesh = "BronzeSoldier.mesh";
 	const Ogre::String			bronzeArcherMesh = "BronzeArcher.mesh";
 	const Ogre::String			bronzeWizardMesh = "BronzeWizard.mesh";
+	const Ogre::String			axe = "axe.mesh";
 	
 	const Ogre::String			skySoldierMesh = "SkySoldier.mesh";
 	const Ogre::String			skyArcherMesh = "SkyArcher.mesh";

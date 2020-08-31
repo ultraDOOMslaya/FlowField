@@ -272,7 +272,8 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			/* Reset all unit behaviours */
 			(*unit)->halt();
 			(*unit)->attacking = false;
-			(*unit)->hunting = false;
+			//(*unit)->trekking = true;
+			//(*unit)->hunting = false;
 
 			//TODO temporary for flocking work. Remove or refactor. Would like to see a single method with code the render loop uses.
 			Ogre::Vector2 aPos = GridUtils::numericalCordFinder(path->flowField[(*unit)->currentPos.x][(*unit)->currentPos.y]);
@@ -282,6 +283,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder(SquareIndex);
 			Ogre::Vector3* finalCord = new Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
 			(*unit)->b2FinalDestination = finalPosition;
+			(*unit)->postCombatB2Desination = finalPosition;
 			(*unit)->finalDestination = Ogre::Vector3(finalPosition.x, 0, finalPosition.y);
 
 			if (activePlayer->queuedAttackMove) {
@@ -302,8 +304,9 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			(*unit)->path->pathingUnits++;
 		}
 
+		//TODO this may be the wrong place for this after the refactor
 		/* Reset state player state */
-		activePlayer->queuedAttackMove = false;
+		//activePlayer->queuedAttackMove = false;
 
 		if (activePlayer->unitQueue.size() > 0) {
 			for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
@@ -315,24 +318,28 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			}
 		}
 
-		// Right click on an enemy player?
-		if (rayQuerySize > 1) {
-			//Found the floor object AND something else
-			Unit* unit;
-			for (; it != result.end(); it++) {
-				if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
-					std::map<Ogre::String, Unit*>::iterator itTree = units.find(it->movable->getParentSceneNode()->getName());
-					unit = itTree->second;
-					switch (PlayerUtils::determineStatus(activePlayer, players, unit)) 
-					{
-					case PlayerRelationshipStatus::HOSTILE: activePlayer->attack(unit);
-						break;
-					default:
-						break;
+		if (!mNonCombat->isChecked()) {
+			Ogre::RaySceneQueryResult::iterator it = result.begin();
+			// Right click on an enemy player?
+			if (rayQuerySize > 1) {
+				//Found the floor object AND something else
+				//Unit unit;
+				for (; it != result.end(); it++) {
+					if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
+						std::map<Ogre::String, Unit*>::iterator itTree = units.find(it->movable->getParentSceneNode()->getName());
+						Unit& unit = *itTree->second;
+						switch (PlayerUtils::determineStatus(activePlayer, players, &unit))
+						{
+						case PlayerRelationshipStatus::HOSTILE: activePlayer->attack(&unit);
+							break;
+						default:
+							break;
+						}
 					}
 				}
 			}
 		}
+		
 	}
 
 	if (evt.button == SDL_BUTTON_LEFT) {
@@ -381,6 +388,9 @@ void GameRunnable::setup(void)
 	mModeCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "WallGen", "Editor Mode", 150.0f);
 	mUnitCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "UnitGen", "New Units", 150.0f);
 	mShowFlowPathCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "ShowPath", "Show Paths", 150.0f);
+	mNonCombat = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "NonCombat", "Non Combat", 150.0f);
+	mMoveableCamera = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "MoveableCamera", "Moveable Camera", 150.0f);
+
 	addInputListener(mTrayMgr);
 
 	Ogre::RTShader::ShaderGenerator* shadergen = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
@@ -443,8 +453,8 @@ void GameRunnable::setup(void)
 	//GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy);
 	GenerateUnits::generateEightBronze(mScnMgr, &units, &player1.myArmy, mWorld);
 
-	//GenerateUnits::generateOneSky(mScnMgr, &units, &player2.myArmy);
-	//GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy);
+	//GenerateUnits::generateOneSky(mScnMgr, &units, &player2.myArmy, mWorld);
+	GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy, mWorld);
 
 	float32 timeStep = 1.0f / 60.0f;
 	int32 velocityIterations = 10;
@@ -477,108 +487,192 @@ static int distanceTo(Ogre::Vector3 unit1, Ogre::Vector3 unit2) {
 }
 //----------------------------------------------------------------
 
+void GameRunnable::spawnProjectile(Unit* unit) {
+	projectiles.push_back(Projectile(unit, mScnMgr, mWorld));
+}
+//----------------------------------------------------------------
+
+void GameRunnable::spawnMagic(Unit* unit) {
+	magicAttacks.push_back(MagicAttack(unit, mScnMgr, mWorld));
+}
+//----------------------------------------------------------------
+
+void GameRunnable::clearTargets(Unit* expiredTarget) {
+	for (std::map<Ogre::String, Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+		Unit* unit = it->second;
+		if (unit->mTarget == expiredTarget) {
+			unit->resetTarget();
+		}
+	}
+}
+//----------------------------------------------------------------
+
 void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 {
 	/* Camera movement */
 	// Working code but annoying when trying to debug
-	Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
-	int mMoveScale = 250;
-	int x, y;
-	SDL_GetMouseState(&x, &y);
-	if (x > (getRenderWindow()->getWidth() - 20)) {
-	transVector.x += mMoveScale;
+	if (mMoveableCamera->isChecked()) {
+		Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
+		int mMoveScale = 250;
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		if (x > (getRenderWindow()->getWidth() - 20)) {
+			transVector.x += mMoveScale;
+		}
+		else if (x < 20) {
+			transVector.x -= mMoveScale;
+		}
+		else if (y > (getRenderWindow()->getHeight() - 20)) {
+			transVector.y -= mMoveScale;
+		}
+		else if (y < 20) {
+			transVector.y += mMoveScale;
+		}
+		mScnMgr->getSceneNode("camNode")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	}
-	else if (x < 20) {
-	transVector.x -= mMoveScale;
-	}
-	else if (y >(getRenderWindow()->getHeight() - 20)) {
-	transVector.y -= mMoveScale;
-	}
-	else if (y < 20) {
-	transVector.y += mMoveScale;
-	}
-	mScnMgr->getSceneNode("camNode")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
-	
+
 	float32 timeStep = 1.0f / 60.0f;
 	int32 velocityIterations = 10;
 	int32 positionIterations = 8;
 	mWorld->Step(timeStep, velocityIterations, positionIterations);
 	mWorld->ClearForces();
-	for (std::map<Ogre::String, Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-		Unit* unit = it->second;
 
-		/* Attack Code
-		if (unit->isAggressive()) {
-			if (unit->hasTarget()) {
-				unit->distanceFromTarget = unit->getPosition().squaredLength() - unit->mTarget->getPosition().squaredLength();
-				if (unit->inRange()) {
-					unit->attack();
-				}
-				else {
-					if (unit->isHunting()) {
-						CombatBehaviour::huntForTarget(&units, activePlayer, players, unit);
-					}
-					if (unit->unitAnimState->getAnimationName() != "Walk") {
-						unit->walkList.push_back(unit->mTarget->getPosition());
+	//TODO exception in vector while units move randomly
+	for (auto player = players.begin(); player != players.end(); ++player) {
+		for (std::map<Ogre::String, Unit*>::iterator it = (*player)->myArmy.begin(); it != (*player)->myArmy.end(); ++it) {
+			Unit* unit = it->second;
+
+			// Bang out A-Move: button press and all
+
+			/** Attack Code **/
+			if (!unit->trekking) {
+				if (unit->hasTarget()) {
+					unit->distanceFromTarget = unit->getPosition().squaredLength() - unit->mTarget->getPosition().squaredLength();
+					if (unit->inRange()) {
+						unit->attack();
+						//TODO make this a method in Unit
+						if (unit->mUnitClass == "HeavyArmor" && (unit->unitAnimState->getTimePosition() > (unit->unitAnimState->getLength() * 0.5))) {
+
+							if (!unit->hasAttacked)
+								unit->mTarget->takeDamage(unit->mAttackDamage);
+
+							if (unit->mTarget->mHitPoints <= 0) {
+								clearTargets(unit->mTarget);
+							}
+
+							unit->hasAttacked = true;
+						}
+						if (unit->mUnitClass == "Fletcher" && (unit->unitAnimState->getTimePosition() < unit->animationElapsedTime)) {
+							if (!unit->hasAttacked)
+								spawnProjectile(unit);
+
+							if (unit->mTarget->mHitPoints <= 0) {
+								clearTargets(unit->mTarget);
+							}
+
+							unit->hasAttacked = true;
+						}
+						if (unit->mUnitClass == "Caster" && (unit->unitAnimState->getTimePosition() > (unit->unitAnimState->getLength() * 0.8))) {
+							if (!unit->hasAttacked)
+								spawnMagic(unit);
+
+							if (unit->mTarget->mHitPoints <= 0) {
+								clearTargets(unit->mTarget);
+							}
+
+							unit->hasAttacked = true;
+						}
+						unit->animationElapsedTime = unit->unitAnimState->getTimePosition();
 					}
 					else {
-						unit->finalDestination = unit->mTarget->getPosition();
+						if (unit->unitAnimState->getAnimationName() != "Walk") {
+							unit->walkList.push_back(unit->mTarget->getPosition());
+						}
+						else {
+							//Assign units a final destination but give them a *dummy path as well
+							unit->finalDestination = unit->mTarget->getPosition();
+							unit->b2FinalDestination = unit->mTarget->getB2DPosition();
+							//TODO duplicate code
+							//TODO consider adding this to the unit constructor. Should probably have better path disposal logic first.
+							if (!unit->hasPath()) {
+								PathFinding* path = new PathFinding(unit->currentPos, &impassableTerrainSquares, mScnMgr, (*player)->unitQueue.size(), (*player)->unitGroupConglomerate());
+								unit->path = path;
+							}
+						}
 					}
 				}
-			}
-			else {
-				CombatBehaviour::seekTarget(&units, activePlayer, players, unit);
-			}
-		}*/
+				else if (unit->isHunting()) {
+					CombatBehaviour::huntForTarget(&units, (*player), players, unit);
+				}
+				else {
+					CombatBehaviour::seekTarget(&units, (*player), players, unit);
+				}
 
-		if (unit->unitAnimState->getAnimationName() == "Walk") {
+				if ((unit->mTarget == NULL) && !unit->isAnimation("Walk") && !unit->isAnimation("Idle")) {
+					Ogre::Vector2 aPos = GridUtils::numericalCordFinder(unit->path->flowField[unit->currentPos.x][unit->currentPos.y]);
+					b2Vec2 nextCord = b2Vec2(aPos.x, aPos.y);
+					unit->b2WalkList.push_back(nextCord);
+					unit->b2FinalDestination = unit->postCombatB2Desination;
+				}
+			}
+
 			
-			/* Realtime directing */
-		
-			Ogre::Vector2 b4Position = GridUtils::cordNumericalFinder(unit->getPosition());
-			unit->debugB2Pos1 = unit->getB2DPosition();
-			//Ogre::Vector2 position = GridUtils::cordNumericalFinder(unit->getPosition()); // Temporary to see if this works over the next line.
-			Ogre::Vector2 position = GridUtils::b2CordNumericalFinder(unit->getB2DPosition());
-			if (position != unit->currentPos) {
-				unit->currentPos = position;
-			}
+			/*if (unit->isHunting() && (unit->mTarget == NULL)) {
+				unit->b2Destination = unit->postCombatB2Desination;
+			}*/
 
-			/** If the group has LOS, assign the most final destination **/
-			if (unit->assignedPathLosDiscovered()) {
-				gom->proximityLocationFormation(unit->path->origin.x, unit->path->origin.y, activePlayer->unitQueue, unit->path);
-			}
+			//TODO this method name sucks
+			if (unit->isAnimation("Walk")) {
 
-			b2Vec2 cords;
-			if (unit->hasLos()) {
-				cords = unit->b2FinalDestination;
-			}
-			else {
-				Ogre::Vector2 direction = GridUtils::numericalCordFinder(*unit->getCurrentFlowValue());
-				unit->debugPos1 = *unit->getCurrentFlowValue();
-				cords = GridUtils::b2NumericalCordFinder(*unit->getCurrentFlowValue());
-				/*int x, y;
-				x = direction.x;
-				y = direction.y;
-				cords = Ogre::Vector3(x, 0, y);*/
-			}
-			
-			/* Physics applied to everyone */
-			unit->debugPos2 = Ogre::Vector2(cords.x, cords.y);
+				/* Realtime directing */
 
-			b2Vec2 seek = SteeringBehaviour::seek(unit, cords);
-			unit->b2ForceToApply = seek;
+				Ogre::Vector2 b4Position = GridUtils::cordNumericalFinder(unit->getPosition());
+				unit->debugB2Pos1 = unit->getB2DPosition();
+				//Ogre::Vector2 position = GridUtils::cordNumericalFinder(unit->getPosition()); // Temporary to see if this works over the next line.
+				Ogre::Vector2 position = GridUtils::b2CordNumericalFinder(unit->getB2DPosition());
+				if (position != unit->currentPos) {
+					unit->currentPos = position;
+				}
+
+				/** If the group has LOS, assign the most final destination **/
+				//TODO make unti states such as idle, marching, and attacking
+				if (unit->mTarget == NULL) {
+					if (unit->assignedPathLosDiscovered()) {
+						gom->proximityLocationFormation(unit->path->origin.x, unit->path->origin.y, activePlayer->unitQueue, unit->path);
+					}
+				}
+				
+
+				b2Vec2 cords;
+				if (unit->hasLos()) {
+					cords = unit->b2FinalDestination;
+				}
+				else {
+					Ogre::Vector2 direction = GridUtils::numericalCordFinder(*unit->getCurrentFlowValue());
+					unit->debugPos1 = *unit->getCurrentFlowValue();
+					cords = GridUtils::b2NumericalCordFinder(*unit->getCurrentFlowValue());
+				}
+
+				/* Physics applied to everyone */
+				unit->debugPos2 = Ogre::Vector2(cords.x, cords.y);
+
+				b2Vec2 seek = SteeringBehaviour::seek(unit, cords);
+				unit->b2ForceToApply = seek;
 
 
-			//TODO put this somewhere... do it as soon as you see this!
-			if (unit->hasArrived()) {
-				unit->halt();
+				//TODO put this somewhere... do it as soon as you see this!
+				if (unit->hasArrived()) {
+					unit->halt();
+				}
 			}
 		}
 	}
 
+	/** Unit animation frame rendering **/
 	Ogre::AnimationState* tempState;
 	for (std::map<Ogre::String, Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
 		Unit* unit = it->second;
+
 
 		if (unit->nextLocation()) {
 			unit->animate("Walk");
@@ -586,11 +680,10 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			unit->mBody->SetType(b2_dynamicBody);
 		}
 
-
 		if (unit->b2Destination != b2Vec2_zero) {
 
-			unit->b2ForceToApply.operator*=(evt.timeSinceLastFrame);								//Real Time
-			//unit->b2ForceToApply.operator*=(0.0166666);
+			unit->b2ForceToApply.operator*=(evt.timeSinceLastFrame);		//Real Time
+			//unit->b2ForceToApply.operator*=(0.0166666);			//Mocked Delta Time
 			unit->b2Velocity.operator+=(unit->b2ForceToApply);
 
 			float speed = unit->b2Velocity.Length();
@@ -615,14 +708,59 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			unit->b2Velocity(0.0f);
 			unit->mBody->SetLinearVelocity(b2Vec2_zero);
 			unit->mBody->SetType(b2_staticBody);
+			unit->trekking = false;
 		}
 		
 		/** Advance Unit Animations **/
-		//unit->unitAnimState->addTime(0.0166666);
-		unit->unitAnimState->addTime(evt.timeSinceLastEvent);
+		//unit->unitAnimState->addTime(0.0166666);				//Mocked Delta Time
+		unit->unitAnimState->addTime(evt.timeSinceLastEvent);		//Real Time
 	}
-	
+
+	/** Projectile animation frame rendering **/
+
+	for (std::vector<Projectile>::iterator projectile = projectiles.begin(); projectile != projectiles.end(); ++projectile) {
+		if (projectile->mDistance > 0.0) {
+			Ogre::Real move = projectile->mWalkSpeed * evt.timeSinceLastFrame;
+			projectile->mDistance -= move;
+
+			projectile->projectileNode->translate(move * projectile->mDirection);
+		}
+		else {
+			projectile->dealDamage();
+			Ogre::String objName = projectile->projectileName;
+			mScnMgr->destroySceneNode(objName);
+			projectiles.erase(projectile--);
+		}
+	}
+
+	/** Particle animation frame rendering **/
+
+	for (std::vector<MagicAttack>::iterator magic = magicAttacks.begin(); magic != magicAttacks.end(); ++magic) {
+		if (magic->summoner->unitAnimState->hasEnded() || magic->summoner->mTarget == NULL) {
+			magic->dealDamage();
+			Ogre::String objName = magic->particleName;
+			mScnMgr->destroySceneNode(objName);
+			magicAttacks.erase(magic--);
+		}
+	}
+
 	mTrayMgr->frameRendered(evt);
+
+	/** Clear units from the simulation **/
+	// This must be at the end of the step otherwise B2 will throw an exception
+	for (std::map<Ogre::String, Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+		Unit* unit = it->second;
+		/** Remove units with zero hitpoints **/
+		if (unit->mHitPoints <= 0) {
+			units.erase(it--);
+			for (auto player = players.begin(); player != players.end(); ++player) {
+				if ((*player)->hasUnitInArmy(unit->unitName)) {
+					(*player)->cullUnit(unit);
+				}
+			}
+			delete unit;
+		}
+	}
 }
 //----------------------------------------------------------------
 
