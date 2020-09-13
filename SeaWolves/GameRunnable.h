@@ -16,7 +16,6 @@
 
 #include "Constants.h"
 #include "SquareNeighbor.h"
-#include "Unit.h"
 #include "SteeringBehaviour.h"
 #include "PathFinding.h"
 #include "PlayerManager.h"
@@ -41,6 +40,11 @@
 #include "BitStream.h"
 #include "RakNetTypes.h"  // MessageID
 
+//Units
+#include "Unit.h"
+#include "MagicAttack.h"
+
+
 #include "Box2D\Box2D.h"
 
 enum GameMessages
@@ -61,11 +65,14 @@ public:
 	virtual bool mousePressed(const OgreBites::MouseButtonEvent &evt);
 	virtual bool mouseReleased(const OgreBites::MouseButtonEvent &evt);
 	virtual void changeSquareColor(int num);
-
 	virtual void frameRendered(const Ogre::FrameEvent& evt);
 
 	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color, Ogre::MaterialPtr defaultMaterial);
 	virtual void createTileMap(void);
+
+	virtual void spawnProjectile(Unit* unit);
+	virtual void spawnMagic(Unit* unit);
+	virtual void clearTargets(Unit* unit);
 
 	#define SERVER_PORT 60000
 
@@ -74,6 +81,8 @@ public:
 	OgreBites::CheckBox*		mModeCB;
 	OgreBites::CheckBox*		mUnitCB;
 	OgreBites::CheckBox*		mShowFlowPathCB;
+	OgreBites::CheckBox*		mNonCombat;
+	OgreBites::CheckBox*		mMoveableCamera;
 
 	Ogre::SceneManager*			mScnMgr;
 	Ogre::Camera*				mCam;
@@ -96,6 +105,8 @@ public:
 	bool						createUnitMode;
 	//std::vector<Unit>			units;
 	std::map<Ogre::String, Unit*> units;
+	std::vector<Projectile>		projectiles;
+	std::vector<MagicAttack>	magicAttacks;
 	std::queue<Ogre::String>	robots;
 	int							robotNumber;
 	int							debugx;

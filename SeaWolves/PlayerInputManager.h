@@ -6,6 +6,7 @@
 
 #include "GridSquare.h"
 #include "PlayerManager.h"
+#include "SelectionBox.h"
 
 class PlayerInputManager
 {
@@ -17,6 +18,8 @@ private:
 public:
 	PlayerInputManager(Ogre::Camera* mCam, Ogre::PlaneBoundedVolumeListSceneQuery* mVolQuery, Ogre::SceneManager* mScnMgr);
 	~PlayerInputManager();
+
+	void gameInputActionSelect_Release(SelectionBox* selectBox, Ogre::RaySceneQuery* raySceneQuery, Ogre::Ray& mouseRay);
 
 	void performSelection(const Ogre::Vector2& first, const Ogre::Vector2& second, PlayerManager* activePlayer, std::vector<std::vector<GridSquare*>> &gridMap);
 	void clearFocusedLocations(PlayerManager* activePlayer, std::vector<std::vector<GridSquare*>> &gridMap);

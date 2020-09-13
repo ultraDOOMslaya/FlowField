@@ -19,7 +19,9 @@ public:
 	Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String name, Ogre::String meshName, Ogre::String unitClass, int ID, b2World* world);
 	~Unit();
 	virtual void commandMove(Ogre::Vector3 position);
-	virtual void animate(Ogre::String animation);
+	virtual void animate(Ogre::String animation);		//TODO make this animateLoop()
+	virtual void animateSingle(Ogre::String animation);		//TODO make this animate()
+	virtual bool isAnimation(Ogre::String animation);
 	virtual void rotate(Ogre::Vector3 mDirection);
 	virtual void rotate(b2Vec2 direction);
 	virtual void haltTheGroup();
@@ -33,8 +35,11 @@ public:
 	virtual bool isAggressive();
 	virtual bool isAtEndOfAnimation();
 	virtual bool hasTarget();
+	virtual bool hasPath();
 	virtual void setTarget(Unit* target);
 	virtual void attack();
+	virtual void doDamage();
+	virtual void takeDamage(int damage);
 
 	virtual Ogre::Vector3 getPosition();
 	virtual b2Vec2 getB2DPosition();
@@ -50,11 +55,18 @@ public:
 	virtual void setLooseTarget(Unit* unit, int distance);
 	virtual void setHardTarget(void);
 	virtual void seekTarget(std::map<Ogre::String, Unit*>* units);
+	virtual void resetTarget();
+
+	int getUnitState();
+	void setUnitState(int unitState);
 
 	Ogre::SceneManager*			gameSceneManager;
 	Ogre::AnimationState*		unitAnimState;
+	Ogre::Animation*			unitAnimation;
 	Ogre::SceneNode*			unitNode;
+	Ogre::SceneNode*			projectileNode;
 	Ogre::Entity*				unitEntity;
+	Ogre::Entity*				projectileEntity;
 	Ogre::String				unitName;
 	Ogre::String				mUnitClass;
 
@@ -64,6 +76,7 @@ public:
 	float32						b2Distance;
 	Ogre::Vector3				destination; // destination the object is moving towards
 	b2Vec2						b2Destination;
+	b2Vec2						postCombatB2Desination = b2Vec2_zero;
 	Ogre::Vector3				finalDestination;
 	b2Vec2						b2FinalDestination;
 
@@ -73,6 +86,7 @@ public:
 	Ogre::Vector2				debugPos2;
 	b2Vec2						debugB2Pos1;
 	int							debugInt1;
+	Ogre::Real					animationElapsedTime = 1.0;
 	std::deque<Ogre::Vector3>   walkList;
 	std::deque<b2Vec2>			b2WalkList;
 
@@ -82,12 +96,17 @@ public:
 	int							physicsBodyRadius;
 	int							unitID;
 	int							attackRange;
+	int							mHitPoints;
+	int							mAttackDamage;
 	int							distanceFromTarget;		//This is not continually updated and its state needs to be reset. Used while picking a target
 	int							targetRadius;
 	int							debugDump;
+	int							projectileCount = 1000; //TODO this shouldn't be here
 	bool						isSelected;
 	bool						attacking;		//While attacking, will attack any target in an area
-	bool						hunting;
+	bool						hunting;		//A move
+	bool						trekking = false;			//Command move
+	bool						hasAttacked = false;		//check to see if damage has been dealt over a given attack animation
 	Unit*						mTarget;			//Target this unit is attacking
 	Ogre::Real					maxForce;
 	Ogre::Real					maxSpeed;
@@ -105,7 +124,10 @@ public:
 	//Box2D Physics
 	b2BodyDef					bodyDef;
 	b2Body*						mBody;
+	b2World*					mWorld;
 
+private:
+	int							currentUnitState;
 };
 
 #endif __Unit_h_

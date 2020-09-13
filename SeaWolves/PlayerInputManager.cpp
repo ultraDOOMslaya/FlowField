@@ -23,6 +23,35 @@ void swap(float& x, float& y)
 }
 //----------------------------------------------------------------
 
+void gameInputActionSelect_Press() {
+
+}
+//----------------------------------------------------------------
+
+void gameInputActionExecute_Press() {
+
+}
+//----------------------------------------------------------------
+
+void PlayerInputManager::gameInputActionSelect_Release(SelectionBox* selectBox, Ogre::RaySceneQuery* raySceneQuery, Ogre::Ray &mouseRay) {
+
+	if (selectBox->mStop == selectBox->mStart) {
+		Ogre::String objectName = "";
+
+		raySceneQuery->setRay(mouseRay);
+		Ogre::RaySceneQueryResult& result = raySceneQuery->execute();
+		Ogre::RaySceneQueryResult::iterator it = result.begin();
+
+		
+	}
+}
+//----------------------------------------------------------------
+
+void gameInputActionExecute_Release() {
+
+}
+//----------------------------------------------------------------
+
 void PlayerInputManager::performSelection(
 	const Ogre::Vector2& first,
 	const Ogre::Vector2& second,
@@ -100,10 +129,12 @@ void PlayerInputManager::clearFocusedLocations(
 
 	if (activePlayer->unitQueue.size() > 0) {
 		PathFinding* path = activePlayer->unitQueue.front()->path;
-		for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
-			gridMap[(*it)->x][(*it)->y]->defaultColor(sceneManager);
+		if (path != NULL) {
+			for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
+				gridMap[(*it)->x][(*it)->y]->defaultColor(sceneManager);
+			}
+			path->formationLocations.clear();
 		}
-		path->formationLocations.clear();
 	}
 }
 //----------------------------------------------------------------

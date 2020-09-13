@@ -3,6 +3,10 @@
 #include "Ogre.h"
 
 #include "Unit.h"
+#include "Soldier.h"
+#include "Archer.h"
+#include "Wizard.h"
+
 #include "Constants.h"
 #include "Box2D\Box2D.h"
 #include "GridUtils.h"

@@ -73,6 +73,27 @@ void PlayerManager::assignToGroup() {
 }
 //----------------------------------------------------------------
 
+/**
+* Remove unit from all groups, delete the units Ogre references, and free the memory
+**/
+void PlayerManager::cullUnit(Unit* unit) {
+	for (auto group = groups.begin(); group != groups.end(); ++group) {
+		for (auto unitInstance = group->begin(); unitInstance != group->end(); ++unitInstance) {
+			if ((*unitInstance) == unit) {
+				group->erase(unitInstance--);
+			}			
+		}
+	}
+
+	for (auto it = myArmy.begin(); it != myArmy.end(); ++it) {
+		Unit* unitInArmy = it->second;
+		if (unitInArmy == unit) {
+			myArmy.erase(it--);
+		}
+	}
+}
+//----------------------------------------------------------------
+
 void PlayerManager::clearUnitQueue() {
 	std::vector<Unit*>::iterator ia;
 	for (ia = unitQueue.begin(); ia != unitQueue.end(); ia++) {
@@ -99,6 +120,7 @@ void PlayerManager::attack() {
 
 void PlayerManager::attack(Unit* target) {
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
+		(*unit)->trekking = false;
 		(*unit)->setTarget(target);
 	}
 }
@@ -108,6 +130,7 @@ void PlayerManager::attackMove() {
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
 		(*unit)->attacking = true;
 		(*unit)->hunting = true;
+		(*unit)->trekking = false;
 	}
 }
 //-----------------------------------------------------=-----------

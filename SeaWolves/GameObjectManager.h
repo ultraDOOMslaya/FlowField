@@ -7,6 +7,8 @@
 #include <stack>
 
 #include "Unit.h"
+#include "Projectile.h"
+
 #include "PathFinding.h"
 #include "GridUtils.h"
 

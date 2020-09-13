@@ -313,6 +313,7 @@
     <ClInclude Include="..\..\Dependencies\RakNet\Source\WSAStartupSingleton.h" />
     <ClInclude Include="..\..\Dependencies\RakNet\Source\XBox360Includes.h" />
     <ClInclude Include="..\..\Dependencies\RakNet\Source\_FindFirst.h" />
+    <ClInclude Include="Archer.h" />
     <ClInclude Include="CombatBehaviour.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="EditorUtil.h" />
@@ -322,17 +323,21 @@
     <ClInclude Include="GridEditor.h" />
     <ClInclude Include="GridSquare.h" />
     <ClInclude Include="GridUtils.h" />
+    <ClInclude Include="MagicAttack.h" />
     <ClInclude Include="PathFinding.h" />
     <ClInclude Include="PlayerInputManager.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayerRelationship.h" />
     <ClInclude Include="PlayerRelationshipStatus.h" />
     <ClInclude Include="PlayerUtils.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="SelectionBox.h" />
     <ClInclude Include="SelectionCircle.h" />
+    <ClInclude Include="Soldier.h" />
     <ClInclude Include="SquareNeighbor.h" />
     <ClInclude Include="SteeringBehaviour.h" />
     <ClInclude Include="Unit.h" />
+    <ClInclude Include="Wizard.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Dependencies\RakNet\Source\Base64Encoder.cpp" />
@@ -445,6 +450,7 @@
     <ClCompile Include="..\..\Dependencies\RakNet\Source\VitaIncludes.cpp" />
     <ClCompile Include="..\..\Dependencies\RakNet\Source\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\..\Dependencies\RakNet\Source\_FindFirst.cpp" />
+    <ClCompile Include="Archer.cpp" />
     <ClCompile Include="CombatBehaviour.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="EditorUtil.cpp" />
@@ -454,17 +460,21 @@
     <ClCompile Include="GridEditor.cpp" />
     <ClCompile Include="GridSquare.cpp" />
     <ClCompile Include="GridUtils.cpp" />
+    <ClCompile Include="MagicAttack.cpp" />
     <ClCompile Include="PathFinding.cpp" />
     <ClCompile Include="PlayerInputManager.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="PlayerRelationship.cpp" />
     <ClCompile Include="PlayerRelationshipStatus.cpp" />
     <ClCompile Include="PlayerUtils.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="SelectionBox.cpp" />
     <ClCompile Include="SelectionCircle.cpp" />
+    <ClCompile Include="Soldier.cpp" />
     <ClCompile Include="SquareNeighbor.cpp" />
     <ClCompile Include="SteeringBehaviour.cpp" />
     <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="Wizard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\Dependencies\RakNet\Source\CMakeLists.txt" />

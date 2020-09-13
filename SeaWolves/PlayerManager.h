@@ -17,6 +17,7 @@ public:
 	virtual void addToQueue(Unit* unit);
 	virtual void assignToGroup();
 	virtual void clearUnitQueue();
+	virtual void cullUnit(Unit* unit);
 	virtual void attack();
 	virtual void attack(Unit* target);
 	virtual void attackMove();
