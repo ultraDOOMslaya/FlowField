@@ -169,20 +169,20 @@ void GenerateUnits::generateFourSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::
 	unitNumber++;
 	Ogre::String unit4 = "UnitNode" + Ogre::StringConverter::toString(unitNumber);
 	unitNumber++;
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(10, 4), unit1, soldierSky, "HeavyArmor", 101, world);
-	unit->currentPos = Ogre::Vector2(10, 4);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(6, 4), unit1, soldierSky, "HeavyArmor", 101, world);
+	unit->currentPos = Ogre::Vector2(6, 4);
 	units->insert(std::make_pair(unit1, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit1, unit));
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(10, 5), unit2, soldierSky, "HeavyArmor", 102, world);
-	unit->currentPos = Ogre::Vector2(10, 5);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(6, 5), unit2, soldierSky, "HeavyArmor", 102, world);
+	unit->currentPos = Ogre::Vector2(6, 5);
 	units->insert(std::make_pair(unit2, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit2, unit));
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(11, 5), unit3, soldierSky, "LightArmor", 103, world);
-	unit->currentPos = Ogre::Vector2(11, 5);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(7, 5), unit3, soldierSky, "LightArmor", 103, world);
+	unit->currentPos = Ogre::Vector2(7, 5);
 	units->insert(std::make_pair(unit3, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit3, unit));
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(11, 6), unit4, soldierSky, "LightArmor", 104, world);
-	unit->currentPos = Ogre::Vector2(11, 6);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(7, 6), unit4, soldierSky, "LightArmor", 104, world);
+	unit->currentPos = Ogre::Vector2(7, 6);
 	units->insert(std::make_pair(unit4, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit4, unit));
 }

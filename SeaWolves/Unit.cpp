@@ -69,7 +69,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	fixtureDef.restitution = 0.2f;
 	mBody->CreateFixture(&fixtureDef);
 
-	hunting = true;
+	//hunting = true;
 }
 
 
@@ -413,6 +413,9 @@ void Unit::resetTarget() {
 		if ((*unit)->mHitPoints > 0) {
 			(*unit)->mTarget = NULL;
 			(*unit)->attacking = false;
+			(*unit)->b2FinalDestination = (*unit)->postCombatB2Desination;
+			
+			(*unit)->b2FinalDestination = (*unit)->postCombatB2Desination;
 		}
 	}
 }

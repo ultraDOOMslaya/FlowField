@@ -272,7 +272,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			/* Reset all unit behaviours */
 			(*unit)->halt();
 			(*unit)->attacking = false;
-			//(*unit)->trekking = true;
+			(*unit)->trekking = true;
 			//(*unit)->hunting = false;
 
 			//TODO temporary for flocking work. Remove or refactor. Would like to see a single method with code the render loop uses.
@@ -537,12 +537,15 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 	mWorld->Step(timeStep, velocityIterations, positionIterations);
 	mWorld->ClearForces();
 
-	//TODO exception in vector while units move randomly
 	for (auto player = players.begin(); player != players.end(); ++player) {
 		for (std::map<Ogre::String, Unit*>::iterator it = (*player)->myArmy.begin(); it != (*player)->myArmy.end(); ++it) {
 			Unit* unit = it->second;
 
-			// Bang out A-Move: button press and all
+			//TODO PlayerManager should be renamed to player and some of its functionality should be extracted to an actual player manager
+			//TODO Units should become a child class of a generic GameObject class
+			//TODO implement unit states and priority queues so this mess becomes maintainable
+			//TODO implement unit generation
+			//TODO implement unit modes... offshoot of unit states?
 
 			/** Attack Code **/
 			if (!unit->trekking) {
@@ -608,18 +611,16 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 					CombatBehaviour::seekTarget(&units, (*player), players, unit);
 				}
 
+				//This could be done in Unit::resetTarget but it results in very choppy behaviour for the group
+				//TODO revisit when large degree turns are smoother
 				if ((unit->mTarget == NULL) && !unit->isAnimation("Walk") && !unit->isAnimation("Idle")) {
 					Ogre::Vector2 aPos = GridUtils::numericalCordFinder(unit->path->flowField[unit->currentPos.x][unit->currentPos.y]);
 					b2Vec2 nextCord = b2Vec2(aPos.x, aPos.y);
 					unit->b2WalkList.push_back(nextCord);
 					unit->b2FinalDestination = unit->postCombatB2Desination;
 				}
-			}
 
-			
-			/*if (unit->isHunting() && (unit->mTarget == NULL)) {
-				unit->b2Destination = unit->postCombatB2Desination;
-			}*/
+			}
 
 			//TODO this method name sucks
 			if (unit->isAnimation("Walk")) {

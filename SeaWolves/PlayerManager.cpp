@@ -130,6 +130,7 @@ void PlayerManager::attackMove() {
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
 		(*unit)->attacking = true;
 		(*unit)->hunting = true;
+		(*unit)->trekking = false;
 	}
 }
 //-----------------------------------------------------=-----------
