@@ -15,10 +15,11 @@ public:
 	~GridEditor();
 
 	//virtual void addTerrainValue(Ogre::String squareName, Ogre::MaterialPtr	mat, std::vector<Ogre::Vector2>* impassableTerrain);
-	virtual void addTerrainValue(Ogre::String squareName, Ogre::MaterialPtr	mat, std::vector<GridSquare*>* impassableTerrain, b2World* world);
+	virtual void addTerrainValue(Ogre::String squareName, Ogre::MaterialPtr	mat, b2World* world, std::vector<GridSquare*>* impassableTerrain);
 	virtual void changeTileColor(int x, int y, Ogre::MaterialPtr mat, Ogre::ColourValue color);
 
-	Ogre::SceneManager*					gameSceneManager;
-	std::vector<std::vector<GridSquare*>>* gridMap;
+	Ogre::SceneManager*						gameSceneManager;
+	std::vector<std::vector<GridSquare*>>*  gridMap;
+	
 };
 

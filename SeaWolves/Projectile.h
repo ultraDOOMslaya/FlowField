@@ -16,7 +16,7 @@
 class Projectile
 {
 public:
-	Projectile(Unit* unit, Ogre::SceneManager* mScnMgr, b2World* world);
+	Projectile(Unit* unit, Ogre::SceneManager* mScnMgr);
 	~Projectile();
 
 	void dealDamage();
@@ -39,6 +39,7 @@ public:
 	Unit*						mTarget;
 	Unit*						mFletcher;
 	int							mDamage;
+	int							mTargetId;
 };
 
 #endif __Projectile_h_

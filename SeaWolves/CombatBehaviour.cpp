@@ -1,7 +1,7 @@
 #include "CombatBehaviour.h"
 
 
-void CombatBehaviour::seekTarget(std::map<Ogre::String, Unit*>* units, PlayerManager* activePlayer, std::vector<PlayerManager*> players, Unit* unit) {
+void CombatBehaviour::seekTarget(std::map<Ogre::String, Unit*>* units, Player* activePlayer, std::vector<Player*> players, Unit* unit) {
 	for (std::map<Ogre::String, Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
 		Unit* potentialTarget = it->second;
 		
@@ -23,10 +23,11 @@ void CombatBehaviour::seekTarget(std::map<Ogre::String, Unit*>* units, PlayerMan
 	else if (unit->mTarget == NULL) {
 		unit->attacking = false;
 	}
+	unit->mState = Unit::STATE_AGGRESSIVE;
 }
 //----------------------------------------------------------------
 
-void CombatBehaviour::huntForTarget(std::map<Ogre::String, Unit*>* units, PlayerManager* activePlayer, std::vector<PlayerManager*> players, Unit* unit) {
+void CombatBehaviour::huntForTarget(std::map<Ogre::String, Unit*>* units, Player* activePlayer, std::vector<Player*> players, Unit* unit) {
 	for (std::map<Ogre::String, Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
 		Unit* potentialTarget = it->second;
 		//int distance = std::abs(unit->getPosition().length() - potentialTarget->getPosition().length());
@@ -51,6 +52,29 @@ void CombatBehaviour::huntForTarget(std::map<Ogre::String, Unit*>* units, Player
 			}
 		}
 	}
+	unit->mState = Unit::STATE_AGGRESSIVE;
 }
 //----------------------------------------------------------------
 
+void CombatBehaviour::clearTargets(std::map<Ogre::String, Unit*>* units, Unit* expiredTarget) {
+	for (std::map<Ogre::String, Unit*>::iterator it = units->begin(); it != units->end(); ++it) {
+		Unit* unit = it->second;
+		if (unit->mTarget == expiredTarget) {
+			unit->resetTarget();
+		}
+	}
+}
+//----------------------------------------------------------------
+
+
+//void CombatBehaviour::spawnSpellAction(Unit* unit, std::vector<Projectile>* projectiles, std::vector<MagicAttack>* magicAttacks, Ogre::SceneManager* sceneMgr) {
+//
+//	//TODO make unit classes enum... this should be a switch case
+//	if (unit->mUnitClass == "Fletcher") {
+//		projectiles->push_back(Projectile(unit, sceneMgr));
+//	}
+//	else if (unit->mUnitClass == "Caster") {
+//		magicAttacks->push_back(MagicAttack(unit, sceneMgr));
+//	}
+//}
+////----------------------------------------------------------------

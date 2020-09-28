@@ -55,7 +55,7 @@ void gameInputActionExecute_Release() {
 void PlayerInputManager::performSelection(
 	const Ogre::Vector2& first,
 	const Ogre::Vector2& second,
-	PlayerManager* activePlayer,
+	Player* activePlayer,
 	std::vector<std::vector<GridSquare*>> &gridMap)
 {
 	float left = first.x, right = second.x;
@@ -124,7 +124,7 @@ void PlayerInputManager::performSelection(
 
 //TODO maybe this should live somewhere else
 void PlayerInputManager::clearFocusedLocations(
-	PlayerManager* activePlayer,
+	Player* activePlayer,
 	std::vector<std::vector<GridSquare*>> &gridMap) {
 
 	if (activePlayer->unitQueue.size() > 0) {

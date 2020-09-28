@@ -12,7 +12,7 @@ GenerateUnits::~GenerateUnits()
 }
 
 
-void GenerateUnits::generateOneBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world) {
+void GenerateUnits::generateOneBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world, std::vector<GridSquare*>*   impassableTerrain) {
 	int unitNumber = 0;
 	Unit* unit;
 	Constants constants;
@@ -20,14 +20,17 @@ void GenerateUnits::generateOneBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre
 	Ogre::String archerBronze = constants.bronzeArcherMesh;
 	Ogre::String wizardBronze = constants.bronzeWizardMesh;
 
-	Ogre::String unit1 = "UnitNode" + Ogre::StringConverter::toString(unitNumber);
+	Ogre::String unit2 = "UnitNode" + Ogre::StringConverter::toString(unitNumber);
 	unitNumber++;
-	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 45.0f), unit1, soldierBronze, "HeavyArmor", 1, world);
-	units->insert(std::make_pair(unit1, unit));
-	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit1, unit));
+	
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(0, 1), unit2, soldierBronze, "HeavyArmor", 2, world, impassableTerrain);
+	unit->currentPos = Ogre::Vector2(0, 1);
+	unit->mPlayerId = 1;
+	units->insert(std::make_pair(unit2, unit));
+	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit2, unit));
 }
 
-void GenerateUnits::generateFourBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world) {
+void GenerateUnits::generateFourBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world, std::vector<GridSquare*>*   impassableTerrain) {
 	int unitNumber = 0;
 	Unit* unit;
 	Constants constants;
@@ -43,29 +46,33 @@ void GenerateUnits::generateFourBronze(Ogre::SceneManager* mScnMgr, std::map<Ogr
 	unitNumber++;
 	Ogre::String unit4 = "UnitNode" + Ogre::StringConverter::toString(unitNumber);
 	unitNumber++;
-	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 150.0f), unit1, archerBronze, "LightArmor", 1, world);
+	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 150.0f), unit1, archerBronze, "LightArmor", 1, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(0, 2);
 	unit->attackRange = 200;
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit1, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit1, unit));
-	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 100.0f), unit2, soldierBronze, "HeavyArmor", 2, world);
+	unit = new Unit(mScnMgr, Ogre::Vector3(15.0f, 0.0f, 100.0f), unit2, soldierBronze, "HeavyArmor", 2, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(0, 1);
 	unit->attackRange = 50;
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit2, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit2, unit));
-	unit = new Unit(mScnMgr, Ogre::Vector3(65.0f, 0.0f, 50.0f), unit3, soldierBronze, "HeavyArmor", 3, world);
+	unit = new Unit(mScnMgr, Ogre::Vector3(65.0f, 0.0f, 50.0f), unit3, soldierBronze, "HeavyArmor", 3, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(1, 0);
 	unit->attackRange = 50;
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit3, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit3, unit));
-	unit = new Unit(mScnMgr, Ogre::Vector3(65.0f, 0.0f, 100.0f), unit4, wizardBronze, "LightArmor", 4, world);
+	unit = new Unit(mScnMgr, Ogre::Vector3(65.0f, 0.0f, 100.0f), unit4, wizardBronze, "LightArmor", 4, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(1, 1);
 	unit->attackRange = 150;
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit4, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit4, unit));
 }
 
-void GenerateUnits::generateEightBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world) {
+void GenerateUnits::generateEightBronze(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world, std::vector<GridSquare*>* impassableTerrain) {
 	int unitNumber = 0;
 	Unit* unit;
 	Constants constants;
@@ -94,40 +101,49 @@ void GenerateUnits::generateEightBronze(Ogre::SceneManager* mScnMgr, std::map<Og
 	//Ogre::String unit10 = "UnitNode" + Ogre::StringConverter::toString(unitNumber);
 	//unitNumber++;
 
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(0, 1), unit2, soldierBronze, "HeavyArmor", 2, world);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(0, 1), unit2, soldierBronze, "HeavyArmor", 2, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(0, 1);
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit2, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit2, unit));
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(1, 0), unit3, soldierBronze, "HeavyArmor", 3, world);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(1, 0), unit3, soldierBronze, "HeavyArmor", 3, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(1, 0);
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit3, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit3, unit));
-	unit = new Wizard(mScnMgr, GridUtils::numericalCordFinder(1, 1), unit4, wizardBronze, "Caster", 4, world);
+	unit = new Wizard(mScnMgr, GridUtils::numericalCordFinder(1, 1), unit4, wizardBronze, "Caster", 4, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(1, 1);
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit4, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit4, unit));
-	unit = new Archer(mScnMgr, GridUtils::numericalCordFinder(0, 2), unit5, archerBronze, "Fletcher", 5, world);
+	unit = new Archer(mScnMgr, GridUtils::numericalCordFinder(0, 2), unit5, archerBronze, "Fletcher", 5, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(0, 2);
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit5, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit5, unit));
-	unit = new Archer(mScnMgr, GridUtils::numericalCordFinder(1, 2), unit6, archerBronze, "Fletcher", 6, world);
+	unit = new Archer(mScnMgr, GridUtils::numericalCordFinder(1, 2), unit6, archerBronze, "Fletcher", 6, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(1, 2);
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit6, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit6, unit));
-	unit = new Archer(mScnMgr, GridUtils::numericalCordFinder(0, 3), unit7, archerBronze, "Fletcher", 7, world);
+	unit = new Archer(mScnMgr, GridUtils::numericalCordFinder(0, 3), unit7, archerBronze, "Fletcher", 7, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(0, 3);
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit7, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit7, unit));
-	unit = new Wizard(mScnMgr, GridUtils::numericalCordFinder(1, 3), unit8, wizardBronze, "Caster", 8, world);
+	unit = new Wizard(mScnMgr, GridUtils::numericalCordFinder(1, 3), unit8, wizardBronze, "Caster", 8, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(1, 3);
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit8, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit8, unit));
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(0, 4), unit1, soldierBronze, "HeavyArmor", 1, world);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(0, 4), unit1, soldierBronze, "HeavyArmor", 1, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(0, 4);
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit1, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit1, unit));
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(1, 5), unit9, soldierBronze, "HeavyArmor", 9, world);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(1, 5), unit9, soldierBronze, "HeavyArmor", 9, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(1, 5);
+	unit->mPlayerId = 1;
 	units->insert(std::make_pair(unit9, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit9, unit));
 	/*unit = new Unit(mScnMgr, GridUtils::numericalCordFinder(1, 6), unit10, soldierBronze, "HeavyArmor", 10, world);
@@ -136,7 +152,7 @@ void GenerateUnits::generateEightBronze(Ogre::SceneManager* mScnMgr, std::map<Og
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit10, unit));*/
 }
 
-void GenerateUnits::generateOneSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world) {
+void GenerateUnits::generateOneSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world, std::vector<GridSquare*>*   impassableTerrain) {
 	int unitNumber = 100;
 	Unit* unit;
 	Constants constants;
@@ -146,14 +162,15 @@ void GenerateUnits::generateOneSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::S
 
 	Ogre::String unit1 = "UnitNode" + Ogre::StringConverter::toString(unitNumber);
 	unitNumber++;
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(9, 4), unit1, soldierSky, "HeavyArmor", 101, world);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(9, 4), unit1, soldierSky, "HeavyArmor", 101, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(9, 4);
 	unit->attackRange = 50;
+	unit->mPlayerId = 2;
 	units->insert(std::make_pair(unit1, unit));
 	playerArmy->insert(std::make_pair(unit1, unit));
 }
 
-void GenerateUnits::generateFourSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world) {
+void GenerateUnits::generateFourSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world, std::vector<GridSquare*>*   impassableTerrain) {
 	int unitNumber = 100;
 	Unit* unit;
 	Constants constants;
@@ -169,25 +186,29 @@ void GenerateUnits::generateFourSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::
 	unitNumber++;
 	Ogre::String unit4 = "UnitNode" + Ogre::StringConverter::toString(unitNumber);
 	unitNumber++;
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(6, 4), unit1, soldierSky, "HeavyArmor", 101, world);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(6, 4), unit1, soldierSky, "HeavyArmor", 101, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(6, 4);
+	unit->mPlayerId = 2;
 	units->insert(std::make_pair(unit1, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit1, unit));
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(6, 5), unit2, soldierSky, "HeavyArmor", 102, world);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(6, 5), unit2, soldierSky, "HeavyArmor", 102, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(6, 5);
+	unit->mPlayerId = 2;
 	units->insert(std::make_pair(unit2, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit2, unit));
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(7, 5), unit3, soldierSky, "LightArmor", 103, world);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(7, 5), unit3, soldierSky, "LightArmor", 103, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(7, 5);
+	unit->mPlayerId = 2;
 	units->insert(std::make_pair(unit3, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit3, unit));
-	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(7, 6), unit4, soldierSky, "LightArmor", 104, world);
+	unit = new Soldier(mScnMgr, GridUtils::numericalCordFinder(7, 6), unit4, soldierSky, "LightArmor", 104, world, impassableTerrain);
 	unit->currentPos = Ogre::Vector2(7, 6);
+	unit->mPlayerId = 2;
 	units->insert(std::make_pair(unit4, unit));
 	playerArmy->insert(std::pair<Ogre::String, Unit*>(unit4, unit));
 }
 
-void GenerateUnits::generateEightSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world) {
+void GenerateUnits::generateEightSky(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, Unit*>* units, std::map<Ogre::String, Unit*>* playerArmy, b2World* world, std::vector<GridSquare*>*   impassableTerrain) {
 	/*int unitNumber = 100;
 	Unit* unit;
 	Constants constants;

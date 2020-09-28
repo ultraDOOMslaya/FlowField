@@ -1,19 +1,19 @@
-#include "PlayerManager.h"
+#include "Player.h"
 
 
 
-PlayerManager::PlayerManager()
+Player::Player()
 	: queuedAttackMove(false)
 {
 }
 
 
-PlayerManager::~PlayerManager()
+Player::~Player()
 {
 }
 
 /*
-void PlayerManager::focusUnits(Ogre::SceneQueryResult& result, std::map<Ogre::String, Unit>* units) {
+void Player::focusUnits(Ogre::SceneQueryResult& result, std::map<Ogre::String, Unit>* units) {
 	clearUnitQueue();
 
 	std::map<Ogre::String, Unit>::iterator itTree;
@@ -28,7 +28,7 @@ void PlayerManager::focusUnits(Ogre::SceneQueryResult& result, std::map<Ogre::St
 }*/
 //----------------------------------------------------------------
 
-void PlayerManager::focusUnits(Ogre::SceneQueryResult& result) {
+void Player::focusUnits(Ogre::SceneQueryResult& result) {
 	clearUnitQueue();
 
 	std::map<Ogre::String, Unit*>::iterator itTree;
@@ -45,20 +45,20 @@ void PlayerManager::focusUnits(Ogre::SceneQueryResult& result) {
 }
 //----------------------------------------------------------------
 
-void PlayerManager::focusUnit(Unit* unit) {
+void Player::focusUnit(Unit* unit) {
 	clearUnitQueue();
 	addToQueue(unit);
 	assignToGroup();
 }
 //----------------------------------------------------------------
 
-void PlayerManager::addToQueue(Unit* unit) {
+void Player::addToQueue(Unit* unit) {
 	unit->selected();
 	unitQueue.push_back(unit);
 }
 //----------------------------------------------------------------
 
-void PlayerManager::assignToGroup() {
+void Player::assignToGroup() {
 	std::vector<Unit*>* newUnitGroup = new std::vector<Unit*>();
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
 		if ((*unit)->group != NULL) {
@@ -76,7 +76,7 @@ void PlayerManager::assignToGroup() {
 /**
 * Remove unit from all groups, delete the units Ogre references, and free the memory
 **/
-void PlayerManager::cullUnit(Unit* unit) {
+void Player::cullUnit(Unit* unit) {
 	for (auto group = groups.begin(); group != groups.end(); ++group) {
 		for (auto unitInstance = group->begin(); unitInstance != group->end(); ++unitInstance) {
 			if ((*unitInstance) == unit) {
@@ -94,7 +94,7 @@ void PlayerManager::cullUnit(Unit* unit) {
 }
 //----------------------------------------------------------------
 
-void PlayerManager::clearUnitQueue() {
+void Player::clearUnitQueue() {
 	std::vector<Unit*>::iterator ia;
 	for (ia = unitQueue.begin(); ia != unitQueue.end(); ia++) {
 		(*ia)->unselected();
@@ -103,7 +103,7 @@ void PlayerManager::clearUnitQueue() {
 }
 //----------------------------------------------------------------
 
-bool PlayerManager::hasUnitInArmy(Ogre::String unitName) {
+bool Player::hasUnitInArmy(Ogre::String unitName) {
 	if (myArmy.find(unitName) != myArmy.end()) {
 		return true;
 	}
@@ -111,26 +111,28 @@ bool PlayerManager::hasUnitInArmy(Ogre::String unitName) {
 }
 //----------------------------------------------------------------
 
-void PlayerManager::attack() {
+void Player::attack() {
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
 		(*unit)->attackingTarget();
 	}
 }
 //----------------------------------------------------------------
 
-void PlayerManager::attack(Unit* target) {
+void Player::attack(Unit* target) {
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
 		(*unit)->trekking = false;
 		(*unit)->setTarget(target);
+		(*unit)->mState = Unit::STATE_AGGRESSIVE;
 	}
 }
 //----------------------------------------------------------------
 
-void PlayerManager::attackMove() {
+void Player::attackMove() {
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
 		(*unit)->attacking = true;
 		(*unit)->hunting = true;
 		(*unit)->trekking = false;
+		(*unit)->mState = Unit::STATE_AGGRESSIVE;
 	}
 }
 //-----------------------------------------------------=-----------
@@ -139,7 +141,7 @@ void PlayerManager::attackMove() {
 /*
  *Find the average of the given unit queues position
  */
-Ogre::Vector3 PlayerManager::unitGroupConglomerate() {
+Ogre::Vector3 Player::unitGroupConglomerate() {
 	float x = 0;
 	float y = 0;
 

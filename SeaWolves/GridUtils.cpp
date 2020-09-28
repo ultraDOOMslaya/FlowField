@@ -162,6 +162,8 @@ int GridUtils::distanceTo(Ogre::Vector3 object1, Ogre::Vector3 object2) {
 //----------------------------------------------------------------
 
 
+
+
 bool isValid(int x, int y, std::vector<std::vector<int>> dijkastraGrid) {
 	if ((x <= Constants::gridWidth && x > 0) && (y <= Constants::gridHeight && y > 0)) {
 		return x >= 0 && y >= 0 && x < Constants::gridWidth && y < Constants::gridHeight && dijkastraGrid[x][y] != Constants::WALL;

@@ -3,13 +3,13 @@
 /*
  Cycle through every player for a given unit and determine its status given the current active player
 */
-PlayerRelationshipStatus PlayerUtils::determineStatus(PlayerManager* activePlayer, std::vector<PlayerManager*> players, Unit* unit) {
+PlayerRelationshipStatus PlayerUtils::determineStatus(Player* activePlayer, std::vector<Player*> players, Unit* unit) {
 	if (activePlayer->hasUnitInArmy(unit->unitName)) {
 		return PlayerRelationshipStatus::ME;
 	}
 	else {
-		for (std::vector<PlayerManager*>::iterator it = players.begin(); it < players.end(); it++) {
-			PlayerManager* player = *it;
+		for (std::vector<Player*>::iterator it = players.begin(); it < players.end(); it++) {
+			Player* player = *it;
 			if (player->hasUnitInArmy(unit->unitName)) {
 				if (player->relationship->isFoe()) {
 					return PlayerRelationshipStatus::HOSTILE;

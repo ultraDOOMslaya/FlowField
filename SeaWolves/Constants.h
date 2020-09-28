@@ -12,13 +12,6 @@ public:
 	Constants();
 	~Constants();
 
-	enum UnitStates {
-		Idle = 1,
-		Marching = 2,
-		Attacking = 3,
-		Hunting = 4
-	};
-
 	const static int			gridWidth = 15;
 	const static int			gridHeight = 15;
 	const static int			edgeLength = 60; //was 50

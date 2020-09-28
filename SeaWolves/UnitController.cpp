@@ -1,13 +1,13 @@
-#include "GameObjectManager.h"
+#include "UnitController.h"
 
 
 
-GameObjectManager::GameObjectManager()
+UnitController::UnitController()
 {
 }
 
 
-GameObjectManager::~GameObjectManager()
+UnitController::~UnitController()
 {
 }
 
@@ -70,7 +70,7 @@ static void permutations(std::vector<Unit*>* items, std::stack<Unit*>* permutati
 }
 
 /** by row impl. Efficient but not as good as the shotgun approach **/
-void GameObjectManager::priorityQueueFormation(int width, int height, std::vector<Unit*> units, PathFinding* path) {
+void UnitController::priorityQueueFormation(int width, int height, std::vector<Unit*> units, PathFinding* path) {
 	int rowSize = 4;
 	int iterations = (units.size() + (rowSize - 1)) / rowSize;
 	int totalUnits = units.size();
@@ -196,7 +196,7 @@ void GameObjectManager::priorityQueueFormation(int width, int height, std::vecto
 }
 
 /** Assign locations by row. The is the impl we are using. best compromise between accuracy and performance. **/
-void GameObjectManager::proximityLocationFormation(int width, int height, std::vector<Unit*> units, PathFinding* path) {
+void UnitController::proximityLocationFormation(int width, int height, std::vector<Unit*> units, PathFinding* path) {
 	int totalUnits = units.size();
 	int rowSize = ceil(std::sqrt(totalUnits));
 	int groupSize = 1;	
@@ -322,13 +322,14 @@ void GameObjectManager::proximityLocationFormation(int width, int height, std::v
 		for (std::vector<PotentialUnitLocation*>::iterator shortestLocations = (*unitLocMaps)->begin()->second->begin(); shortestLocations < (*unitLocMaps)->begin()->second->end(); shortestLocations++) {
 			b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder((*shortestLocations)->potentialLocation);
 			(*shortestLocations)->unit->b2FinalDestination = finalPosition;
+			//(*shortestLocations)->unit->mState = (*shortestLocations)->unit->mPreviousState;
 		}
 	}
 	
 }
 
 /** by row impl. Efficient but not as good as the shotgun approach **/
-void GameObjectManager::fullLocationFormation(int width, int height, std::vector<Unit*> units, PathFinding* path) {
+void UnitController::fullLocationFormation(int width, int height, std::vector<Unit*> units, PathFinding* path) {
 
 	proximityLocationFormation(width, height, units, path);
 	//priorityQueueFormation(width, height, units, path);

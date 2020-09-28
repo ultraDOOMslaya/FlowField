@@ -18,7 +18,7 @@
 #include "SquareNeighbor.h"
 #include "SteeringBehaviour.h"
 #include "PathFinding.h"
-#include "PlayerManager.h"
+#include "Player.h"
 #include "SelectionCircle.h"
 #include "SelectionBox.h"
 #include "GridUtils.h"
@@ -29,10 +29,12 @@
 #include "PlayerRelationshipStatus.h"
 #include "PlayerUtils.h"
 #include "CombatBehaviour.h"
-#include "GameObjectManager.h"
+#include "AIUtils.h"
 
 //Manager Singletons
 #include "PlayerInputManager.h"
+#include "GameManager.h"
+#include "UnitController.h"
 
 //Net Code
 #include "RakPeerInterface.h"
@@ -73,6 +75,7 @@ public:
 	virtual void spawnProjectile(Unit* unit);
 	virtual void spawnMagic(Unit* unit);
 	virtual void clearTargets(Unit* unit);
+	bool doesUnitExist(int unitId);
 
 	#define SERVER_PORT 60000
 
@@ -119,20 +122,21 @@ public:
 	Ogre::MaterialPtr			greenMat;
 	Ogre::MaterialPtr			redMat;
 
-	std::vector<std::vector<GridSquare*>> gridMap;
-	std::vector<Ogre::Vector2>	impassableTerrain;
-	std::vector<GridSquare*>		impassableTerrainSquares;
-	std::vector<PlayerManager*>	players;
-	PlayerManager*				activePlayer;
-	PlayerManager				player1;
-	PlayerManager				player2;
+	std::vector<std::vector<GridSquare*>> gridMap; //TODO put this in a map class of some sort and consolidate the non static items in gridUtils into it.
+	std::vector<Player*>	players;
+	Player*				activePlayer;
+	Player				player1;
+	Player				player2;
 	GridEditor*					gridEditor;
+	std::vector<GridSquare*>    impassableTerrain;
 	SelectionBox*				selectBox;
 	Ogre::PlaneBoundedVolumeListSceneQuery* volQuery;
 
 	//Manager Singletons
-	GameObjectManager*			gom;
+	//TODO why are these pointers?
+	UnitController				mUnitController;
 	PlayerInputManager*			pim;
+	GameManager*				GameMgr;
 
 	//Net Code
 	RakNet::Packet*				packet;

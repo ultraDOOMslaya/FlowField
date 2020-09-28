@@ -17,7 +17,7 @@
 class MagicAttack
 {
 public:
-	MagicAttack(Unit* unit, Ogre::SceneManager* mScnMgr, b2World* world);
+	MagicAttack(Unit* unit, Ogre::SceneManager* mScnMgr);
 	~MagicAttack();
 
 	void dealDamage();
@@ -30,6 +30,7 @@ public:
 
 	Unit*						mTarget;
 	int							mDamage;
+	int							mTargetId;
 };
 
 #endif __MagicAttack_h_

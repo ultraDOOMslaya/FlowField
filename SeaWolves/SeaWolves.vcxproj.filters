@@ -57,9 +57,6 @@
     <ClInclude Include="PathFinding.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SelectionBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -546,9 +543,6 @@
     <ClInclude Include="GridSquare.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerInputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -566,6 +560,21 @@
     </ClInclude>
     <ClInclude Include="MagicAttack.h">
       <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="AIUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AIBehaviour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitController.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -594,9 +603,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PathFinding.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SelectionBox.cpp">
@@ -953,9 +959,6 @@
     <ClCompile Include="GridSquare.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjectManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerInputManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -973,6 +976,21 @@
     </ClCompile>
     <ClCompile Include="MagicAttack.cpp">
       <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="AIUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AIBehaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitController.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

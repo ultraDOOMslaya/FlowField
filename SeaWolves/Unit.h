@@ -3,6 +3,8 @@
 #define __Unit_h_
 
 #include <Ogre.h>
+#include <OgreInput.h>
+#include <OgreBitesConfigDialog.h>
 
 #include "Constants.h"
 #include "PathFinding.h"
@@ -16,7 +18,18 @@ class PathFinding;  //Forward declaration
 class Unit
 {
 public:
-	Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String name, Ogre::String meshName, Ogre::String unitClass, int ID, b2World* world);
+	enum State {
+		STATE_IDLE,
+		STATE_MARCHING,
+		STATE_FINISH_JOURNEY,
+		STATE_ATTACKING,
+		STATE_HUNTING,
+		STATE_SEEKING,
+		STATE_AGGRESSIVE,
+		STATE_POST_COMBAT
+	};
+
+	Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String name, Ogre::String meshName, Ogre::String unitClass, int ID, b2World* world, std::vector<GridSquare*>* impassableTerrain);
 	~Unit();
 	virtual void commandMove(Ogre::Vector3 position);
 	virtual void animate(Ogre::String animation);		//TODO make this animateLoop()
@@ -57,8 +70,12 @@ public:
 	virtual void seekTarget(std::map<Ogre::String, Unit*>* units);
 	virtual void resetTarget();
 
-	int getUnitState();
-	void setUnitState(int unitState);
+	/** Utils **/
+	virtual Ogre::Vector3 unitGroupConglomerate();
+
+	/** Handle inputs given to the unit **/
+	virtual void handleInput(OgreBites::Event &evt);
+	virtual void update(const Ogre::FrameEvent& evt);
 
 	Ogre::SceneManager*			gameSceneManager;
 	Ogre::AnimationState*		unitAnimState;
@@ -102,6 +119,7 @@ public:
 	int							targetRadius;
 	int							debugDump;
 	int							projectileCount = 1000; //TODO this shouldn't be here
+	//std::queue<Unit*>			spellActionQueue;
 	bool						isSelected;
 	bool						attacking;		//While attacking, will attack any target in an area
 	bool						hunting;		//A move
@@ -126,8 +144,9 @@ public:
 	b2Body*						mBody;
 	b2World*					mWorld;
 
-private:
-	int							currentUnitState;
+	State						mState;
+	State						mPreviousState;
+	int							mPlayerId;
 };
 
 #endif __Unit_h_

@@ -1,13 +1,15 @@
 #pragma once
 
-#include "PlayerManager.h"
+#include "Player.h"
 #include "Unit.h"
 #include "PlayerUtils.h"
 
 class CombatBehaviour
 {
 public:
-	static void huntForTarget(std::map<Ogre::String, Unit*>* units, PlayerManager* activePlayer, std::vector<PlayerManager*> players, Unit* unit);
-	static void seekTarget(std::map<Ogre::String, Unit*>* units, PlayerManager* activePlayer, std::vector<PlayerManager*> players, Unit* unit);
+	static void huntForTarget(std::map<Ogre::String, Unit*>* units, Player* activePlayer, std::vector<Player*> players, Unit* unit);
+	static void seekTarget(std::map<Ogre::String, Unit*>* units, Player* activePlayer, std::vector<Player*> players, Unit* unit);
+	static void clearTargets(std::map<Ogre::String, Unit*>* units, Unit* expiredTarget);
+	//static void spawnSpellAction(Unit* unit, std::vector<Projectile>* projectiles, std::vector<MagicAttack>* magicAttacks, Ogre::SceneManager* sceneMgr);
 };
 

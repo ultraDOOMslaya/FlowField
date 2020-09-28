@@ -2,7 +2,7 @@
 
 
 
-Projectile::Projectile(Unit* unit, Ogre::SceneManager* mScnMgr, b2World* world)
+Projectile::Projectile(Unit* unit, Ogre::SceneManager* mScnMgr)
 {
 	SceneManager = mScnMgr;
 	Ogre::Vector3 projectilePos = Ogre::Vector3(unit->unitNode->getPosition().x, unit->unitNode->getPosition().y + 50, unit->unitNode->getPosition().z);
@@ -17,6 +17,7 @@ Projectile::Projectile(Unit* unit, Ogre::SceneManager* mScnMgr, b2World* world)
 	projectileNode->setScale(5, 5, 5);
 	projectileNode->attachObject(projectileEntity);
 	mTarget = unit->mTarget;
+	mTargetId = unit->unitID;
 	mDamage = unit->mAttackDamage;
 
 	Ogre::Vector3 directionToFire = unit->mTarget->getPosition() - unit->getPosition();
@@ -48,9 +49,9 @@ Projectile::~Projectile()
 void Projectile::dealDamage() {
 	mTarget->takeDamage(mDamage);
 
-	if (mTarget->mHitPoints <= 0) {
+	/*if (mTarget->mHitPoints <= 0) {
 		mFletcher->resetTarget();
-	}
+	}*/
 }
 //----------------------------------------------------------------
 

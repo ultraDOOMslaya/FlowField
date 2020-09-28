@@ -1,13 +1,14 @@
 #include "MagicAttack.h"
 
 
-MagicAttack::MagicAttack(Unit* unit, Ogre::SceneManager* mScnMgr, b2World* world)
+MagicAttack::MagicAttack(Unit* unit, Ogre::SceneManager* mScnMgr)
 {
 	SceneManager = mScnMgr;
 	particleName = unit->unitName + "_light_particle" + std::to_string(unit->projectileCount);
 	Ogre::ParticleSystem* lightParticle = SceneManager->createParticleSystem(particleName, "Space/Sun");
 	unit->projectileCount++;
 	mTarget = unit->mTarget;
+	mTargetId = unit->unitID;
 	mDamage = unit->mAttackDamage;
 
 	Ogre::Vector3 targetPos = unit->mTarget->getPosition();

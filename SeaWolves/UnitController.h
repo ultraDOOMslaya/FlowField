@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __GameObjectManager_h_
-#define __GameObjectManager_h_
+#ifndef __UnitController_h_
+#define __UnitController_h_
 
 #include <Ogre.h>
 #include <stack>
@@ -12,7 +12,7 @@
 #include "PathFinding.h"
 #include "GridUtils.h"
 
-class GameObjectManager
+class UnitController
 {
 public:
 	class SharedUnitReference
@@ -63,8 +63,8 @@ public:
 		int distance = std::numeric_limits<int>::max();
 	};
 
-	GameObjectManager();
-	virtual ~GameObjectManager();
+	UnitController();
+	virtual ~UnitController();
 
 	//void assignUnitToFormationLocation(int width, int height, std::vector<Unit*> units, PathFinding* path);
 	void fullLocationFormation(int width, int height, std::vector<Unit*> units, PathFinding* path);
@@ -78,4 +78,4 @@ private:
 
 
 
-#endif __GameObjectManager_h_
+#endif __UnitController_h_

@@ -1,12 +1,12 @@
 #pragma once
 
 #include "PlayerRelationshipStatus.h"
-#include "PlayerManager.h"
+#include "Player.h"
 
 class PlayerUtils
 {
 public:
 
-	static PlayerRelationshipStatus determineStatus(PlayerManager* activePlayer, std::vector<PlayerManager*> players, Unit* unit);
+	static PlayerRelationshipStatus determineStatus(Player* activePlayer, std::vector<Player*> players, Unit* unit);
 };
 

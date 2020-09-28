@@ -95,7 +95,7 @@ b2Vec2 SteeringBehaviour::seek(Unit* unit, b2Vec2 destination) {
 }
 //----------------------------------------------------------------
 
-b2Vec2 SteeringBehaviour::b2seperation(Unit* unit, std::map<Ogre::String, Unit*>* units, PlayerManager* activePlayer, std::vector<PlayerManager*> players) {
+b2Vec2 SteeringBehaviour::b2seperation(Unit* unit, std::map<Ogre::String, Unit*>* units, Player* activePlayer, std::vector<Player*> players) {
 	//Ogre::Vector3 totalForce = Ogre::Vector3(0, 0, 0);
 	b2Vec2 totalForce = b2Vec2::b2Vec2(0, 0);
 	int neighborsCount = 0;
@@ -144,7 +144,7 @@ b2Vec2 SteeringBehaviour::b2seperation(Unit* unit, std::map<Ogre::String, Unit*>
 /*
 Seperation keeps units from treading on each other. High seperation will create very jumpy movement. Counteract with alignment.
 */
-Ogre::Vector3 SteeringBehaviour::seperation(Unit* unit, std::map<Ogre::String, Unit*>* units, PlayerManager* activePlayer, std::vector<PlayerManager*> players) {
+Ogre::Vector3 SteeringBehaviour::seperation(Unit* unit, std::map<Ogre::String, Unit*>* units, Player* activePlayer, std::vector<Player*> players) {
 	Ogre::Vector3 totalForce = Ogre::Vector3(0, 0, 0);
 	int neighborsCount = 0;
 	

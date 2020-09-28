@@ -6,11 +6,11 @@
 #include "Constants.h"
 #include "PlayerRelationship.h"
 
-class PlayerManager
+class Player
 {
 public:
-	PlayerManager();
-	~PlayerManager();
+	Player();
+	~Player();
 	//virtual void focusUnits(Ogre::SceneQueryResult& result, std::map<Ogre::String, Unit>* units);
 	virtual void focusUnits(Ogre::SceneQueryResult& result);
 	virtual void focusUnit(Unit* unit);
@@ -33,5 +33,6 @@ public:
 	std::map<Ogre::String, Unit*>		myArmy;
 	PlayerRelationship*					relationship;
 	bool								queuedAttackMove;
+	int									playerId;
 };
 

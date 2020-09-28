@@ -8,6 +8,7 @@
 #include "PathFinding.h"
 #include "SelectionCircle.h"
 #include "GridUtils.h"
+#include "GridEditor.h"
 
 #include "Box2D\Box2D.h"
 
@@ -19,7 +20,7 @@ private:
 
 
 public:
-	Soldier(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String name, Ogre::String meshName, Ogre::String unitClass, int ID, b2World* world);
+	Soldier(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String name, Ogre::String meshName, Ogre::String unitClass, int ID, b2World* world, std::vector<GridSquare*>* impassableTerrain);
 	~Soldier();
 
 

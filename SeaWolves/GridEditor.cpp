@@ -19,7 +19,7 @@ void setSquareColor(Ogre::Entity* entity, Ogre::MaterialPtr mat, Ogre::ColourVal
 }
 //----------------------------------------------------------------
 
-void GridEditor::addTerrainValue(Ogre::String squareName, Ogre::MaterialPtr	mat, std::vector<GridSquare*>* impassableTerrain, b2World* world) {
+void GridEditor::addTerrainValue(Ogre::String squareName, Ogre::MaterialPtr	mat, b2World* world, std::vector<GridSquare*>* impassableTerrain) {
 	int squareNumber = stoi(squareName);
 	int xcount = 0;
 	int ycount = 0;
