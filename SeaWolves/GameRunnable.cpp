@@ -493,12 +493,12 @@ static int distanceTo(Ogre::Vector3 unit1, Ogre::Vector3 unit2) {
 //----------------------------------------------------------------
 
 void GameRunnable::spawnProjectile(Unit* unit) {
-	projectiles.push_back(Projectile(unit, mScnMgr));
+	projectiles.push_back(new Projectile(unit, mScnMgr));
 }
 //----------------------------------------------------------------
 
 void GameRunnable::spawnMagic(Unit* unit) {
-	magicAttacks.push_back(MagicAttack(unit, mScnMgr));
+	magicAttacks.push_back(new MagicAttack(unit, mScnMgr));
 }
 //----------------------------------------------------------------
 
@@ -563,9 +563,12 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			case Unit::STATE_MARCHING:
 				break;
 			case Unit::STATE_FINISH_JOURNEY:
-				//mUnitController.proximityLocationFormation(unit->path->origin.x, unit->path->origin.y, activePlayer->unitQueue, unit->path);
+				mUnitController.proximityLocationFormation(unit->path->origin.x, unit->path->origin.y, activePlayer->unitQueue, unit->path);
 				break;
 			case Unit::STATE_ATTACKING:
+				break;
+			case Unit::STATE_SPAWN_SPELLACTION:
+				CombatBehaviour::spawnSpellAction(unit, &projectiles, &magicAttacks, mScnMgr);
 				break;
 			case Unit::STATE_HUNTING:
 				CombatBehaviour::huntForTarget(&units, (*player), players, unit);
@@ -575,192 +578,28 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 				break;
 			}
 
-			/** This will throw exceptions, if placed near the top, if dealing damage to an already dead unit **/
-
 			//TODO fix unit stuttering at sudden direction changes
 			//TODO remove references to units from GameRunnable
 			//TODO Player should be renamed to player and some of its functionality should be extracted to an actual player manager
 			//TODO Units should become a child class of a generic GameObject class
 			//TODO implement unit generation
 
-			/** Attack Code **/
-			/** Idle, Attacking, or Hunting **/
-			if (unit->mState == Unit::STATE_AGGRESSIVE) {
-				if (unit->hasTarget()) {
-					unit->distanceFromTarget = unit->getPosition().squaredLength() - unit->mTarget->getPosition().squaredLength();
-					if (unit->inRange()) {
-						unit->mState = Unit::STATE_ATTACKING;
-					}
-					else {
-						if (unit->unitAnimState->getAnimationName() != "Walk") {
-							unit->walkList.push_back(unit->mTarget->getPosition());
-						}
-						else {
-							//Assign units a final destination but give them a *dummy path as well
-							unit->finalDestination = unit->mTarget->getPosition();
-							unit->b2FinalDestination = unit->mTarget->getB2DPosition();
-						}
-					}
-				}
-				else if (unit->isHunting()) {
-					unit->mState = Unit::STATE_HUNTING;
-				}
-				else {
-					unit->mState = Unit::STATE_SEEKING;
-				}
-			}
-
-			if (unit->mState == Unit::STATE_POST_COMBAT) {
-				if (unit->hasTarget() && unit->inRange()) {
-					unit->mState = Unit::STATE_ATTACKING;
-				}
-				else {
-					Ogre::Vector2 aPos = GridUtils::numericalCordFinder(unit->path->flowField[unit->currentPos.x][unit->currentPos.y]);
-					b2Vec2 nextCord = b2Vec2(aPos.x, aPos.y);
-					unit->b2WalkList.push_back(nextCord);
-					unit->b2FinalDestination = unit->postCombatB2Desination;
-					unit->mState = Unit::STATE_AGGRESSIVE;
-				}
-			}
-
-			if (unit->mState == Unit::STATE_ATTACKING) {
-				unit->attack();
-				//TODO make this a method in Unit
-				if (unit->mUnitClass == "HeavyArmor" && (unit->unitAnimState->getTimePosition() > (unit->unitAnimState->getLength() * 0.5))) {
-
-					if (!unit->hasAttacked)
-						unit->mTarget->takeDamage(unit->mAttackDamage);
-
-					unit->hasAttacked = true;
-				}
-				if (unit->mUnitClass == "Fletcher" && (unit->unitAnimState->getTimePosition() < unit->animationElapsedTime)) {
-					if (!unit->hasAttacked) {
-						//unit->spellActionQueue.push(unit);
-						//CombatBehaviour::spawnSpellAction(unit->spellActionQueue.front(), &projectiles, &magicAttacks, mScnMgr);
-						//unit->spellActionQueue.pop();
-						spawnProjectile(unit);
-						//CombatBehaviour::spawnSpellAction(unit, &projectiles, &magicAttacks, mScnMgr);
-					}
-
-					unit->hasAttacked = true;
-				}
-				if (unit->mUnitClass == "Caster" && (unit->unitAnimState->getTimePosition() > (unit->unitAnimState->getLength() * 0.8))) {
-					if (!unit->hasAttacked) {
-						/*unit->spellActionQueue.push(unit);
-						CombatBehaviour::spawnSpellAction(unit->spellActionQueue.front(), &projectiles, &magicAttacks, mScnMgr);
-						unit->spellActionQueue.pop();*/
-						spawnMagic(unit);
-						//CombatBehaviour::spawnSpellAction(unit, &projectiles, &magicAttacks, mScnMgr);
-					}
-
-					unit->hasAttacked = true;
-				}
-				unit->animationElapsedTime = unit->unitAnimState->getTimePosition();
-			}
-
-			/** Kinetic unit states **/
-			if (unit->mState == Unit::STATE_MARCHING || unit->mState == Unit::STATE_AGGRESSIVE || unit->mState == Unit::STATE_HUNTING || unit->mState == Unit::STATE_SEEKING) {
-
-				/* Realtime directing */
-				unit->debugB2Pos1 = unit->getB2DPosition();
-				Ogre::Vector2 position = GridUtils::b2CordNumericalFinder(unit->getB2DPosition());
-				if (position != unit->currentPos) {
-					unit->currentPos = position;
-				}
-
-				/** If the group has LOS, assign the most final destination **/
-				// This assigns units into formation if we have LOS
-				if (unit->mTarget == NULL) {
-					if (unit->assignedPathLosDiscovered()) {
-						//unit->mPreviousState = unit->mState;
-						//unit->mState = Unit::STATE_FINISH_JOURNEY;
-						mUnitController.proximityLocationFormation(unit->path->origin.x, unit->path->origin.y, activePlayer->unitQueue, unit->path);
-						//gom->proximityLocationFormation(unit->path->origin.x, unit->path->origin.y, *(unit->group), unit->path); //was activeplayer->UnitQueue
-					}
-				}
-				
-				b2Vec2 cords;
-				if (unit->hasLos()) {
-					cords = unit->b2FinalDestination;
-				}
-				else {
-					Ogre::Vector2 direction = GridUtils::numericalCordFinder(*unit->getCurrentFlowValue());
-					unit->debugPos1 = *unit->getCurrentFlowValue();
-					cords = GridUtils::b2NumericalCordFinder(*unit->getCurrentFlowValue());
-				}
-
-				/* Physics applied to everyone */
-				unit->debugPos2 = Ogre::Vector2(cords.x, cords.y);
-				b2Vec2 seek = SteeringBehaviour::seek(unit, cords);
-				unit->b2ForceToApply = seek;
-
-				//TODO put this somewhere... do it as soon as you see this!
-				if (unit->hasArrived()) {
-					unit->halt();
-				}
-			}
-
-			/** unit subroutine **/
-			if (unit->nextLocation()) {
-				unit->animate("Walk");
-				unit->b2Velocity = unit->b2Direction;
-				unit->mBody->SetType(b2_dynamicBody);
-				//NOTE this code seems to be obsolete after the implementation of POSTCOMBAT unit state
-				/*if ((unit->mState != Unit::STATE_AGGRESSIVE) && (unit->mState != Unit::STATE_HUNTING) && (unit->mState != Unit::STATE_SEEKING))
-					unit->mState = Unit::STATE_MARCHING;*/
-			}
-
-			/** Marching and Hunting **/
-			if (unit->b2Destination != b2Vec2_zero) {
-
-				unit->b2ForceToApply.operator*=(evt.timeSinceLastFrame);		//Real Time
-				//unit->b2ForceToApply.operator*=(0.0166666);			//Mocked Delta Time
-				unit->b2Velocity.operator+=(unit->b2ForceToApply);
-
-				float speed = unit->b2Velocity.Length();
-				if (speed > unit->maxSpeed) {
-					unit->b2Velocity.operator*=(unit->maxSpeed / speed);
-				}
-
-				unit->rotate(unit->b2Velocity);
-
-				//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.0166666));			//Mocked Delta Time
-				Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(evt.timeSinceLastFrame));		//Real Time
-
-				unit->mBody->SetLinearVelocity(unit->b2Velocity);
-				Ogre::Vector3 moveGraphic = Ogre::Vector3(unit->getB2DPosition().x, 0, unit->getB2DPosition().y);
-				unit->debugPos2 = Ogre::Vector2(moveGraphic.x, moveGraphic.z);
-				unit->commandMove(moveGraphic);
-
-			}
-			/** Attacking and Idle **/
-			else {
-				/** Code responsible for stopping unit movement **/
-				//TODO Consider throwing this in a method
-				unit->b2Velocity(0.0f);
-				unit->mBody->SetLinearVelocity(b2Vec2_zero);
-				unit->mBody->SetType(b2_staticBody);
-				unit->trekking = false;
-			}
-
-			/** Advance Unit Animations **/
-			//unit->unitAnimState->addTime(0.0166666);				//Mocked Delta Time
-			unit->unitAnimState->addTime(evt.timeSinceLastEvent);		//Real Time
+			unit->update(evt);
 		}
 	}
 
 	/** Projectile animation frame rendering **/
 
-	for (std::vector<Projectile>::iterator projectile = projectiles.begin(); projectile != projectiles.end(); ++projectile) {
-		if (projectile->mDistance > 0.0) {
-			Ogre::Real move = projectile->mWalkSpeed * evt.timeSinceLastFrame;
-			projectile->mDistance -= move;
+	for (std::vector<Projectile*>::iterator projectile = projectiles.begin(); projectile != projectiles.end(); ++projectile) {
+		if ((*projectile)->mDistance > 0.0) {
+			Ogre::Real move = (*projectile)->mWalkSpeed * evt.timeSinceLastFrame;
+			(*projectile)->mDistance -= move;
 
-			projectile->projectileNode->translate(move * projectile->mDirection);
+			(*projectile)->projectileNode->translate(move * (*projectile)->mDirection);
 		}
 		else {
-			projectile->dealDamage();
-			Ogre::String objName = projectile->projectileName;
+			(*projectile)->dealDamage();
+			Ogre::String objName = (*projectile)->projectileName;
 			mScnMgr->destroySceneNode(objName);
 			projectiles.erase(projectile--);
 		}
@@ -768,10 +607,10 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 
 	/** Particle animation frame rendering **/
 
-	for (std::vector<MagicAttack>::iterator magic = magicAttacks.begin(); magic != magicAttacks.end(); ++magic) {
-		if (magic->summoner->unitAnimState->hasEnded() || magic->summoner->mTarget == NULL) {
-			magic->dealDamage();
-			Ogre::String objName = magic->particleName;
+	for (std::vector<MagicAttack*>::iterator magic = magicAttacks.begin(); magic != magicAttacks.end(); ++magic) {
+		if ((*magic)->summoner->unitAnimState->hasEnded() || (*magic)->summoner->mTarget == NULL) {
+			(*magic)->dealDamage();
+			Ogre::String objName = (*magic)->particleName;
 			mScnMgr->destroySceneNode(objName);
 			magicAttacks.erase(magic--);
 		}

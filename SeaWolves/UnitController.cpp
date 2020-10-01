@@ -322,7 +322,6 @@ void UnitController::proximityLocationFormation(int width, int height, std::vect
 		for (std::vector<PotentialUnitLocation*>::iterator shortestLocations = (*unitLocMaps)->begin()->second->begin(); shortestLocations < (*unitLocMaps)->begin()->second->end(); shortestLocations++) {
 			b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder((*shortestLocations)->potentialLocation);
 			(*shortestLocations)->unit->b2FinalDestination = finalPosition;
-			//(*shortestLocations)->unit->mState = (*shortestLocations)->unit->mPreviousState;
 		}
 	}
 	

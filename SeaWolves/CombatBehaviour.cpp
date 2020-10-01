@@ -67,14 +67,15 @@ void CombatBehaviour::clearTargets(std::map<Ogre::String, Unit*>* units, Unit* e
 //----------------------------------------------------------------
 
 
-//void CombatBehaviour::spawnSpellAction(Unit* unit, std::vector<Projectile>* projectiles, std::vector<MagicAttack>* magicAttacks, Ogre::SceneManager* sceneMgr) {
-//
-//	//TODO make unit classes enum... this should be a switch case
-//	if (unit->mUnitClass == "Fletcher") {
-//		projectiles->push_back(Projectile(unit, sceneMgr));
-//	}
-//	else if (unit->mUnitClass == "Caster") {
-//		magicAttacks->push_back(MagicAttack(unit, sceneMgr));
-//	}
-//}
-////----------------------------------------------------------------
+void CombatBehaviour::spawnSpellAction(Unit* unit, std::vector<Projectile*>* projectiles, std::vector<MagicAttack*>* magicAttacks, Ogre::SceneManager* sceneMgr) {
+
+	//TODO make unit classes enum... this should be a switch case
+	if (unit->mUnitClass == "Fletcher") {
+		projectiles->push_back(new Projectile(unit, sceneMgr));
+	}
+	else if (unit->mUnitClass == "Caster") {
+		magicAttacks->push_back(new MagicAttack(unit, sceneMgr));
+	}
+	unit->mState = unit->mPreviousState;
+}
+//----------------------------------------------------------------

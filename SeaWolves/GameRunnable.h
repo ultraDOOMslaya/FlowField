@@ -108,8 +108,8 @@ public:
 	bool						createUnitMode;
 	//std::vector<Unit>			units;
 	std::map<Ogre::String, Unit*> units;
-	std::vector<Projectile>		projectiles;
-	std::vector<MagicAttack>	magicAttacks;
+	std::vector<Projectile*>	projectiles;
+	std::vector<MagicAttack*>	magicAttacks;
 	std::queue<Ogre::String>	robots;
 	int							robotNumber;
 	int							debugx;

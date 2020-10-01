@@ -104,171 +104,174 @@ void Unit::handleInput(OgreBites::Event &evt) {
 
 void Unit::update(const Ogre::FrameEvent& evt) {
 
-	//if (mState == Unit::STATE_AGGRESSIVE) {
-	//	if (hasTarget()) {
-	//		distanceFromTarget = getPosition().squaredLength() - mTarget->getPosition().squaredLength();
-	//		if (inRange()) {
-	//			mState = Unit::STATE_ATTACKING;
-	//		}
-	//		else {
-	//			if (unitAnimState->getAnimationName() != "Walk") {
-	//				walkList.push_back(mTarget->getPosition());
-	//			}
-	//			else {
-	//				finalDestination = mTarget->getPosition();
-	//				b2FinalDestination = mTarget->getB2DPosition();
-	//			}
-	//		}
-	//	}
-	//	else if (isHunting()) {
-	//		mState = Unit::STATE_HUNTING;
-	//		//AIUtils::unitGroupConglomerate(group);
-	//		//CombatBehaviour::huntForTarget(&units, (*player), players, unit);
-	//	}
-	//	else {
-	//		mState = Unit::STATE_SEEKING;
-	//		//CombatBehaviour::seekTarget(&units, (*player), players, unit);
-	//	}
-	//}
+	/** Attack Code **/
+	/** Idle, Attacking, or Hunting **/
+	if (mState == Unit::STATE_AGGRESSIVE) {
+		if (hasTarget()) {
+			distanceFromTarget = getPosition().squaredLength() - mTarget->getPosition().squaredLength();
+			if (inRange()) {
+				mState = Unit::STATE_ATTACKING;
+			}
+			else {
+				if (unitAnimState->getAnimationName() != "Walk") {
+					walkList.push_back(mTarget->getPosition());
+				}
+				else {
+					//Assign units a final destination but give them a *dummy path as well
+					finalDestination = mTarget->getPosition();
+					b2FinalDestination = mTarget->getB2DPosition();
+				}
+			}
+		}
+		else if (isHunting()) {
+			mState = Unit::STATE_HUNTING;
+		}
+		else {
+			mState = Unit::STATE_SEEKING;
+		}
+	}
 
-	//if (mState == Unit::STATE_POST_COMBAT) {
-	//	if (hasTarget() && inRange()) {
-	//		mState = Unit::STATE_ATTACKING;
-	//	}
-	//	else {
-	//		Ogre::Vector2 aPos = GridUtils::numericalCordFinder(path->flowField[currentPos.x][currentPos.y]);
-	//		b2Vec2 nextCord = b2Vec2(aPos.x, aPos.y);
-	//		b2WalkList.push_back(nextCord);
-	//		b2FinalDestination = postCombatB2Desination;
-	//		mState = Unit::STATE_AGGRESSIVE;
-	//	}
-	//}
+	if (mState == Unit::STATE_POST_COMBAT) {
+		if (hasTarget() && inRange()) {
+			mState = Unit::STATE_ATTACKING;
+		}
+		else {
+			Ogre::Vector2 aPos = GridUtils::numericalCordFinder(path->flowField[currentPos.x][currentPos.y]);
+			b2Vec2 nextCord = b2Vec2(aPos.x, aPos.y);
+			b2WalkList.push_back(nextCord);
+			b2FinalDestination = postCombatB2Desination;
+			mState = Unit::STATE_AGGRESSIVE;
+		}
+	}
 
-	//if (mState == Unit::STATE_ATTACKING) {
-	//	attack();
-	//	//TODO make this a method in Unit
-	//	/*if (mUnitClass == "HeavyArmor" && (unitAnimState->getTimePosition() > (unitAnimState->getLength() * 0.5))) {
+	if (mState == Unit::STATE_ATTACKING) {
+		attack();
+		//TODO make this a method in Unit
+		if (mUnitClass == "HeavyArmor" && (unitAnimState->getTimePosition() > (unitAnimState->getLength() * 0.5))) {
 
-	//		if (!hasAttacked)
-	//			mTarget->takeDamage(mAttackDamage);
+			if (!hasAttacked)
+				mTarget->takeDamage(mAttackDamage);
 
-	//		if (mTarget->mHitPoints <= 0) {
-	//			clearTargets(mTarget);
-	//		}
+			hasAttacked = true;
+		}
+		if (mUnitClass == "Fletcher" && (unitAnimState->getTimePosition() < animationElapsedTime)) {
+			if (!hasAttacked) {
+				//spellActionQueue.push(unit);
+				//spellActionQueue.pop();
+				mPreviousState = mState;
+				mState = Unit::STATE_SPAWN_SPELLACTION;
+				//spawnProjectile(unit);
+				//CombatBehaviour::spawnSpellAction(unit, &projectiles, &magicAttacks, mScnMgr);
+			}
 
-	//		hasAttacked = true;
-	//	}
-	//	if (mUnitClass == "Fletcher" && (unitAnimState->getTimePosition() < animationElapsedTime)) {
-	//		if (!hasAttacked)
-	//			spawnProjectile(unit);
+			hasAttacked = true;
+		}
+		if (mUnitClass == "Caster" && (unitAnimState->getTimePosition() > (unitAnimState->getLength() * 0.8))) {
+			if (!hasAttacked) {
+				mPreviousState = mState;
+				mState = Unit::STATE_SPAWN_SPELLACTION;
+				//spellActionQueue.push(unit);
+				//spellActionQueue.pop();
+				//spawnMagic(unit);
+				//CombatBehaviour::spawnSpellAction(unit, &projectiles, &magicAttacks, mScnMgr);
+			}
 
-	//		if (mTarget->mHitPoints <= 0) {
-	//			clearTargets(mTarget);
-	//		}
+			hasAttacked = true;
+		}
+		animationElapsedTime = unitAnimState->getTimePosition();
+	}
 
-	//		hasAttacked = true;
-	//	}
-	//	if (mUnitClass == "Caster" && (unitAnimState->getTimePosition() > (unitAnimState->getLength() * 0.8))) {
-	//		if (!hasAttacked)
-	//			spawnMagic(unit);
+	/** Kinetic unit states **/
+	if (mState == Unit::STATE_MARCHING || mState == Unit::STATE_AGGRESSIVE || mState == Unit::STATE_HUNTING || mState == Unit::STATE_SEEKING || mState == Unit::STATE_FINISH_JOURNEY) {
 
-	//		if (mTarget->mHitPoints <= 0) {
-	//			clearTargets(mTarget);
-	//		}
+		/* Realtime directing */
+		debugB2Pos1 = getB2DPosition();
+		Ogre::Vector2 position = GridUtils::b2CordNumericalFinder(getB2DPosition());
+		if (position != currentPos) {
+			currentPos = position;
+		}
 
-	//		hasAttacked = true;
-	//	}*/
+		/** If the group has LOS, assign the most final destination **/
+		// This assigns units into formation if we have LOS
+		if (mTarget == NULL) {
+			if (assignedPathLosDiscovered()) {
+				mPreviousState = mState;
+				mState = Unit::STATE_FINISH_JOURNEY;
+			}
+			else if (mState == Unit::STATE_FINISH_JOURNEY) {
+				mState = mPreviousState;
+			}
+		}
 
-	//	/** Kinetic unit states **/
-	//	if (unit->mState == Unit::STATE_MARCHING || unit->mState == Unit::STATE_AGGRESSIVE) {
+		b2Vec2 cords;
+		if (hasLos()) {
+			cords = b2FinalDestination;
+		}
+		else {
+			Ogre::Vector2 direction = GridUtils::numericalCordFinder(*getCurrentFlowValue());
+			debugPos1 = *getCurrentFlowValue();
+			cords = GridUtils::b2NumericalCordFinder(*getCurrentFlowValue());
+		}
 
-	//		/* Realtime directing */
-
-	//		Ogre::Vector2 b4Position = GridUtils::cordNumericalFinder(unit->getPosition());
-	//		unit->debugB2Pos1 = unit->getB2DPosition();
-	//		//Ogre::Vector2 position = GridUtils::cordNumericalFinder(unit->getPosition()); // Temporary to see if this works over the next line.
-	//		Ogre::Vector2 position = GridUtils::b2CordNumericalFinder(unit->getB2DPosition());
-	//		if (position != unit->currentPos) {
-	//			unit->currentPos = position;
-	//		}
-
-	//		/** If the group has LOS, assign the most final destination **/
-	//		// This assigns units into formation if we have LOS
-	//		//TODO make unti states such as idle, marching, and attacking
-	//		if (unit->mTarget == NULL) {
-	//			if (unit->assignedPathLosDiscovered()) {
-	//				gom->proximityLocationFormation(unit->path->origin.x, unit->path->origin.y, activePlayer->unitQueue, unit->path);
-	//			}
-	//		}
-
-
-	//		b2Vec2 cords;
-	//		if (unit->hasLos()) {
-	//			cords = unit->b2FinalDestination;
-	//		}
-	//		else {
-	//			Ogre::Vector2 direction = GridUtils::numericalCordFinder(*unit->getCurrentFlowValue());
-	//			unit->debugPos1 = *unit->getCurrentFlowValue();
-	//			cords = GridUtils::b2NumericalCordFinder(*unit->getCurrentFlowValue());
-	//		}
-
-	//		/* Physics applied to everyone */ 
-	//		unit->debugPos2 = Ogre::Vector2(cords.x, cords.y);
-
-	//		b2Vec2 seek = SteeringBehaviour::seek(unit, cords);
-	//		unit->b2ForceToApply = seek;
+		/* Physics applied to everyone */
+		debugPos2 = Ogre::Vector2(cords.x, cords.y);
+		b2Vec2 seek = Unit::seek(cords);
 
 
-	//		//TODO put this somewhere... do it as soon as you see this!
-	//		if (unit->hasArrived()) {
-	//			unit->halt();
-	//		}
-	//	}
+		b2ForceToApply = seek;
 
-	//	/** unit subroutine **/
-	//	if (unit->nextLocation()) {
-	//		unit->animate("Walk");
-	//		unit->b2Velocity = unit->b2Direction;
-	//		unit->mBody->SetType(b2_dynamicBody);
-	//		if (unit->mState != Unit::STATE_AGGRESSIVE)
-	//			unit->mState = Unit::STATE_MARCHING;
-	//	}
+		//TODO put this somewhere... do it as soon as you see this!
+		if (hasArrived()) {
+			halt();
+		}
+	}
 
-	//	/** Marching and Hunting **/
-	//	if (unit->b2Destination != b2Vec2_zero) {
+	/** unit subroutine **/
+	if (nextLocation()) {
+		animate("Walk");
+		b2Velocity = b2Direction;
+		mBody->SetType(b2_dynamicBody);
+		//NOTE this code seems to be obsolete after the implementation of POSTCOMBAT unit state
+		/*if ((mState != Unit::STATE_AGGRESSIVE) && (mState != Unit::STATE_HUNTING) && (mState != Unit::STATE_SEEKING))
+			mState = Unit::STATE_MARCHING;*/
+	}
 
-	//		unit->b2ForceToApply.operator*=(evt.timeSinceLastFrame);		//Real Time
-	//		//unit->b2ForceToApply.operator*=(0.0166666);			//Mocked Delta Time
-	//		unit->b2Velocity.operator+=(unit->b2ForceToApply);
+	/** Marching and Hunting **/
+	if (b2Destination != b2Vec2_zero) {
 
-	//		float speed = unit->b2Velocity.Length();
-	//		if (speed > unit->maxSpeed) {
-	//			unit->b2Velocity.operator*=(unit->maxSpeed / speed);
-	//		}
+		b2ForceToApply.operator*=(evt.timeSinceLastFrame);		//Real Time
+		//b2ForceToApply.operator*=(0.0166666);			//Mocked Delta Time
+		b2Velocity.operator+=(b2ForceToApply);
 
-	//		unit->rotate(unit->b2Velocity);
+		float speed = b2Velocity.Length();
+		if (speed > maxSpeed) {
+			b2Velocity.operator*=(maxSpeed / speed);
+		}
 
-	//		//Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(0.0166666));			//Mocked Delta Time
-	//		Ogre::Vector3 newPos = unit->getPosition().operator+=(unit->velocity.operator*(evt.timeSinceLastFrame));		//Real Time
+		rotate(b2Velocity);
 
-	//		unit->mBody->SetLinearVelocity(unit->b2Velocity);
-	//		Ogre::Vector3 moveGraphic = Ogre::Vector3(unit->getB2DPosition().x, 0, unit->getB2DPosition().y);
-	//		unit->debugPos2 = Ogre::Vector2(moveGraphic.x, moveGraphic.z);
-	//		unit->commandMove(moveGraphic);
+		//Ogre::Vector3 newPos = getPosition().operator+=(velocity.operator*(0.0166666));			//Mocked Delta Time
+		Ogre::Vector3 newPos = getPosition().operator+=(velocity.operator*(evt.timeSinceLastFrame));		//Real Time
 
-	//	}
-	//	/** Attacking and Idle **/
-	//	else {
-	//		/** Code responsible for stopping unit movement **/
-	//		//TODO Consider throwing this in a method
-	//		unit->b2Velocity(0.0f);
-	//		unit->mBody->SetLinearVelocity(b2Vec2_zero);
-	//		unit->mBody->SetType(b2_staticBody);
-	//		unit->trekking = false;
-	//	}
+		mBody->SetLinearVelocity(b2Velocity);
+		Ogre::Vector3 moveGraphic = Ogre::Vector3(getB2DPosition().x, 0, getB2DPosition().y);
+		debugPos2 = Ogre::Vector2(moveGraphic.x, moveGraphic.z);
+		commandMove(moveGraphic);
 
-	/*	animationElapsedTime = unitAnimState->getTimePosition();
-	}*/
+	}
+	/** Attacking and Idle **/
+	else {
+		/** Code responsible for stopping unit movement **/
+		//TODO Consider throwing this in a method
+		b2Velocity(0.0f);
+		mBody->SetLinearVelocity(b2Vec2_zero);
+		mBody->SetType(b2_staticBody);
+		trekking = false;
+	}
+
+	/** Advance Unit Animations **/
+	//unit->unitAnimState->addTime(0.0166666);				//Mocked Delta Time
+	unitAnimState->addTime(evt.timeSinceLastEvent);		//Real Time
 }
 //----------------------------------------------------------------
 
@@ -613,5 +616,22 @@ Ogre::Vector3 Unit::unitGroupConglomerate() {
 	y /= group->size();
 	Ogre::Vector3 conglomerate = Ogre::Vector3(x, 0, y);
 	return conglomerate;
+}
+//----------------------------------------------------------------
+
+b2Vec2 Unit::seek(b2Vec2 destination) {
+	//Desired change of location
+	b2Vec2 desired = destination - getB2DPosition();
+
+	//unit.distance = desired.normalise();
+
+	//Desired velocity (move there at maximum speed)
+	desired.operator*=(walkSpeed / desired.Length()); //TODO: maybe use squaredLength
+															//The velocity change we want
+	b2Vec2 force = desired - b2Velocity;
+	//Convert to a force
+	force.operator*=(maxForce / walkSpeed);
+
+	return force;
 }
 //----------------------------------------------------------------

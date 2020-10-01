@@ -23,6 +23,7 @@ public:
 		STATE_MARCHING,
 		STATE_FINISH_JOURNEY,
 		STATE_ATTACKING,
+		STATE_SPAWN_SPELLACTION,
 		STATE_HUNTING,
 		STATE_SEEKING,
 		STATE_AGGRESSIVE,
@@ -72,6 +73,7 @@ public:
 
 	/** Utils **/
 	virtual Ogre::Vector3 unitGroupConglomerate();
+	virtual b2Vec2 seek(b2Vec2 destination);
 
 	/** Handle inputs given to the unit **/
 	virtual void handleInput(OgreBites::Event &evt);
@@ -119,7 +121,6 @@ public:
 	int							targetRadius;
 	int							debugDump;
 	int							projectileCount = 1000; //TODO this shouldn't be here
-	//std::queue<Unit*>			spellActionQueue;
 	bool						isSelected;
 	bool						attacking;		//While attacking, will attack any target in an area
 	bool						hunting;		//A move
