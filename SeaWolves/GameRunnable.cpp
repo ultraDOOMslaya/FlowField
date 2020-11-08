@@ -555,8 +555,6 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 	mWorld->Step(timeStep, velocityIterations, positionIterations);
 	mWorld->ClearForces();
 
-	
-
 	/** Projectile animation frame rendering **/
 	
 	for (std::vector<Projectile*>::iterator projectile = projectiles.begin(); projectile != projectiles.end(); ++projectile) {
@@ -584,6 +582,8 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			magicAttacks.erase(magic--);
 		}
 	}
+
+	/** Unit animation frame rendering **/
 
 	for (auto player = players.begin(); player != players.end(); ++player) {
 		for (std::map<Ogre::String, Unit*>::iterator it = (*player)->myArmy.begin(); it != (*player)->myArmy.end(); ++it) {

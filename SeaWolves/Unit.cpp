@@ -561,7 +561,7 @@ void Unit::rotate(b2Vec2 direction) {
 	Ogre::Real dotProd = 1.0 + src.dotProduct(graphicDirection);
 	if (dotProd < 0.0001) {
 		//unitNode->yaw(Ogre::Degree(180));
-		unitNode->yaw(Ogre::Degree(15));
+		unitNode->yaw(Ogre::Degree(10));
 	}
 	else {
 
