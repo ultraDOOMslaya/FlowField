@@ -13,6 +13,8 @@
 
 #include "Unit.h"
 
+class Unit;
+
 class Projectile
 {
 public:
@@ -20,6 +22,7 @@ public:
 	~Projectile();
 
 	void dealDamage();
+	void clearTarget();
 	void halt();
 
 	Ogre::SceneManager*			SceneManager;

@@ -13,6 +13,7 @@
 
 #include "Unit.h"
 
+class Unit;
 
 class MagicAttack
 {
@@ -21,6 +22,7 @@ public:
 	~MagicAttack();
 
 	void dealDamage();
+	void clearTarget();
 
 	Ogre::SceneManager*				SceneManager;
 	Ogre::String					particleName;

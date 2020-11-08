@@ -313,13 +313,18 @@
     <ClInclude Include="..\..\Dependencies\RakNet\Source\WSAStartupSingleton.h" />
     <ClInclude Include="..\..\Dependencies\RakNet\Source\XBox360Includes.h" />
     <ClInclude Include="..\..\Dependencies\RakNet\Source\_FindFirst.h" />
+    <ClInclude Include="AggressiveState.h" />
     <ClInclude Include="AIBehaviour.h" />
     <ClInclude Include="AIUtils.h" />
     <ClInclude Include="Archer.h" />
+    <ClInclude Include="AttackingState.h" />
     <ClInclude Include="CombatBehaviour.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="EditorUtil.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="HuntingState.h" />
+    <ClInclude Include="IdleState.h" />
+    <ClInclude Include="SeekingState.h" />
     <ClInclude Include="UnitController.h" />
     <ClInclude Include="GameRunnable.h" />
     <ClInclude Include="GenerateUnits.h" />
@@ -340,6 +345,8 @@
     <ClInclude Include="SquareNeighbor.h" />
     <ClInclude Include="SteeringBehaviour.h" />
     <ClInclude Include="Unit.h" />
+    <ClInclude Include="UnitState.h" />
+    <ClInclude Include="WalkingState.h" />
     <ClInclude Include="Wizard.h" />
   </ItemGroup>
   <ItemGroup>
@@ -453,13 +460,18 @@
     <ClCompile Include="..\..\Dependencies\RakNet\Source\VitaIncludes.cpp" />
     <ClCompile Include="..\..\Dependencies\RakNet\Source\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\..\Dependencies\RakNet\Source\_FindFirst.cpp" />
+    <ClCompile Include="AggressiveState.cpp" />
     <ClCompile Include="AIBehaviour.cpp" />
     <ClCompile Include="AIUtils.cpp" />
     <ClCompile Include="Archer.cpp" />
+    <ClCompile Include="AttackingState.cpp" />
     <ClCompile Include="CombatBehaviour.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="EditorUtil.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="HuntingState.cpp" />
+    <ClCompile Include="IdleState.cpp" />
+    <ClCompile Include="SeekingState.cpp" />
     <ClCompile Include="UnitController.cpp" />
     <ClCompile Include="GameRunnable.cpp" />
     <ClCompile Include="GenerateUnits.cpp" />
@@ -480,6 +492,8 @@
     <ClCompile Include="SquareNeighbor.cpp" />
     <ClCompile Include="SteeringBehaviour.cpp" />
     <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="UnitState.cpp" />
+    <ClCompile Include="WalkingState.cpp" />
     <ClCompile Include="Wizard.cpp" />
   </ItemGroup>
   <ItemGroup>

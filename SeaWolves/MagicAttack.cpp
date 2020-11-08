@@ -28,10 +28,17 @@ MagicAttack::~MagicAttack()
 //----------------------------------------------------------------
 
 void MagicAttack::dealDamage() {
-	mTarget->takeDamage(mDamage);
+	if (mTarget != NULL) {
+		mTarget->takeDamage(mDamage);
 
-	if (mTarget->mHitPoints <= 0) {
-		summoner->resetTarget();
+		if (mTarget->mHitPoints <= 0) {
+			summoner->resetTarget();
+		}
 	}
+}
+//----------------------------------------------------------------
+
+void MagicAttack::clearTarget() {
+	mTarget = NULL;
 }
 //----------------------------------------------------------------

@@ -47,11 +47,18 @@ Projectile::~Projectile()
 //----------------------------------------------------------------
 
 void Projectile::dealDamage() {
-	mTarget->takeDamage(mDamage);
+	if (mTarget != NULL) {
+		mTarget->takeDamage(mDamage);
 
-	/*if (mTarget->mHitPoints <= 0) {
-		mFletcher->resetTarget();
-	}*/
+		if (mTarget->mHitPoints <= 0) {
+			mFletcher->resetTarget();
+		}
+	}
+}
+//----------------------------------------------------------------
+
+void Projectile::clearTarget() {
+	mTarget = NULL;
 }
 //----------------------------------------------------------------
 

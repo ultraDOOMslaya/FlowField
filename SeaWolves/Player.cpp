@@ -122,17 +122,20 @@ void Player::attack(Unit* target) {
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
 		(*unit)->trekking = false;
 		(*unit)->setTarget(target);
-		(*unit)->mState = Unit::STATE_AGGRESSIVE;
+		(*unit)->mState = Unit::STATE_SEEKING;
+		(*unit)->mSeekingState->enter(**unit);
 	}
 }
 //----------------------------------------------------------------
 
 void Player::attackMove() {
+	//TODO can we remove most of these assignments?
 	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
 		(*unit)->attacking = true;
 		(*unit)->hunting = true;
 		(*unit)->trekking = false;
 		(*unit)->mState = Unit::STATE_AGGRESSIVE;
+		(*unit)->mAggressiveState->enter(**unit);
 	}
 }
 //-----------------------------------------------------=-----------

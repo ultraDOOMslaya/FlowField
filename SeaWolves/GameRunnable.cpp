@@ -271,7 +271,6 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 		pim->clearFocusedLocations(activePlayer, gridMap);
 
 		for (std::vector<Unit*>::iterator unit = activePlayer->unitQueue.begin(); unit != activePlayer->unitQueue.end(); ++unit) {
-			(*unit)->handleInput(fullEvt);
 			/* Reset all unit behaviours */
 			(*unit)->halt();
 			(*unit)->attacking = false;
@@ -305,6 +304,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 
 			(*unit)->path = path;
 			(*unit)->path->pathingUnits++;
+			(*unit)->handleInput(fullEvt);
 		}
 
 		//TODO this may be the wrong place for this after the refactor
@@ -452,13 +452,15 @@ void GameRunnable::setup(void)
 	//b2Vec2 gravity(0.0f, -10.0f);
 	b2Vec2 gravity(0.0f, 0.0f);
 	mWorld = new b2World(gravity);
+
+	mUnitController = new UnitController(&units, &players, &projectiles, &magicAttacks);
 	//GenerateUnits::generateOneBronze(mScnMgr, &units, &player1.myArmy, mWorld);
 	//GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy, mWorld);
 	//GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy);
-	GenerateUnits::generateEightBronze(mScnMgr, &units, &player1.myArmy, mWorld, &impassableTerrain);
+	GenerateUnits::generateEightBronze(mScnMgr, &units, &player1.myArmy, mWorld, &impassableTerrain, mUnitController);
 
-	//GenerateUnits::generateOneSky(mScnMgr, &units, &player2.myArmy, mWorld);
-	GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy, mWorld, &impassableTerrain);
+	//GenerateUnits::generateOneSky(mScnMgr, &units, &player2.myArmy, mWorld, &impassableTerrain, mUnitController);
+	GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy, mWorld, &impassableTerrain, mUnitController);
 
 	float32 timeStep = 1.0f / 60.0f;
 	int32 velocityIterations = 10;
@@ -467,7 +469,7 @@ void GameRunnable::setup(void)
 	/* END TESTING ZONE */
 
 	/** Initialize Singletons **/
-	mUnitController = UnitController();
+	
 	pim = new PlayerInputManager(mCam, volQuery, mScnMgr);
 	GameMgr = new GameManager();
 }
@@ -553,43 +555,10 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 	mWorld->Step(timeStep, velocityIterations, positionIterations);
 	mWorld->ClearForces();
 
-	for (auto player = players.begin(); player != players.end(); ++player) {
-		for (std::map<Ogre::String, Unit*>::iterator it = (*player)->myArmy.begin(); it != (*player)->myArmy.end(); ++it) {
-			Unit* unit = it->second;
-
-			switch (unit->mState) {
-			case Unit::STATE_IDLE:
-				break;
-			case Unit::STATE_MARCHING:
-				break;
-			case Unit::STATE_FINISH_JOURNEY:
-				mUnitController.proximityLocationFormation(unit->path->origin.x, unit->path->origin.y, activePlayer->unitQueue, unit->path);
-				break;
-			case Unit::STATE_ATTACKING:
-				break;
-			case Unit::STATE_SPAWN_SPELLACTION:
-				CombatBehaviour::spawnSpellAction(unit, &projectiles, &magicAttacks, mScnMgr);
-				break;
-			case Unit::STATE_HUNTING:
-				CombatBehaviour::huntForTarget(&units, (*player), players, unit);
-				break;
-			case Unit::STATE_SEEKING:
-				CombatBehaviour::seekTarget(&units, (*player), players, unit);
-				break;
-			}
-
-			//TODO fix unit stuttering at sudden direction changes
-			//TODO remove references to units from GameRunnable
-			//TODO Player should be renamed to player and some of its functionality should be extracted to an actual player manager
-			//TODO Units should become a child class of a generic GameObject class
-			//TODO implement unit generation
-
-			unit->update(evt);
-		}
-	}
+	
 
 	/** Projectile animation frame rendering **/
-
+	
 	for (std::vector<Projectile*>::iterator projectile = projectiles.begin(); projectile != projectiles.end(); ++projectile) {
 		if ((*projectile)->mDistance > 0.0) {
 			Ogre::Real move = (*projectile)->mWalkSpeed * evt.timeSinceLastFrame;
@@ -616,6 +585,19 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 		}
 	}
 
+	for (auto player = players.begin(); player != players.end(); ++player) {
+		for (std::map<Ogre::String, Unit*>::iterator it = (*player)->myArmy.begin(); it != (*player)->myArmy.end(); ++it) {
+			Unit* unit = it->second;
+
+			//TODO remove references to units from GameRunnable
+			//TODO Player should be renamed to player and some of its functionality should be extracted to an actual player manager
+			//TODO Units should become a child class of a generic GameObject class
+			//TODO implement unit generation
+
+			unit->update(evt);
+		}
+	}
+
 	mTrayMgr->frameRendered(evt);
 
 	/** Clear units from the simulation **/
@@ -627,7 +609,7 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 			units.erase(mortality--);
 
 			/** ensure no one is targeting the dieing unit **/
-			CombatBehaviour::clearTargets(&units, mortalUnit);
+			mortalUnit->mUnitController->clearTargets(mortalUnit);
 
 			/** cull the dead unit **/
 			for (auto player = players.begin(); player != players.end(); ++player) {

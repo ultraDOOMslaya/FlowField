@@ -6,6 +6,8 @@
 #include "Constants.h"
 #include "PlayerRelationship.h"
 
+class Unit;
+
 class Player
 {
 public:

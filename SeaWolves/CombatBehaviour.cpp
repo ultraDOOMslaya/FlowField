@@ -16,6 +16,8 @@ void CombatBehaviour::seekTarget(std::map<Ogre::String, Unit*>* units, Player* a
 		}
 	}
 
+
+	//TODO this can probably go
 	if (unit->mTarget == NULL && !unit->isAnimation("Walk")) {
 		unit->attacking = false;
 		unit->animate("Idle");
@@ -52,6 +54,7 @@ void CombatBehaviour::huntForTarget(std::map<Ogre::String, Unit*>* units, Player
 			}
 		}
 	}
+	//TODO this can probably go
 	unit->mState = Unit::STATE_AGGRESSIVE;
 }
 //----------------------------------------------------------------
@@ -70,12 +73,12 @@ void CombatBehaviour::clearTargets(std::map<Ogre::String, Unit*>* units, Unit* e
 void CombatBehaviour::spawnSpellAction(Unit* unit, std::vector<Projectile*>* projectiles, std::vector<MagicAttack*>* magicAttacks, Ogre::SceneManager* sceneMgr) {
 
 	//TODO make unit classes enum... this should be a switch case
-	if (unit->mUnitClass == "Fletcher") {
+	/*if (unit->mUnitClass == "Fletcher") {
 		projectiles->push_back(new Projectile(unit, sceneMgr));
 	}
 	else if (unit->mUnitClass == "Caster") {
 		magicAttacks->push_back(new MagicAttack(unit, sceneMgr));
-	}
+	}*/
 	unit->mState = unit->mPreviousState;
 }
 //----------------------------------------------------------------

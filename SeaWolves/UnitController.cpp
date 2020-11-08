@@ -2,8 +2,12 @@
 
 
 
-UnitController::UnitController()
+UnitController::UnitController(std::map<Ogre::String, Unit*>* units, std::vector<Player*>* players, std::vector<Projectile*>* projectiles, std::vector<MagicAttack*>* magicAttacks)
 {
+	allUnits = units;
+	allPlayers = players;
+	allProjectiles = projectiles;
+	allMagicAttacks = magicAttacks;
 }
 
 
@@ -12,6 +16,128 @@ UnitController::~UnitController()
 }
 
 
+/*
+ Cycle through every player for a given unit and determine its status given the current active player
+*/
+PlayerRelationshipStatus determineUnitAllegiance(std::vector<Player*> players, Unit* unit, Unit* target) {
+	if (unit->mPlayerId == target->mPlayerId) {
+		return PlayerRelationshipStatus::ME;
+	}
+	else {
+		for (std::vector<Player*>::iterator it = players.begin(); it < players.end(); it++) {
+			Player* player = *it;
+			if (player->hasUnitInArmy(unit->unitName)) {
+				if (player->relationship->isFoe()) {
+					return PlayerRelationshipStatus::HOSTILE;
+				}
+			}
+		}
+	}
+	return PlayerRelationshipStatus::FRIENDLY;
+}
+//----------------------------------------------------------------
+
+void UnitController::huntForTarget(Unit* unit) {
+	for (std::map<Ogre::String, Unit*>::iterator it = allUnits->begin(); it != allUnits->end(); ++it) {
+		Unit* potentialTarget = it->second;
+		//int distance = std::abs(unit->getPosition().length() - potentialTarget->getPosition().length());
+
+		int proximity_x = std::pow((unit->getPosition().x - potentialTarget->getPosition().x), 2);
+		int proximity_y = std::pow((unit->getPosition().y - potentialTarget->getPosition().y), 2);
+		int proximity = proximity_x + proximity_y;
+
+		if (proximity < std::pow(unit->targetRadius, 2)) {
+			if (determineUnitAllegiance(*allPlayers, unit, potentialTarget) == PlayerRelationshipStatus::HOSTILE) {
+				int currentDistance = std::numeric_limits<int>::max();
+				if (unit->mTarget != NULL) {
+					//currentDistance = std::abs(unit->getPosition().length() - unit->mTarget->getPosition().length());
+					int proximity_x = std::pow((unit->getPosition().x - unit->mTarget->getPosition().x), 2);
+					int proximity_y = std::pow((unit->getPosition().y - unit->mTarget->getPosition().y), 2);
+					currentDistance = proximity_x + proximity_y;
+				}
+				//if (distance < currentDistance) {
+				if (proximity < currentDistance) {
+					unit->setLooseTarget(potentialTarget, proximity);
+				}
+			}
+		}
+	}
+}
+//----------------------------------------------------------------
+
+void UnitController::seekTarget(Unit* unit) {
+	for (std::map<Ogre::String, Unit*>::iterator it = allUnits->begin(); it != allUnits->end(); ++it) {
+		Unit* potentialTarget = it->second;
+
+		int proximity_x = std::pow((unit->getPosition().x - potentialTarget->getPosition().x), 2);
+		int proximity_y = std::pow((unit->getPosition().y - potentialTarget->getPosition().y), 2);
+		int proximity = proximity_x + proximity_y;
+
+		if (proximity < std::pow(unit->targetRadius, 2)) {
+			if (determineUnitAllegiance(*allPlayers, unit, potentialTarget) == PlayerRelationshipStatus::HOSTILE) {
+				unit->setLooseTarget(potentialTarget, proximity);
+			}
+		}
+	}
+
+
+	//TODO this can probably go
+	if (unit->mTarget == NULL && !unit->isAnimation("Walk")) {
+		unit->attacking = false;
+		unit->animate("Idle");
+	}
+	else if (unit->mTarget == NULL) {
+		unit->attacking = false;
+	}
+	unit->mState = Unit::STATE_AGGRESSIVE;
+}
+//----------------------------------------------------------------
+
+void UnitController::spawnSpellAction(Unit* unit) {
+
+	//TODO make unit classes enum... this should be a switch case
+	if (unit->mUnitClass == "Fletcher") {
+		allProjectiles->push_back(new Projectile(unit, unit->gameSceneManager));
+	}
+	else if (unit->mUnitClass == "Caster") {
+		allMagicAttacks->push_back(new MagicAttack(unit, unit->gameSceneManager));
+	}
+	/*unit->mState = unit->mPreviousState;*/
+}
+//----------------------------------------------------------------
+
+void UnitController::clearTargets(Unit* expiredTarget) {
+	for (std::map<Ogre::String, Unit*>::iterator it = allUnits->begin(); it != allUnits->end(); ++it) {
+		Unit* unit = it->second;
+		if (unit->mTarget == expiredTarget) {
+			unit->resetTarget();
+		}
+	}
+
+	for (auto projectile = allProjectiles->begin(); projectile != allProjectiles->end(); ++projectile) {
+		if ((*projectile)->mTarget == expiredTarget) {
+			(*projectile)->clearTarget();
+		}
+	}
+
+	for (auto magic = allMagicAttacks->begin(); magic != allMagicAttacks->end(); ++magic) {
+		if ((*magic)->mTarget == expiredTarget) {
+			(*magic)->clearTarget();
+		}
+	}
+}
+//----------------------------------------------------------------
+
+int UnitController::SharedUnitReference::getUnitGridPositionX()
+{
+	return this->unit->currentPos.x;
+}
+
+
+int UnitController::SharedUnitReference::getUnitGridPositionY()
+{
+	return this->unit->currentPos.y;
+}
 
 
 void PrintStack(std::stack<Unit*> s, std::vector<Unit*>* partition)
@@ -322,6 +448,7 @@ void UnitController::proximityLocationFormation(int width, int height, std::vect
 		for (std::vector<PotentialUnitLocation*>::iterator shortestLocations = (*unitLocMaps)->begin()->second->begin(); shortestLocations < (*unitLocMaps)->begin()->second->end(); shortestLocations++) {
 			b2Vec2 finalPosition = GridUtils::b2NumericalCordFinder((*shortestLocations)->potentialLocation);
 			(*shortestLocations)->unit->b2FinalDestination = finalPosition;
+			(*shortestLocations)->unit->postCombatB2Desination = finalPosition;
 		}
 	}
 	

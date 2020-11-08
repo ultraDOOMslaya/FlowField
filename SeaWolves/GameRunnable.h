@@ -134,7 +134,7 @@ public:
 
 	//Manager Singletons
 	//TODO why are these pointers?
-	UnitController				mUnitController;
+	UnitController*				mUnitController;
 	PlayerInputManager*			pim;
 	GameManager*				GameMgr;
 

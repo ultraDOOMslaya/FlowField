@@ -16,17 +16,29 @@
     <Filter Include="RakNet">
       <UniqueIdentifier>{d195e7d1-9f1e-453b-b81d-02b8a90e956d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Units">
-      <UniqueIdentifier>{b578b4f2-4cad-4fe4-8198-edc03b1bfe1e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Units">
-      <UniqueIdentifier>{406e6397-ca2d-48a3-95eb-42695f098dcf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\GameObjects">
       <UniqueIdentifier>{3f39149e-7acd-403d-a3e2-1c28631df2bf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\GameObjects">
       <UniqueIdentifier>{df44c57d-07ba-4cb9-9c4a-ca078edf9e53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Unit">
+      <UniqueIdentifier>{b53fb64f-0b06-47e7-9230-ae63f8b40401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Unit\Units">
+      <UniqueIdentifier>{b578b4f2-4cad-4fe4-8198-edc03b1bfe1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Unit">
+      <UniqueIdentifier>{84bc50ff-03ed-4448-8b95-422c989db3d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Unit\Units">
+      <UniqueIdentifier>{406e6397-ca2d-48a3-95eb-42695f098dcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Unit\UnitStates">
+      <UniqueIdentifier>{325541e7-fdeb-4f57-86df-57dcd068a328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Unit\UnitStates">
+      <UniqueIdentifier>{42dc5c24-c3df-4403-a9fa-f7c1c7731f5d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,9 +49,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SquareNeighbor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EditorUtil.h">
@@ -547,13 +556,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Soldier.h">
-      <Filter>Header Files\Units</Filter>
+      <Filter>Header Files\Unit\Units</Filter>
     </ClInclude>
     <ClInclude Include="Archer.h">
-      <Filter>Header Files\Units</Filter>
+      <Filter>Header Files\Unit\Units</Filter>
     </ClInclude>
     <ClInclude Include="Wizard.h">
-      <Filter>Header Files\Units</Filter>
+      <Filter>Header Files\Unit\Units</Filter>
     </ClInclude>
     <ClInclude Include="Projectile.h">
       <Filter>Header Files\GameObjects</Filter>
@@ -576,6 +585,30 @@
     <ClInclude Include="UnitController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Unit.h">
+      <Filter>Header Files\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitState.h">
+      <Filter>Header Files\Unit\UnitStates</Filter>
+    </ClInclude>
+    <ClInclude Include="WalkingState.h">
+      <Filter>Header Files\Unit\UnitStates</Filter>
+    </ClInclude>
+    <ClInclude Include="IdleState.h">
+      <Filter>Header Files\Unit\UnitStates</Filter>
+    </ClInclude>
+    <ClInclude Include="AggressiveState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackingState.h">
+      <Filter>Header Files\Unit\UnitStates</Filter>
+    </ClInclude>
+    <ClInclude Include="HuntingState.h">
+      <Filter>Header Files\Unit\UnitStates</Filter>
+    </ClInclude>
+    <ClInclude Include="SeekingState.h">
+      <Filter>Header Files\Unit\UnitStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameRunnable.cpp">
@@ -585,9 +618,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SquareNeighbor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Unit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EditorUtil.cpp">
@@ -963,13 +993,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Soldier.cpp">
-      <Filter>Source Files\Units</Filter>
+      <Filter>Source Files\Unit\Units</Filter>
     </ClCompile>
     <ClCompile Include="Archer.cpp">
-      <Filter>Source Files\Units</Filter>
+      <Filter>Source Files\Unit\Units</Filter>
     </ClCompile>
     <ClCompile Include="Wizard.cpp">
-      <Filter>Source Files\Units</Filter>
+      <Filter>Source Files\Unit\Units</Filter>
     </ClCompile>
     <ClCompile Include="Projectile.cpp">
       <Filter>Source Files\GameObjects</Filter>
@@ -986,11 +1016,35 @@
     <ClCompile Include="GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UnitController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UnitController.cpp">
+    <ClCompile Include="Unit.cpp">
+      <Filter>Source Files\Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitState.cpp">
+      <Filter>Source Files\Unit\UnitStates</Filter>
+    </ClCompile>
+    <ClCompile Include="WalkingState.cpp">
+      <Filter>Source Files\Unit\UnitStates</Filter>
+    </ClCompile>
+    <ClCompile Include="IdleState.cpp">
+      <Filter>Source Files\Unit\UnitStates</Filter>
+    </ClCompile>
+    <ClCompile Include="HuntingState.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AttackingState.cpp">
+      <Filter>Source Files\Unit\UnitStates</Filter>
+    </ClCompile>
+    <ClCompile Include="AggressiveState.cpp">
+      <Filter>Source Files\Unit\UnitStates</Filter>
+    </ClCompile>
+    <ClCompile Include="SeekingState.cpp">
+      <Filter>Source Files\Unit\UnitStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

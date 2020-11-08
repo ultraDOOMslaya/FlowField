@@ -5,15 +5,33 @@
 #include <Ogre.h>
 #include <OgreInput.h>
 #include <OgreBitesConfigDialog.h>
-
 #include "Constants.h"
 #include "PathFinding.h"
 #include "SelectionCircle.h"
 #include "GridUtils.h"
 
+#include "UnitController.h"
+
+//#include "UnitState.h"
+#include "IdleState.h"
+#include "WalkingState.h"
+#include "AggressiveState.h"
+#include "SeekingState.h"
+#include "HuntingState.h"
+#include "AttackingState.h"
+
 #include "Box2D\Box2D.h"
 
 class PathFinding;  //Forward declaration
+class UnitController;
+
+//class UnitState;
+class IdleState;
+class WalkingState;
+class AggressiveState;
+class SeekingState;
+class HuntingState;
+class AttackingState;
 
 class Unit
 {
@@ -30,7 +48,7 @@ public:
 		STATE_POST_COMBAT
 	};
 
-	Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String name, Ogre::String meshName, Ogre::String unitClass, int ID, b2World* world, std::vector<GridSquare*>* impassableTerrain);
+	Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String name, Ogre::String meshName, Ogre::String unitClass, int ID, b2World* world, std::vector<GridSquare*>* impassableTerrain, UnitController* unitController);
 	~Unit();
 	virtual void commandMove(Ogre::Vector3 position);
 	virtual void animate(Ogre::String animation);		//TODO make this animateLoop()
@@ -139,6 +157,7 @@ public:
 
 	PathFinding*				path;
 	SelectionCircle*			selectionCircle;
+	UnitController*				mUnitController;
 
 	//Box2D Physics
 	b2BodyDef					bodyDef;
@@ -147,7 +166,15 @@ public:
 
 	State						mState;
 	State						mPreviousState;
+	//UnitState*				mUnitState;
+	IdleState*					mIdleState;
+	WalkingState*				mWalkingState;
+	AggressiveState*			mAggressiveState;
+	SeekingState*				mSeekingState;
+	HuntingState*				mHuntingState;
+	AttackingState*				mAttackingState;
 	int							mPlayerId;
+
 };
 
 #endif __Unit_h_
