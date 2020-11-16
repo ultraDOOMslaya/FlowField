@@ -398,13 +398,13 @@ void PathFinding::assignUnitFormationLocations(int width, int height, int numUni
 	}
 	else {
 		Ogre::Vector3 pointToMoveTo = GridUtils::numericalCordFinder(Ogre::Vector3(width, 0, height));
-		int xOffset = -1;
-		int yOffset = -1;
+		int xOffset = -2;
+		int yOffset = -2;
 		if ((pointToMoveTo.x - conglomerate.x) > 0) {
-			xOffset = 1;
+			xOffset = 2;
 		}
 		if ((pointToMoveTo.z - conglomerate.z) > 0) {
-			yOffset = 1;
+			yOffset = 2;
 		}
 
 		int startingOffset = rowSize * 0.5; //Works as intended

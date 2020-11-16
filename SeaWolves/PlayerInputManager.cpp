@@ -130,9 +130,10 @@ void PlayerInputManager::clearFocusedLocations(
 	if (activePlayer->unitQueue.size() > 0) {
 		PathFinding* path = activePlayer->unitQueue.front()->path;
 		if (path != NULL) {
-			for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
+			//TODO this is broken now that we've switched to using textures
+			/*for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
 				gridMap[(*it)->x][(*it)->y]->defaultColor(sceneManager);
-			}
+			}*/
 			path->formationLocations.clear();
 		}
 	}

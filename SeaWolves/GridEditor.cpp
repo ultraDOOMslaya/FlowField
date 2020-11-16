@@ -15,6 +15,7 @@ GridEditor::~GridEditor()
 
 
 void setSquareColor(Ogre::Entity* entity, Ogre::MaterialPtr mat, Ogre::ColourValue cv) {
+	//entity->setMaterialName("Examples/GrassFloor");
 	entity->setMaterialName(mat->getName());
 }
 //----------------------------------------------------------------

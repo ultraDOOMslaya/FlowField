@@ -46,6 +46,9 @@
 #include "Unit.h"
 #include "MagicAttack.h"
 
+//Map & Grid
+#include "MapEditor.h"
+
 
 #include "Box2D\Box2D.h"
 
@@ -70,6 +73,7 @@ public:
 	virtual void frameRendered(const Ogre::FrameEvent& evt);
 
 	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color, Ogre::MaterialPtr defaultMaterial);
+	virtual void createPlane(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color, Ogre::MaterialPtr defaultMaterial);
 	virtual void createTileMap(void);
 
 	virtual void spawnProjectile(Unit* unit);
@@ -87,6 +91,12 @@ public:
 	OgreBites::CheckBox*		mNonCombat;
 	OgreBites::CheckBox*		mMoveableCamera;
 
+	//Top left panel
+	OgreBites::CheckBox*		mAlterTextureCB;
+	OgreBites::CheckBox*		mAlterElevationCB;
+	OgreBites::SelectMenu*		mGroundTypeSM;
+	OgreBites::Slider*			mElevationSlider;
+
 	Ogre::SceneManager*			mScnMgr;
 	Ogre::Camera*				mCam;
 	Ogre::RenderWindow*         mWindow;
@@ -99,6 +109,7 @@ public:
 	Ogre::Vector3				mDestination; // destination the object is moving towards
 	Ogre::Entity*				robotEntity;
 	Ogre::SceneNode*			camNode;
+	Ogre::SceneNode*			camAnchor;
 
 	std::deque<Ogre::Vector3>   mWalkList;
 	std::queue<SquareNeighbor*> squareNeighbors;

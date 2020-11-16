@@ -21,7 +21,6 @@ void AttackingState::update(Unit& unit, const Ogre::FrameEvent& evt) {
 	}
 	if (unit.mUnitClass == "Fletcher" && (unit.unitAnimState->getTimePosition() < unit.animationElapsedTime)) {
 		if (!unit.hasAttacked) {
-			/*unit.mPreviousState = unit.mState;*/
 			unit.mUnitController->spawnSpellAction(&unit);
 		}
 
@@ -29,12 +28,15 @@ void AttackingState::update(Unit& unit, const Ogre::FrameEvent& evt) {
 	}
 	if (unit.mUnitClass == "Caster" && (unit.unitAnimState->getTimePosition() > (unit.unitAnimState->getLength() * 0.8))) {
 		if (!unit.hasAttacked) {
-			//unit.mPreviousState = unit.mState;
 			unit.mUnitController->spawnSpellAction(&unit);
 		}
 
 		unit.hasAttacked = true;
 	}
 	unit.animationElapsedTime = unit.unitAnimState->getTimePosition();
+
+	//Make sure the graphic is following the physics body
+	Ogre::Vector3 moveGraphic = Ogre::Vector3(unit.getB2DPosition().x, 0, unit.getB2DPosition().y);
+	unit.commandMove(moveGraphic);
 }
 

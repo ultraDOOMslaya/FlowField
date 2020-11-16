@@ -54,30 +54,30 @@ void GameRunnable::createSquare(int width, int height, int edgeLength, std::stri
 	Ogre::ManualObject* manual = NULL;
 	{
 		manual = mScnMgr->createManualObject(meshName);
-		bool doIwantToUpdateItLater = false;
-		manual->setDynamic(doIwantToUpdateItLater);
+		//bool doIwantToUpdateItLater = false;
+		//manual->setDynamic(doIwantToUpdateItLater);
 		float triangleScale = 0.7f;
-		manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+		manual->begin("Examples/GrassFloor", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 		{
 			int cm = width * triangleScale;
 			int cp = height * triangleScale;
 			edgeLength = edgeLength * triangleScale;
 			manual->position(cm, 0, cp);// a vertex
-			manual->colour(color);
+			//manual->colour(color);
 			manual->position((cm - edgeLength), 0, cp);// a vertex
-			manual->colour(color);
+			//manual->colour(color);
 			manual->position((cm - edgeLength), 0, (cp + edgeLength));// a vertex
-			manual->colour(color);
+			//manual->colour(color);
 			manual->position(cm, 0, (cp + edgeLength));// a vertex
-			manual->colour(color);
+			//manual->colour(color);
 			manual->position(cm, 0, cp);// a vertex
-			manual->colour(color);
+			//manual->colour(color);
 			manual->position((cm - edgeLength), 0, cp);// a vertex
-			manual->colour(color);
+			//manual->colour(color);
 			manual->position((cm - edgeLength), 0, (cp + edgeLength));// a vertex
-			manual->colour(color);
+			//manual->colour(color);
 			manual->position(cm, 0, (cp + edgeLength));// a vertex
-			manual->colour(color);
+			//manual->colour(color);
 			//face behind / front
 			manual->triangle(0, 1, 2);
 			manual->triangle(2, 3, 0);
@@ -97,13 +97,51 @@ void GameRunnable::createSquare(int width, int height, int edgeLength, std::stri
 		manual->end();
 		tileMesh = manual->convertToMesh(meshName);
 	}
+
+	Ogre::Entity* planeEntity = mScnMgr->createEntity(meshName, tileMesh);
+	planeEntity->setQueryFlags(Constants::terrainQueryMask);
+	mScnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(planeEntity);
+	planeEntity->setCastShadows(false);
+	
+	GridSquare* square = new GridSquare(width, height, meshName, color, defaultMaterial);
+	int x = (width / Constants::edgeLength) - 1;
+	int y = (height / Constants::edgeLength) - 1;
+	gridMap[x][y] = square;
+}
+//----------------------------------------------------------------
+
+void GameRunnable::createPlane(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color, Ogre::MaterialPtr defaultMaterial) {
+	float triangleScale = 0.7f;
+	int cm = width * triangleScale;
+	int cp = height * triangleScale;
+	edgeLength = edgeLength * triangleScale;
+
+	Ogre::ManualObject* man = mScnMgr->createManualObject(meshName);
+	man->begin("Examples/GrassFloor", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+	man->position(cm, 0, cp);
+	man->normal(0, 0, 1);
+	man->textureCoord(0, 0);
+
+	man->position(cm, 0, cp - edgeLength);
+	man->normal(0, 0, 1);
+	man->textureCoord(0, 1);
+
+	man->position(cm - edgeLength, 0, cp - edgeLength);
+	man->normal(0, 0, 1);
+	man->textureCoord(1, 1);
+
+	man->position(cm - edgeLength, 0, cp);
+	man->normal(0, 0, 1);
+	man->textureCoord(1, 0);
+	man->quad(0, 1, 2, 3);
+	man->end();
+	Ogre::MeshPtr tileMesh = man->convertToMesh(meshName);
+
 	Ogre::Entity* planeEntity = mScnMgr->createEntity(meshName, tileMesh);
 	planeEntity->setQueryFlags(Constants::terrainQueryMask);
 	mScnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(planeEntity);
 	planeEntity->setCastShadows(false);
 
-	//planeEntity->getSubEntity("0")->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->get
-	
 	GridSquare* square = new GridSquare(width, height, meshName, color, defaultMaterial);
 	int x = (width / Constants::edgeLength) - 1;
 	int y = (height / Constants::edgeLength) - 1;
@@ -113,6 +151,10 @@ void GameRunnable::createSquare(int width, int height, int edgeLength, std::stri
 
 void GameRunnable::createTileMap(void)
 {
+	//TODO there is a lot of redundancy and legacy here
+	// a lot of the if logic here can be phased out
+	// createTile has redundant variables and I don't see a need to fix it against a triangle scale anymore
+
 	int xscale, yscale = 0;
 	for (int i = 0; i < (Constants::gridHeight * Constants::gridWidth); ++i) {
 		int temp = i;
@@ -127,12 +169,15 @@ void GameRunnable::createTileMap(void)
 		meshName << i;
 		std::string strToPass = meshName.str();
 
-		if (temp % 2 == 0) {
+		//// Checkered grid
+		/*if (temp % 2 == 0) {
 			createSquare(xscale, yscale, Constants::edgeLength, strToPass, true, (Ogre::ColourValue::Blue), mapTileMat1);
 		}
 		else {
 			createSquare(xscale, yscale, Constants::edgeLength, strToPass, false, (Ogre::ColourValue::ColourValue(0.2f, 0.2f, 1.0f, 1.0f)), mapTileMat2);
-		}
+		}*/
+		//createSquare(xscale, yscale, Constants::edgeLength, strToPass, false, (Ogre::ColourValue::ColourValue(0.2f, 0.2f, 1.0f, 1.0f)), mat);
+		createPlane(xscale, yscale, Constants::edgeLength, strToPass, false, (Ogre::ColourValue::ColourValue(0.2f, 0.2f, 1.0f, 1.0f)), mat);
 
 		if (temp == 0) {
 			mat = mScnMgr->getEntity("0")->getSubEntity(0)->getMaterial()->clone("BaseGreenNoLighting");
@@ -311,13 +356,17 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 		/* Reset state player state */
 		//activePlayer->queuedAttackMove = false;
 
-		if (activePlayer->unitQueue.size() > 0) {
-			for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
-				Ogre::Vector2* point = *it;
-				mat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::Green);
+		if (mShowFlowPathCB->isChecked()) {
+			if (activePlayer->unitQueue.size() > 0) {
+				//Ogre::Texture grassTexture = Ogre::Texture
+				for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
+					Ogre::Vector2* point = *it;
 
-				gridEditor->changeTileColor(point->x, point->y, mat, Ogre::ColourValue::Green);
+					mat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::Green);
+					
+					gridEditor->changeTileColor(point->x, point->y, mat, Ogre::ColourValue::Green);
 
+				}
 			}
 		}
 
@@ -346,11 +395,26 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 
 	if (evt.button == SDL_BUTTON_LEFT) {
 		//Editor stuff
-		if (mModeCB->isChecked()) {
-			Ogre::String squareName;
-			for (; it != result.end(); it++) {
-				if (it->movable->getQueryFlags() == Constants::terrainQueryMask) {
-					gridEditor->addTerrainValue(it->movable->getName(), redMat, mWorld, &impassableTerrain);
+		
+		Ogre::String squareName;
+		for (; it != result.end(); it++) {
+			if (it->movable->getQueryFlags() == Constants::terrainQueryMask) {
+				if (mModeCB->isChecked()) {
+					//gridEditor->addTerrainValue(it->movable->getName(), redMat, mWorld, &impassableTerrain);
+				}
+				if (mAlterTextureCB->isChecked()) {
+					MapEditor::changeSquareTexture(mScnMgr->getEntity(it->movable->getName()), mGroundTypeSM->getSelectedItem());
+				}
+				if (mAlterElevationCB->isChecked()) {
+					Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
+					Ogre::Real elevationStep = 60;
+					Ogre::Real elevation = mElevationSlider->getValue();
+					Ogre::Entity* obj = mScnMgr->getEntity(it->movable->getName());
+					Ogre::SceneNode* node = obj->getParentSceneNode();
+					transVector.y += (elevation * elevationStep);
+					node->translate(transVector, Ogre::Node::TS_LOCAL);
+					/*mScnMgr->getSceneNode("camAnchor")->translate(transVector* evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);*/
+
 				}
 			}
 		}
@@ -393,15 +457,22 @@ void GameRunnable::setup(void)
 	mNonCombat = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "NonCombat", "Non Combat", 150.0f);
 	mMoveableCamera = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "MoveableCamera", "Moveable Camera", 150.0f);
 
+	mAlterTextureCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPLEFT, "EditTexture", "Edit Texture", 180.0f);
+	mGroundTypeSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "GroundType", "Textures:", 180.0f, 2, { "Grass", "Dirt" });
+	mAlterElevationCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPLEFT, "EditElevation", "Edit Elevation", 180.0f);
+	mElevationSlider = mTrayMgr->createThickSlider(OgreBites::TL_TOPLEFT, "Elevation", "#:", 180.0f, 150.0f, 0, 6, 7);
+
 	addInputListener(mTrayMgr);
 
 	Ogre::RTShader::ShaderGenerator* shadergen = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 	shadergen->addSceneManager(mScnMgr);
 
-	camNode = mScnMgr->getRootSceneNode()->createChildSceneNode("camNode");
+	camAnchor = mScnMgr->getRootSceneNode()->createChildSceneNode("camAnchor");
+	camNode = camAnchor->createChildSceneNode("camNode");
 	mCam = mScnMgr->createCamera("myCam");
-	camNode->setPosition(500, 750, 1000);
+	camAnchor->setPosition((Constants::edgeLength * Constants::gridWidth), 750, (Constants::edgeLength * Constants::gridHeight));
 	camNode->lookAt(Ogre::Vector3(0, 0, 0), Ogre::Node::TransformSpace::TS_WORLD);
+	
 	mCam->setNearClipDistance(5);
 	camNode->attachObject(mCam);
 	Ogre::Viewport* vp = getRenderWindow()->addViewport(mCam);
@@ -423,10 +494,9 @@ void GameRunnable::setup(void)
 	players.push_back(&player2);
 
 	//gridMap = new std::vector<std::vector<GridSquare*>>();
-	createTileMap();
 
 	mScnMgr->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
-	//scnMgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
+	//mScnMgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
 	Ogre::Light* spotLight = mScnMgr->createLight("SpotLight");
 	spotLight->setDiffuseColour(0, 0, 1.0);
 	spotLight->setSpecularColour(0, 0, 1.0);
@@ -440,7 +510,47 @@ void GameRunnable::setup(void)
 	mRayScnQuery = mScnMgr->createRayQuery(Ogre::Ray());
 	mRayScnQuery->setSortByDistance(true);
 
+	createTileMap();
+
 	/* TESTING ZONE */
+
+
+	/*Ogre::MaterialPtr mat =
+		Ogre::MaterialManager::getSingleton().create(
+			"PlaneMat", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+	Ogre::TextureUnitState* tuisTexture =
+		mat->getTechnique(0)->getPass(0)->createTextureUnitState("grass_1024.jpg");
+
+	Ogre::MovablePlane* mPlane = new Ogre::MovablePlane("Plane");
+	mPlane->d = 0;
+	mPlane->normal = Ogre::Vector3::UNIT_Y;
+
+	Ogre::MeshManager::getSingleton().createPlane(
+		"PlaneMesh",
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+		*mPlane,
+		1000, 1000, 1, 1,
+		true,
+		1, 1, 1,
+		Ogre::Vector3::UNIT_Z);
+	Ogre::Entity* mPlaneEntity = mScnMgr->createEntity("PlaneMesh");
+	mPlaneEntity->setMaterialName("PlaneMat");
+
+	Ogre::SceneNode* mPlaneNode = mScnMgr->getRootSceneNode()->createChildSceneNode();
+	mPlaneNode->attachObject(mPlaneEntity);*/
+
+	Ogre::Plane oceanSurface;
+	oceanSurface.normal = Ogre::Vector3::UNIT_Y;
+	oceanSurface.d = 20;
+	Ogre::MeshManager::getSingleton().createPlane("OceanSurface",
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+		oceanSurface,
+		500, 500, 50, 50, true, 1, 1, 1, Ogre::Vector3::UNIT_Z);
+
+	Ogre::Entity* mOceanSurfaceEnt = mScnMgr->createEntity("OceanSurface", "OceanSurface");
+	mScnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(mOceanSurfaceEnt);
+	mOceanSurfaceEnt->setMaterialName("Ocean2_HLSL_GLSL");
 
 	selectBox = new SelectionBox("SelectionBox");
 	mScnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(selectBox);
@@ -457,10 +567,10 @@ void GameRunnable::setup(void)
 	//GenerateUnits::generateOneBronze(mScnMgr, &units, &player1.myArmy, mWorld);
 	//GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy, mWorld);
 	//GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy);
-	GenerateUnits::generateEightBronze(mScnMgr, &units, &player1.myArmy, mWorld, &impassableTerrain, mUnitController);
+	//GenerateUnits::generateEightBronze(mScnMgr, &units, &player1.myArmy, mWorld, &impassableTerrain, mUnitController);
 
 	//GenerateUnits::generateOneSky(mScnMgr, &units, &player2.myArmy, mWorld, &impassableTerrain, mUnitController);
-	GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy, mWorld, &impassableTerrain, mUnitController);
+	//GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy, mWorld, &impassableTerrain, mUnitController);
 
 	float32 timeStep = 1.0f / 60.0f;
 	int32 velocityIterations = 10;
@@ -532,21 +642,29 @@ void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
 	if (mMoveableCamera->isChecked()) {
 		Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
 		int mMoveScale = 250;
+		int mHalfScale = 125;
 		int x, y;
 		SDL_GetMouseState(&x, &y);
 		if (x > (getRenderWindow()->getWidth() - 20)) {
 			transVector.x += mMoveScale;
+			transVector.z -= mMoveScale;
 		}
 		else if (x < 20) {
 			transVector.x -= mMoveScale;
+			transVector.z += mMoveScale;
 		}
 		else if (y > (getRenderWindow()->getHeight() - 20)) {
-			transVector.y -= mMoveScale;
+			transVector.z += mMoveScale;
+			transVector.x += mMoveScale;
+			//transVector.y -= mMoveScale;
 		}
 		else if (y < 20) {
-			transVector.y += mMoveScale;
+			transVector.z -= mMoveScale;
+			transVector.x -= mMoveScale;
+			//transVector.y += mMoveScale;
 		}
-		mScnMgr->getSceneNode("camNode")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		//mScnMgr->getSceneNode("camNode")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+		mScnMgr->getSceneNode("camAnchor")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	}
 
 	float32 timeStep = 1.0f / 60.0f;
