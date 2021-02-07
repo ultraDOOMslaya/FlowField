@@ -56,9 +56,21 @@ Ogre::Vector2 GridUtils::gridSquareCordFinder(std::string squareName)
 Ogre::Vector2 GridUtils::numericalCordFinder(Ogre::Vector2 cordinates) {
 	int x = 0;
 	int y = 0;
-	float fedge = Constants::edgeLength * 0.7f;
+	//float fedge = Constants::edgeLength * 0.7f;
+	float fedge = Constants::edgeLength;
 	x = (cordinates.x * fedge) + (fedge * 0.5);
-	y = (cordinates.y * fedge) + (fedge * 1.5);
+	//y = (cordinates.y * fedge) + (fedge * 1.5);
+	y = (cordinates.y * fedge) + (fedge * 0.5);
+
+	/*x = (cordinates.x * Constants::edgeLength) - (Constants::edgeLength / 2);
+	y = (cordinates.y * Constants::edgeLength) - (Constants::edgeLength / 2);
+
+	if (x > Constants::worldSize)
+		throw x;
+
+	if (y > Constants::worldSize)
+		throw y;*/
+
 	Ogre::Vector2 cords(x, y);
 	return cords;
 }
@@ -67,19 +79,50 @@ Ogre::Vector2 GridUtils::numericalCordFinder(Ogre::Vector2 cordinates) {
 b2Vec2 GridUtils::b2NumericalCordFinder(Ogre::Vector2 cordinates) {
 	int x = 0;
 	int y = 0;
-	float fedge = Constants::edgeLength * 0.7f;
+	//float fedge = Constants::edgeLength * 0.7f;
+	float fedge = Constants::edgeLength;
 	x = _CMATH_::abs(cordinates.x * fedge) + (fedge * 0.5);
-	y = _CMATH_::abs(cordinates.y * fedge) + (fedge * 1.5);
+	//y = _CMATH_::abs(cordinates.y * fedge) + (fedge * 1.5);
+	y = _CMATH_::abs(cordinates.y * fedge) + (fedge * 0.5);
+
+	/*x = (cordinates.x * Constants::edgeLength) - (Constants::edgeLength / 2);
+	y = (cordinates.y * Constants::edgeLength) - (Constants::edgeLength / 2);*/
+
 	b2Vec2 cords(x, y);
 	return cords;
 }
 //----------------------------------------------------------------
 
 Ogre::Vector3 GridUtils::numericalCordFinder(int x, int y) {
-	float fedge = Constants::edgeLength * 0.7f;
+	//float fedge = Constants::edgeLength * 0.7f;
+	float fedge = Constants::edgeLength;
 	x = (x * fedge) + (fedge * 0.5);
-	y = (y * fedge) + (fedge * 1.5);
+	//y = (y * fedge) + (fedge * 1.5);
+	y = (y * fedge) + (fedge * 0.5);
 	Ogre::Vector3 cords(x, 0, y);
+
+	/*int wp_x = 0;
+	int wp_y = 0;;
+	x++;
+	y++;
+
+	try
+	{
+		wp_x = (x * Constants::edgeLength) - (Constants::edgeLength / 2);
+		wp_y = (y * Constants::edgeLength) - (Constants::edgeLength / 2);
+
+		if (wp_x > Constants::worldSize + (Constants::edgeLength / 2))
+			throw wp_x;
+
+		if (wp_y > Constants::worldSize + (Constants::edgeLength / 2))
+			throw wp_y;
+	}
+	catch (std::exception& e)
+	{
+		std::cout << e.what() << '\n';
+	}
+	
+	Ogre::Vector3 cords(wp_x, 0, wp_y);*/
 	return cords;
 }
 //----------------------------------------------------------------
@@ -87,10 +130,30 @@ Ogre::Vector3 GridUtils::numericalCordFinder(int x, int y) {
 Ogre::Vector3 GridUtils::numericalCordFinder(Ogre::Vector3 cordinates) {
 	int x = 0;
 	int z = 0;
-	float fedge = Constants::edgeLength * 0.7f;
+	//float fedge = Constants::edgeLength * 0.7f;
+	float fedge = Constants::edgeLength;
 	x = (cordinates.x * fedge) + (fedge * 0.5);
-	z = (cordinates.z * fedge) + (fedge * 1.5);
+	//z = (cordinates.z * fedge) + (fedge * 1.5);
+	z = (cordinates.z * fedge) + (fedge * 0.5);
 	Ogre::Vector3 cords(x, 0, z);
+
+	/*int x = cordinates.x;
+	int z = cordinates.z;
+	int wp_x = 0;
+	int wp_y = 0;;
+	x++;
+	z++;
+
+	wp_x = (x * Constants::edgeLength) - (Constants::edgeLength / 2);
+	wp_y = (z * Constants::edgeLength) - (Constants::edgeLength / 2);
+
+	if (wp_x > Constants::worldSize)
+		throw wp_x;
+
+	if (wp_y > Constants::worldSize)
+		throw wp_y;
+
+	Ogre::Vector3 cords(wp_x, 0, wp_y);*/
 	return cords;
 }
 //----------------------------------------------------------------
@@ -100,9 +163,21 @@ Ogre::Vector3 GridUtils::numericalCordFinder(Ogre::Vector3 cordinates) {
 Ogre::Vector2 GridUtils::cordNumericalFinder(Ogre::Vector3 position) {
 	int x = 0;
 	int z = 0;
-	float fedge = Constants::edgeLength * 0.7f;
+	//float fedge = Constants::edgeLength * 0.7f;
+	float fedge = Constants::edgeLength;
 	x = (position.x - (fedge * 0.5) + 1) / fedge;		//+1 is a round up to help the int division math
-	z = (position.z - (fedge * 1.5) + 1) / fedge;		//otherwise end up with cases where unit movement falls short
+	//z = (position.z - (fedge * 1.5) + 1) / fedge;		//otherwise end up with cases where unit movement falls short
+	z = (position.z - (fedge * 0.5) + 1) / fedge;		//otherwise end up with cases where unit movement falls short
+
+	/*x = position.x / Constants::edgeLength;
+	z = position.z / Constants::edgeLength;
+
+	if (x > Constants::gridWidth)
+		throw x;
+
+	if (z > Constants::gridHeight)
+		throw z;*/
+
 	Ogre::Vector2 cords(x, z);
 	return cords;
 }
@@ -113,9 +188,22 @@ Ogre::Vector2 GridUtils::cordNumericalFinder(Ogre::Vector3 position) {
 Ogre::Vector2 GridUtils::b2CordNumericalFinder(b2Vec2 position) {
 	float x = 0;
 	float y = 0;
-	float fedge = Constants::edgeLength * 0.7f;
+	//float fedge = Constants::edgeLength * 0.7f;
+	float fedge = Constants::edgeLength;
 	x = (position.x - (fedge * 0.5) + 1) / fedge;		//+1 is a round up to help the int division math
-	y = (position.y - (fedge * 1.5) + 1) / fedge;		//otherwise end up with cases where unit movement falls short
+	//y = (position.y - (fedge * 1.5) + 1) / fedge;		//otherwise end up with cases where unit movement falls short
+	y = (position.y - (fedge * 0.5) + 1) / fedge;		//otherwise end up with cases where unit movement falls short
+
+	/*x = position.x / Constants::edgeLength;
+	y = position.y / Constants::edgeLength;
+
+	if (x > Constants::gridWidth)
+		throw x;
+
+	if (y > Constants::gridHeight)
+		throw y;*/
+
+
 	Ogre::Vector2 cords(_CMATH_::round(x), _CMATH_::round(y));
 	return cords;
 }

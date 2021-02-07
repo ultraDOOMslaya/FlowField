@@ -14,9 +14,21 @@ GridEditor::~GridEditor()
 }
 
 
+bool isImpassable(int x, int y)
+{
+
+}
+//----------------------------------------------------------------
+
 void setSquareColor(Ogre::Entity* entity, Ogre::MaterialPtr mat, Ogre::ColourValue cv) {
 	//entity->setMaterialName("Examples/GrassFloor");
 	entity->setMaterialName(mat->getName());
+}
+//----------------------------------------------------------------
+
+void GridEditor::addTerrainValue(int x, int y, b2World* world, std::vector<GridSquare*>* impassableTerrain) {
+	GridSquare* gridSquare = new GridSquare(world, x, y);
+	impassableTerrain->push_back(gridSquare);
 }
 //----------------------------------------------------------------
 
