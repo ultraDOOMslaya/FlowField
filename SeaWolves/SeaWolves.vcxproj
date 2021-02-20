@@ -144,14 +144,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(BOX2D_HOME)\include;C:\Projects\Dependencies\RakNet\Source;$(OGRE_HOME)\include\OGRE\RTShaderSystem;$(OGRE_HOME)\include\OGRE\Bites;$(SDL2_HOME)\include;$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOX2D_HOME)\include;C:\Projects\Dependencies\RakNet\Source;$(OGRE_HOME)\include\OGRE\RTShaderSystem;$(OGRE_HOME)\include\OGRE\Bites;$(SDL2_HOME)\include;$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OGRE\Terrain;$(OGRE_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;OgreBites.lib;OgreMain.lib;OgreOverlay.lib;OgreRTShaderSystem.lib;SDL2.lib;SDL2main.lib;Box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;OgreBites.lib;OgreMain.lib;OgreOverlay.lib;OgreRTShaderSystem.lib;OgreTerrain.lib;SDL2.lib;SDL2main.lib;Box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Projects\FlowField\SeaWolves\Box2D\lib;$(SDL2_HOME)\lib\x64;$(OGRE_HOME)\lib;$(OGRE_HOME)\lib\OGRE;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -324,6 +324,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="HuntingState.h" />
     <ClInclude Include="IdleState.h" />
+    <ClInclude Include="MapManager.h" />
     <ClInclude Include="SeekingState.h" />
     <ClInclude Include="UnitController.h" />
     <ClInclude Include="GameRunnable.h" />
@@ -471,6 +472,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="HuntingState.cpp" />
     <ClCompile Include="IdleState.cpp" />
+    <ClCompile Include="MapManager.cpp" />
     <ClCompile Include="SeekingState.cpp" />
     <ClCompile Include="UnitController.cpp" />
     <ClCompile Include="GameRunnable.cpp" />

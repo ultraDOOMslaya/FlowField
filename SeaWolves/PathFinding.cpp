@@ -288,12 +288,12 @@ void PathFinding::showFlow(Ogre::SceneManager* mScnMgr) {
 			Ogre::ManualObject* man = mScnMgr->createManualObject(pathLineName);
 			man->begin("Examples/OgreLogo", Ogre::RenderOperation::OT_LINE_STRIP);
 
-			man->position(origin.x, 1, origin.z);
+			man->position(origin.x, 205, origin.z);
 			man->normal(0, 0, 1);
 
 			int interpolateX = (std::abs(origin.x) + std::abs(endpoint.x)) / 2;
 			int interpolateY = (std::abs(origin.z) + std::abs(endpoint.z)) / 2;
-			man->position(interpolateX, 1, interpolateY);
+			man->position(interpolateX, 205, interpolateY);
 			man->normal(0, 0, 1);
 
 			man->end();

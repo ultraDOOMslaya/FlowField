@@ -37,7 +37,8 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	mWorld = world;
 	unitEntity = gameSceneManager->createEntity(meshName);
 	unitEntity->setCastShadows(true);
-	unitNode = gameSceneManager->getRootSceneNode()->createChildSceneNode(BradsBitch, startPos);
+	Ogre::Vector3 startPosWithHeight = Ogre::Vector3(startPos.x, Constants::unitBaseHeight, startPos.z);
+	unitNode = gameSceneManager->getRootSceneNode()->createChildSceneNode(BradsBitch, startPosWithHeight);
 	unitNode->setScale(50, 50, 50);
 	unitNode->attachObject(unitEntity);
 	mUnitClass = unitClass;

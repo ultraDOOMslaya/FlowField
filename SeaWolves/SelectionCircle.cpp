@@ -28,7 +28,7 @@ SelectionCircle::SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 posi
 	for (loopCount = 0; loopCount < circleResolution; loopCount++) {
 		theta = theta + alpha;
 		circularCord2[loopCount].x = (Ogre::Math::Cos(theta) * circleRadius) + position.x;
-		circularCord2[loopCount].y = circleStart + position.y;
+		circularCord2[loopCount].y = circleStart + position.y + 1;
 		circularCord2[loopCount].z = (Ogre::Math::Sin(theta) * circleRadius) + position.z;
 	}
 
@@ -59,7 +59,7 @@ SelectionCircle::~SelectionCircle()
 
 
 void SelectionCircle::move(Ogre::Vector3 position) {
-	position.y = 1;
+	position.y += 1;
 	circleNode->setPosition(position - startPosition);		//TODO figure out why Position is off to begin with for some reason
 }
 

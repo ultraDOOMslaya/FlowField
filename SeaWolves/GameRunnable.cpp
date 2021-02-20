@@ -439,9 +439,16 @@ void GameRunnable::setup(void)
 
 	//gridMap = new std::vector<std::vector<GridSquare*>>();
 
-	mScnMgr->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
-	//mScnMgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
+	mScnMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
+	mScnMgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
+
 	spotLight = mScnMgr->createLight("SpotLight");
+	spotLight->setType(Ogre::Light::LT_DIRECTIONAL);
+	spotLight->setDirection(Ogre::Vector3(1.0f, -1.0f, -1.0f).normalisedCopy());
+	spotLight->setDiffuseColour(1.0f, 1.0f, 1.0f);
+	spotLight->setSpecularColour(0.25f, 0.25f, 0.25f);
+
+	/*spotLight = mScnMgr->createLight("SpotLight");
 	spotLight->setDiffuseColour(0, 0, 1.0);
 	spotLight->setSpecularColour(0, 0, 1.0);
 	spotLight->setType(Ogre::Light::LT_SPOTLIGHT);
@@ -449,7 +456,7 @@ void GameRunnable::setup(void)
 	spotLightNode->attachObject(spotLight);
 	spotLightNode->setDirection(-1, -1, 0);
 	spotLightNode->setPosition(Ogre::Vector3(200, 200, 0));
-	spotLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+	spotLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));*/
 
 	mRayScnQuery = mScnMgr->createRayQuery(Ogre::Ray());
 	mRayScnQuery->setSortByDistance(true);
@@ -508,6 +515,14 @@ void GameRunnable::setup(void)
 	b2Vec2 gravity(0.0f, 0.0f);
 	mWorld = new b2World(gravity);
 
+	Ogre::Entity* buildingEntity = mScnMgr->createEntity("RedBrickShack.mesh");
+	buildingEntity->setCastShadows(true);
+
+	Ogre::Vector3 buildingPosition = Ogre::Vector3(500, 200, 500);
+	Ogre::SceneNode* buildingNode = mScnMgr->getRootSceneNode()->createChildSceneNode("BlueBrickBuilding", buildingPosition);
+	buildingNode->setScale(10, 10, 10);
+	buildingNode->attachObject(buildingEntity);
+
 	//createTileMap();
 	//TODO move impassableTerrain, gridEditor, and b2 world to the map manager (probably?)
 	mMapManager = new MapManager(mScnMgr, spotLight, &impassableTerrain, mWorld, gridEditor);
@@ -524,6 +539,8 @@ void GameRunnable::setup(void)
 	float32 timeStep = 1.0f / 60.0f;
 	int32 velocityIterations = 10;
 	int32 positionIterations = 8;
+
+	
 
 	/* END TESTING ZONE */
 
