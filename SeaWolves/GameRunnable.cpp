@@ -440,8 +440,7 @@ void GameRunnable::setup(void)
 	//gridMap = new std::vector<std::vector<GridSquare*>>();
 
 	mScnMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
-	mScnMgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
-
+	//mScnMgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
 	spotLight = mScnMgr->createLight("SpotLight");
 	spotLight->setType(Ogre::Light::LT_DIRECTIONAL);
 	spotLight->setDirection(Ogre::Vector3(1.0f, -1.0f, -1.0f).normalisedCopy());
@@ -515,15 +514,9 @@ void GameRunnable::setup(void)
 	b2Vec2 gravity(0.0f, 0.0f);
 	mWorld = new b2World(gravity);
 
-	Ogre::Entity* buildingEntity = mScnMgr->createEntity("RedBrickShack.mesh");
-	buildingEntity->setCastShadows(true);
-
 	Ogre::Vector3 buildingPosition = Ogre::Vector3(500, 200, 500);
-	Ogre::SceneNode* buildingNode = mScnMgr->getRootSceneNode()->createChildSceneNode("BlueBrickBuilding", buildingPosition);
-	buildingNode->setScale(10, 10, 10);
-	buildingNode->attachObject(buildingEntity);
-
-	//createTileMap();
+	Building(mScnMgr, buildingPosition, "RedBrickBuilding", "RedBrickShack.mesh", mWorld, &impassableTerrain);
+;
 	//TODO move impassableTerrain, gridEditor, and b2 world to the map manager (probably?)
 	mMapManager = new MapManager(mScnMgr, spotLight, &impassableTerrain, mWorld, gridEditor);
 

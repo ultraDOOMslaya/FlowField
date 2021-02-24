@@ -42,9 +42,10 @@
 #include "BitStream.h"
 #include "RakNetTypes.h"  // MessageID
 
-//Units
+//GameObjects
 #include "Unit.h"
 #include "MagicAttack.h"
+#include "Building.h"
 
 //Map & Grid
 #include <OgreTerrain.h>
