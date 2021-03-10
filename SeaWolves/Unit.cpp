@@ -159,7 +159,7 @@ void Unit::update(const Ogre::FrameEvent& evt) {
 
 	/** Advance Unit Animations **/
 	//unit->unitAnimState->addTime(0.0166666);				//Mocked Delta Time
-	unitAnimState->addTime(evt.timeSinceLastEvent);		//Real Time
+	unitAnimState->addTime(evt.timeSinceLastFrame);		//Real Time
 }
 //----------------------------------------------------------------
 

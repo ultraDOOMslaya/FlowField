@@ -168,8 +168,11 @@ Ogre::Vector2 getCell(Ogre::Vector3 centerPosition)
 	int x = centerPosition.x;
 	int z = centerPosition.z;
 
-	int cell_x = x % Offsets::cellSize > 0 ? (x / Offsets::cellSize) + 1 : x / Offsets::cellSize;
-	int cell_z = z % Offsets::cellSize > 0 ? (z / Offsets::cellSize) + 1 : z / Offsets::cellSize;
+	/*int cell_x = x % Offsets::cellSize > 0 ? (x / Offsets::cellSize) + 1 : x / Offsets::cellSize;
+	int cell_z = z % Offsets::cellSize > 0 ? (z / Offsets::cellSize) + 1 : z / Offsets::cellSize;*/
+
+	int cell_x = x / Offsets::cellSize;
+	int cell_z = z / Offsets::cellSize;
 
 	return Ogre::Vector2(cell_x, cell_z);
 }
@@ -212,7 +215,12 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			if (rayQuerySize > 1) {
 				//Found the floor object AND something else
 				Unit* unit; //TODO eventually we will have buildings and resources. Make this a gameobject and have unit inherit from it.
+				Building* building;
 				for (; it != result.end(); it++) {
+					if (it->movable->getQueryFlags() == Constants::buildingQueryMask) {
+						activePlayer->focusBuilding(mRedBuilding);
+						break;
+					}
 					if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
 						std::map<Ogre::String, Unit*>::iterator itTree = units.find(it->movable->getParentSceneNode()->getName());
 						unit = itTree->second;
@@ -227,6 +235,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 				//Just the floor object
 				pim->clearFocusedLocations(activePlayer, gridMap);
 				activePlayer->clearUnitQueue();
+				//activePlayer->clearSelectedBuilding();
 			}
 		}
 		else {
@@ -362,6 +371,19 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			}
 		}
 	}
+
+	//Check for selected objects:
+	//TODO this can go somewhere else once we have a way to transact with the UI
+	if (activePlayer->mFocusedBuilding != nullptr) {
+		mSpawnSoldier->show();
+		mSpawnArcher->show();
+		mSpawnWizard->show();
+	}
+	else {
+		mSpawnSoldier->hide();
+		mSpawnArcher->hide();
+		mSpawnWizard->hide();
+	}
 	
 	return true;
 }
@@ -404,6 +426,13 @@ void GameRunnable::setup(void)
 	mGroundTypeSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "GroundType", "Textures:", 180.0f, 2, { "Grass", "Dirt" });
 	mAlterElevationCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPLEFT, "EditElevation", "Edit Elevation", 180.0f);
 	mElevationSlider = mTrayMgr->createThickSlider(OgreBites::TL_TOPLEFT, "Elevation", "#:", 180.0f, 150.0f, 0, 6, 7);
+
+	mSpawnSoldier = mTrayMgr->createButton(OgreBites::TL_BOTTOM, "SpawnSoldier", "Soldier", 75);
+	mSpawnArcher = mTrayMgr->createButton(OgreBites::TL_BOTTOM, "SpawnArcher", "Archer", 75);
+	mSpawnWizard = mTrayMgr->createButton(OgreBites::TL_BOTTOM, "SpawnWizard", "Wizard", 75);
+	mSpawnSoldier->hide();
+	mSpawnArcher->hide();
+	mSpawnWizard->hide();
 
 	addInputListener(mTrayMgr);
 
@@ -514,9 +543,11 @@ void GameRunnable::setup(void)
 	b2Vec2 gravity(0.0f, 0.0f);
 	mWorld = new b2World(gravity);
 
-	Ogre::Vector3 buildingPosition = Ogre::Vector3(500, 200, 500);
-	Building(mScnMgr, buildingPosition, "RedBrickBuilding", "RedBrickShack.mesh", mWorld, &impassableTerrain);
-;
+	Ogre::Vector3 buildingPosition = GridUtils::numericalCordFinder(8, 5);
+	buildingPosition.y += Constants::unitBaseHeight;
+	mRedBuilding = new Building(mScnMgr, buildingPosition, "RedBrickBuilding", "RedBrickShack.mesh", mWorld, &impassableTerrain);
+	activePlayer->mRedBuilding = mRedBuilding;
+
 	//TODO move impassableTerrain, gridEditor, and b2 world to the map manager (probably?)
 	mMapManager = new MapManager(mScnMgr, spotLight, &impassableTerrain, mWorld, gridEditor);
 

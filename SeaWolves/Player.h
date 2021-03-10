@@ -5,6 +5,7 @@
 #include "Unit.h"
 #include "Constants.h"
 #include "PlayerRelationship.h"
+#include "Building.h"
 
 class Unit;
 
@@ -16,9 +17,11 @@ public:
 	//virtual void focusUnits(Ogre::SceneQueryResult& result, std::map<Ogre::String, Unit>* units);
 	virtual void focusUnits(Ogre::SceneQueryResult& result);
 	virtual void focusUnit(Unit* unit);
+	virtual void focusBuilding(Building* building);
 	virtual void addToQueue(Unit* unit);
 	virtual void assignToGroup();
 	virtual void clearUnitQueue();
+	virtual void clearSelectedBuilding();
 	virtual void cullUnit(Unit* unit);
 	virtual void attack();
 	virtual void attack(Unit* target);
@@ -36,5 +39,8 @@ public:
 	PlayerRelationship*					relationship;
 	bool								queuedAttackMove;
 	int									playerId;
+
+	Building*							mFocusedBuilding;
+	Building*							mRedBuilding;
 };
 

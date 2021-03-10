@@ -15,6 +15,7 @@ class GridSquare
 public:
 	GridSquare(b2World* world, int x, int y);
 	GridSquare(int x, int y, Ogre::String name, Ogre::ColourValue color, Ogre::MaterialPtr defaultMaterial);
+	GridSquare(int x, int y);
 	~GridSquare();
 
 	virtual void defaultColor(Ogre::SceneManager* gameSceneManager);

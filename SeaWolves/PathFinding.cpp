@@ -346,16 +346,16 @@ void PathFinding::assignUnitFormationLocations(int width, int height, int numUni
 	}
 	if ((degree < 31.0f) || (degree > 60.0f)) {
 		Ogre::Vector3 pointToMoveTo = GridUtils::numericalCordFinder(Ogre::Vector3(width, 0, height));
-		int xOffset = 2;
-		int yOffset = 2;
-		int offset = 2;
+		int xOffset = 1;
+		int yOffset = 1;
+		int offset = 1;
 		bool leftRight = false;
 		bool topDown = false;
 		if (pointToMoveTo.x < conglomerate.x) {
-			xOffset = -2;
+			xOffset = -1;
 		}
 		if (pointToMoveTo.z < conglomerate.z) {
-			yOffset = -2;
+			yOffset = -1;
 		}
 
 		if (std::abs(pointToMoveTo.x - conglomerate.x) < std::abs(pointToMoveTo.z - conglomerate.z)) {
@@ -398,13 +398,13 @@ void PathFinding::assignUnitFormationLocations(int width, int height, int numUni
 	}
 	else {
 		Ogre::Vector3 pointToMoveTo = GridUtils::numericalCordFinder(Ogre::Vector3(width, 0, height));
-		int xOffset = -2;
-		int yOffset = -2;
+		int xOffset = -1;
+		int yOffset = -1;
 		if ((pointToMoveTo.x - conglomerate.x) > 0) {
-			xOffset = 2;
+			xOffset = 1;
 		}
 		if ((pointToMoveTo.z - conglomerate.z) > 0) {
-			yOffset = 2;
+			yOffset = 1;
 		}
 
 		int startingOffset = rowSize * 0.5; //Works as intended

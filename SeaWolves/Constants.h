@@ -19,6 +19,9 @@ public:
 	const static int			edgeLength = 80; //was 50
 	const static int			worldSize = 2000;
 
+	const static int			physicsShapeHalfLength = (edgeLength / 2) + 1;
+	const static int			physicsShapeBuildingHalfLength = 120 + 1;
+
 	/** tile map properties **/
 	//const static int			gridWidth = 30;
 	//const static int			gridHeight = 30;
@@ -30,6 +33,7 @@ public:
 	const static int			WALL = std::numeric_limits<int>::max();
 	const static int			terrainQueryMask = 1;
 	const static int			unitQueryMask = 2;
+	const static int			buildingQueryMask = 3;
 	const static int			awareRadius = 500;
 	const static int			holdPositionFlowValue = 5;
 	const static int			unitBaseHeight = 200;

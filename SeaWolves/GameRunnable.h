@@ -104,6 +104,11 @@ public:
 	OgreBites::SelectMenu*		mGroundTypeSM;
 	OgreBites::Slider*			mElevationSlider;
 
+	//Building Panel
+	OgreBites::Button*			mSpawnSoldier;
+	OgreBites::Button*			mSpawnArcher;
+	OgreBites::Button*			mSpawnWizard;
+
 	Ogre::Light*				spotLight;
 	Ogre::SceneManager*			mScnMgr;
 	Ogre::Camera*				mCam;
@@ -150,6 +155,10 @@ public:
 	std::vector<GridSquare*>    impassableTerrain;
 	SelectionBox*				selectBox;
 	Ogre::PlaneBoundedVolumeListSceneQuery* volQuery;
+
+	//GameObjects
+	Building*					mRedBuilding;
+	Building*					mBlueBuilding;
 
 	//Manager Singletons
 	//TODO why are these pointers?

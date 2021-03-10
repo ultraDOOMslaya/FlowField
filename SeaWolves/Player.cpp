@@ -34,6 +34,10 @@ void Player::focusUnits(Ogre::SceneQueryResult& result) {
 	std::map<Ogre::String, Unit*>::iterator itTree;
 	Ogre::SceneQueryResultMovableList::iterator it;
 	for (it = result.movables.begin(); it != result.movables.end(); ++it) {
+		if ((*it)->getQueryFlags() == Constants::buildingQueryMask) {
+			focusBuilding(mRedBuilding);
+			
+		}
 		if ((*it)->getQueryFlags() == Constants::unitQueryMask) {
 			if (hasUnitInArmy((*it)->getParentSceneNode()->getName())) {
 				itTree = myArmy.find((*it)->getParentSceneNode()->getName());
@@ -49,6 +53,13 @@ void Player::focusUnit(Unit* unit) {
 	clearUnitQueue();
 	addToQueue(unit);
 	assignToGroup();
+}
+//----------------------------------------------------------------
+
+void Player::focusBuilding(Building* building) {
+	mFocusedBuilding = nullptr;
+	mFocusedBuilding = building;
+	mFocusedBuilding->selected();
 }
 //----------------------------------------------------------------
 
@@ -100,6 +111,12 @@ void Player::clearUnitQueue() {
 		(*ia)->unselected();
 	}
 	unitQueue.clear();
+}
+//----------------------------------------------------------------
+
+void Player::clearSelectedBuilding() {
+	mFocusedBuilding->unselected();
+	mFocusedBuilding = nullptr;
 }
 //----------------------------------------------------------------
 
