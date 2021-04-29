@@ -65,6 +65,14 @@ void Building::selected() {
 
 void Building::unselected() {
 	isSelected = false;
-	//delete mSelectionCircle;
+	delete mSelectionCircle;
 }
 //----------------------------------------------------------------
+
+void Building::setSpawnPoint(Ogre::Vector2 coords) {
+	mSpawnCoords = coords;
+}
+
+Ogre::Vector2 Building::getSpawnPoint() {
+	return mSpawnCoords;
+}

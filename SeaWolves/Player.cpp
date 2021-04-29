@@ -5,6 +5,7 @@
 Player::Player()
 	: queuedAttackMove(false)
 {
+	mLastUnitId = 10;
 }
 
 
@@ -12,36 +13,23 @@ Player::~Player()
 {
 }
 
-/*
-void Player::focusUnits(Ogre::SceneQueryResult& result, std::map<Ogre::String, Unit>* units) {
-	clearUnitQueue();
-
-	std::map<Ogre::String, Unit>::iterator itTree;
-	Ogre::SceneQueryResultMovableList::iterator it;
-	for (it = result.movables.begin(); it != result.movables.end(); ++it) {
-		if ((*it)->getQueryFlags() == Constants::unitQueryMask) {
-			itTree = units->find((*it)->getParentSceneNode()->getName());
-			addToQueue(&itTree->second);
-		}
-	}
-	assignToGroup();
-}*/
-//----------------------------------------------------------------
 
 void Player::focusUnits(Ogre::SceneQueryResult& result) {
 	clearUnitQueue();
+	clearBuildingQueue();
 
-	std::map<Ogre::String, Unit*>::iterator itTree;
+	std::map<Ogre::String, Unit*>::iterator itUnitTree;
+	std::map<Ogre::String, Building*>::iterator itBuildingTree;
 	Ogre::SceneQueryResultMovableList::iterator it;
 	for (it = result.movables.begin(); it != result.movables.end(); ++it) {
 		if ((*it)->getQueryFlags() == Constants::buildingQueryMask) {
-			focusBuilding(mRedBuilding);
-			
+			itBuildingTree = myBuildings.find((*it)->getParentSceneNode()->getName());
+			addToBuildingQueue(itBuildingTree->second);
 		}
 		if ((*it)->getQueryFlags() == Constants::unitQueryMask) {
 			if (hasUnitInArmy((*it)->getParentSceneNode()->getName())) {
-				itTree = myArmy.find((*it)->getParentSceneNode()->getName());
-				addToQueue(itTree->second);
+				itUnitTree = myArmy.find((*it)->getParentSceneNode()->getName());
+				addToQueue(itUnitTree->second);
 			}
 		}
 	}
@@ -57,9 +45,8 @@ void Player::focusUnit(Unit* unit) {
 //----------------------------------------------------------------
 
 void Player::focusBuilding(Building* building) {
-	mFocusedBuilding = nullptr;
-	mFocusedBuilding = building;
-	mFocusedBuilding->selected();
+	clearBuildingQueue();
+	addToBuildingQueue(building);
 }
 //----------------------------------------------------------------
 
@@ -68,6 +55,11 @@ void Player::addToQueue(Unit* unit) {
 	unitQueue.push_back(unit);
 }
 //----------------------------------------------------------------
+
+void Player::addToBuildingQueue(Building* building) {
+	building->selected();
+	buildingQueue.push_back(building);
+}
 
 void Player::assignToGroup() {
 	std::vector<Unit*>* newUnitGroup = new std::vector<Unit*>();
@@ -114,9 +106,12 @@ void Player::clearUnitQueue() {
 }
 //----------------------------------------------------------------
 
-void Player::clearSelectedBuilding() {
-	mFocusedBuilding->unselected();
-	mFocusedBuilding = nullptr;
+void Player::clearBuildingQueue() {
+	std::vector<Building*>::iterator ia;
+	for (ia = buildingQueue.begin(); ia != buildingQueue.end(); ia++) {
+		(*ia)->unselected();
+	}
+	buildingQueue.clear();
 }
 //----------------------------------------------------------------
 
@@ -125,6 +120,18 @@ bool Player::hasUnitInArmy(Ogre::String unitName) {
 		return true;
 	}
 	return false;
+}
+//----------------------------------------------------------------
+
+void Player::harvest(NaturalResource* target) {
+	for (std::vector<Unit*>::iterator unit = unitQueue.begin(); unit != unitQueue.end(); ++unit) {
+		if ((*unit)->mUnitClass == "Villager") {
+			(*unit)->trekking = false;
+			(*unit)->setNatResourceTarget(target);
+			(*unit)->mState = Unit::STATE_HUNTING;
+			(*unit)->harvestingTarget();
+		}
+	}
 }
 //----------------------------------------------------------------
 

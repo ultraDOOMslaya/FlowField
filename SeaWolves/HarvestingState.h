@@ -1,15 +1,14 @@
 #pragma once
-#ifndef __HuntingState_h_
-#define __HuntingState_h_
+#ifndef __HarvestingState_h_
+#define __HarvestingState_h_
 
 #include "Unit.h"
-#include "NaturalResource.h"
 #include <OgreInput.h>
 #include <OgreBitesConfigDialog.h>
 
 class Unit;
 
-class HuntingState
+class HarvestingState
 {
 public:
 	virtual void enter(Unit& unit);
@@ -17,4 +16,4 @@ public:
 	virtual void update(Unit& unit, const Ogre::FrameEvent& evt);
 };
 
-#endif __HuntingState_h_
+#endif __HarvestingState_h_

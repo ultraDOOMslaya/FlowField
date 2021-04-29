@@ -318,14 +318,18 @@
     <ClInclude Include="AIUtils.h" />
     <ClInclude Include="Archer.h" />
     <ClInclude Include="AttackingState.h" />
+    <ClInclude Include="Building.h" />
     <ClInclude Include="CombatBehaviour.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="EditorUtil.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="HarvestingState.h" />
     <ClInclude Include="HuntingState.h" />
     <ClInclude Include="IdleState.h" />
     <ClInclude Include="MapManager.h" />
+    <ClInclude Include="NaturalResource.h" />
     <ClInclude Include="SeekingState.h" />
+    <ClInclude Include="ForestTree.h" />
     <ClInclude Include="UnitController.h" />
     <ClInclude Include="GameRunnable.h" />
     <ClInclude Include="GenerateUnits.h" />
@@ -347,6 +351,7 @@
     <ClInclude Include="SteeringBehaviour.h" />
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitState.h" />
+    <ClInclude Include="Villager.h" />
     <ClInclude Include="WalkingState.h" />
     <ClInclude Include="Wizard.h" />
   </ItemGroup>
@@ -466,14 +471,18 @@
     <ClCompile Include="AIUtils.cpp" />
     <ClCompile Include="Archer.cpp" />
     <ClCompile Include="AttackingState.cpp" />
+    <ClCompile Include="Building.cpp" />
     <ClCompile Include="CombatBehaviour.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="EditorUtil.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="HarvestingState.cpp" />
     <ClCompile Include="HuntingState.cpp" />
     <ClCompile Include="IdleState.cpp" />
     <ClCompile Include="MapManager.cpp" />
+    <ClCompile Include="NaturalResource.cpp" />
     <ClCompile Include="SeekingState.cpp" />
+    <ClCompile Include="ForestTree.cpp" />
     <ClCompile Include="UnitController.cpp" />
     <ClCompile Include="GameRunnable.cpp" />
     <ClCompile Include="GenerateUnits.cpp" />
@@ -495,6 +504,7 @@
     <ClCompile Include="SteeringBehaviour.cpp" />
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitState.cpp" />
+    <ClCompile Include="Villager.cpp" />
     <ClCompile Include="WalkingState.cpp" />
     <ClCompile Include="Wizard.cpp" />
   </ItemGroup>

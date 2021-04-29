@@ -29,7 +29,9 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	isSelected(false),
 	attacking(false),
 	mTarget(NULL),
+	mNatResourceTarget(NULL),
 	attackRange(0),
+	harvestRange(0),
 	distanceFromTarget(0),
 	targetRadius(0)
 {
@@ -50,6 +52,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	mSeekingState = new SeekingState();
 	mAttackingState = new AttackingState();
 	mHuntingState = new HuntingState();
+	mHarvestingState = new HarvestingState();
 	mIdleState->enter(*this);
 
 	//unitAnimState = unitEntity->getAnimationState("Idle");
@@ -60,6 +63,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	seperationRadius = physicsBodyRadius * 2;
 	targetRadius = 100;
 	attackRange = 100;
+	harvestRange = 50;
 	unitEntity->setQueryFlags(Constants::unitQueryMask);
 	unitID = ID;
 	
@@ -271,8 +275,20 @@ void Unit::halt() {
 bool Unit::attackingTarget() {
 	if (mTarget) {
 		finalDestination = mTarget->getPosition();
-		if (inRange()) {
+		if (inRange(mTarget->getPosition(), attackRange)) {
 			attack();
+		}
+		return true;
+	}
+	return false;
+}
+//----------------------------------------------------------------
+
+bool Unit::harvestingTarget() {
+	if (mNatResourceTarget) {
+		finalDestination = mNatResourceTarget->getPosition();
+		if (inRange(mNatResourceTarget->getPosition(), harvestRange)) {
+			harvest();
 		}
 		return true;
 	}
@@ -286,6 +302,12 @@ void Unit::setTarget(Unit* target) {
 }
 //----------------------------------------------------------------
 
+void Unit::setNatResourceTarget(NaturalResource* target) {
+	mNatResourceTarget = target;
+	harvesting = true;
+}
+//----------------------------------------------------------------
+
 void Unit::attack() {
 	halt();
 	rotate((mTarget->getPosition() - getPosition()));
@@ -295,6 +317,13 @@ void Unit::attack() {
 		hasAttacked = false;
 		animateSingle("Attack");
 	}
+}
+//----------------------------------------------------------------
+
+void Unit::harvest() {
+	halt();
+	rotate((mNatResourceTarget->getPosition() - getPosition()));
+	animate("Chopping");
 }
 //----------------------------------------------------------------
 
@@ -320,9 +349,15 @@ void Unit::takeDamage(int damage) {
 }
 //----------------------------------------------------------------
 
-bool Unit::inRange() {
-	int distance = GridUtils::distanceTo(mTarget->getPosition(), getPosition());
+bool Unit::inRange(Ogre::Vector3 targetPosition, int maxRange) {
+	/*int distance = GridUtils::distanceTo(mTarget->getPosition(), getPosition());
 	if (distance <= attackRange) {
+		return true;
+	}
+	return false;*/
+
+	int distance = GridUtils::distanceTo(targetPosition, getPosition());
+	if (distance <= maxRange) {
 		return true;
 	}
 	return false;

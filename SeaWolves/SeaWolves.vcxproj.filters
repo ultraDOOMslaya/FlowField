@@ -40,6 +40,24 @@
     <Filter Include="Header Files\Unit\UnitStates">
       <UniqueIdentifier>{42dc5c24-c3df-4403-a9fa-f7c1c7731f5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Building">
+      <UniqueIdentifier>{027c709c-ab5a-4cea-8bbe-78bb69bfb538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Building">
+      <UniqueIdentifier>{19c45977-a403-43f5-a6e6-f4c1b5792254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\Resource">
+      <UniqueIdentifier>{4a0ee62e-b495-494e-992b-232f77fc8318}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\Resource\Trees">
+      <UniqueIdentifier>{1f3eabed-d776-4b40-b910-e544616ceb13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects\Resource">
+      <UniqueIdentifier>{4a2f08e9-8b33-4556-9978-2d5edc98e87e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects\Resource\Trees">
+      <UniqueIdentifier>{5d4b52aa-11db-4208-accf-d671732980c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameRunnable.h">
@@ -612,6 +630,21 @@
     <ClInclude Include="MapManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Header Files\Building</Filter>
+    </ClInclude>
+    <ClInclude Include="Villager.h">
+      <Filter>Header Files\Unit\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="ForestTree.h">
+      <Filter>Header Files\GameObjects\Resource\Trees</Filter>
+    </ClInclude>
+    <ClInclude Include="NaturalResource.h">
+      <Filter>Header Files\GameObjects\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="HarvestingState.h">
+      <Filter>Header Files\Unit\UnitStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameRunnable.cpp">
@@ -1037,9 +1070,6 @@
     <ClCompile Include="IdleState.cpp">
       <Filter>Source Files\Unit\UnitStates</Filter>
     </ClCompile>
-    <ClCompile Include="HuntingState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AttackingState.cpp">
       <Filter>Source Files\Unit\UnitStates</Filter>
     </ClCompile>
@@ -1051,6 +1081,24 @@
     </ClCompile>
     <ClCompile Include="MapManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Source Files\Building</Filter>
+    </ClCompile>
+    <ClCompile Include="Villager.cpp">
+      <Filter>Source Files\Unit\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="HuntingState.cpp">
+      <Filter>Source Files\Unit\UnitStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ForestTree.cpp">
+      <Filter>Source Files\GameObjects\Resource\Trees</Filter>
+    </ClCompile>
+    <ClCompile Include="NaturalResource.cpp">
+      <Filter>Source Files\GameObjects\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="HarvestingState.cpp">
+      <Filter>Source Files\Unit\UnitStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

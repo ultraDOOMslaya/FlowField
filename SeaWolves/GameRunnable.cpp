@@ -151,6 +151,19 @@ bool GameRunnable::keyPressed(const OgreBites::KeyboardEvent& evt)
 	{
 		activePlayer->queuedAttackMove = !activePlayer->queuedAttackMove;
 	}
+
+	//TODO eventually follow this pattern:
+	// 1) get the status of everything selected by the player
+	// 2) execute the input against every selected item
+	if (activePlayer->buildingQueue.size() > 0) {
+		if (evt.keysym.sym == SDLK_q)
+		{
+			Ogre::Vector2 spawnPoint = activePlayer->buildingQueue.at(0)->getSpawnPoint();
+			activePlayer->mLastUnitId = activePlayer->mLastUnitId++;
+			GenerateUnits::generatUnit(mScnMgr, &units, &player1.myArmy, mWorld, &impassableTerrain, mUnitController, activePlayer->mLastUnitId, spawnPoint);
+		}
+	}
+
 	return true;
 }
 //----------------------------------------------------------------
@@ -212,7 +225,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 	if (evt.button == SDL_BUTTON_LEFT) {
 		// Did we drag or did we click?
 		if (selectBox->mStop == selectBox->mStart) {
-			if (rayQuerySize > 1) {
+			if (rayQuerySize >= 1) {
 				//Found the floor object AND something else
 				Unit* unit; //TODO eventually we will have buildings and resources. Make this a gameobject and have unit inherit from it.
 				Building* building;
@@ -235,7 +248,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 				//Just the floor object
 				pim->clearFocusedLocations(activePlayer, gridMap);
 				activePlayer->clearUnitQueue();
-				//activePlayer->clearSelectedBuilding();
+				activePlayer->clearBuildingQueue();
 			}
 		}
 		else {
@@ -325,7 +338,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 		if (!mNonCombat->isChecked()) {
 			Ogre::RaySceneQueryResult::iterator it = result.begin();
 			// Right click on an enemy player?
-			if (rayQuerySize > 1) {
+			if (rayQuerySize > 0) {
 				//Found the floor object AND something else
 				for (; it != result.end(); it++) {
 					if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
@@ -338,6 +351,12 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 						default:
 							break;
 						}
+					}
+
+					if (it->movable->getQueryFlags() == Constants::naturalResourceMask) {
+						std::map<Ogre::String, NaturalResource*>::iterator itTree = natResources.find(it->movable->getParentSceneNode()->getName());
+						NaturalResource& natResource = *itTree->second;
+						activePlayer->harvest(&natResource);
 					}
 				}
 			}
@@ -370,19 +389,6 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 				//}
 			}
 		}
-	}
-
-	//Check for selected objects:
-	//TODO this can go somewhere else once we have a way to transact with the UI
-	if (activePlayer->mFocusedBuilding != nullptr) {
-		mSpawnSoldier->show();
-		mSpawnArcher->show();
-		mSpawnWizard->show();
-	}
-	else {
-		mSpawnSoldier->hide();
-		mSpawnArcher->hide();
-		mSpawnWizard->hide();
 	}
 	
 	return true;
@@ -426,13 +432,6 @@ void GameRunnable::setup(void)
 	mGroundTypeSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "GroundType", "Textures:", 180.0f, 2, { "Grass", "Dirt" });
 	mAlterElevationCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPLEFT, "EditElevation", "Edit Elevation", 180.0f);
 	mElevationSlider = mTrayMgr->createThickSlider(OgreBites::TL_TOPLEFT, "Elevation", "#:", 180.0f, 150.0f, 0, 6, 7);
-
-	mSpawnSoldier = mTrayMgr->createButton(OgreBites::TL_BOTTOM, "SpawnSoldier", "Soldier", 75);
-	mSpawnArcher = mTrayMgr->createButton(OgreBites::TL_BOTTOM, "SpawnArcher", "Archer", 75);
-	mSpawnWizard = mTrayMgr->createButton(OgreBites::TL_BOTTOM, "SpawnWizard", "Wizard", 75);
-	mSpawnSoldier->hide();
-	mSpawnArcher->hide();
-	mSpawnWizard->hide();
 
 	addInputListener(mTrayMgr);
 
@@ -545,8 +544,19 @@ void GameRunnable::setup(void)
 
 	Ogre::Vector3 buildingPosition = GridUtils::numericalCordFinder(8, 5);
 	buildingPosition.y += Constants::unitBaseHeight;
-	mRedBuilding = new Building(mScnMgr, buildingPosition, "RedBrickBuilding", "RedBrickShack.mesh", mWorld, &impassableTerrain);
-	activePlayer->mRedBuilding = mRedBuilding;
+	Ogre::String buildingName = "RedBrickBuilding";
+	mRedBuilding = new Building(mScnMgr, buildingPosition, buildingName, "RedBrickShack.mesh", mWorld, &impassableTerrain);
+	mRedBuilding->setSpawnPoint(Ogre::Vector2(8, 7));
+	activePlayer->myBuildings.insert(std::make_pair(buildingName, mRedBuilding));
+
+
+	
+
+	//treeEntity->setCastShadows(true);
+	/*Ogre::SceneNode* treeNode = mScnMgr->getRootSceneNode()->createChildSceneNode("tree", Ogre::Vector3(560, 200, 640));
+	treeNode->rotate(Ogre::Quaternion(Ogre::Degree(180), Ogre::Vector3::UNIT_Y));
+	treeNode->setScale(50, 50, 50);
+	treeNode->attachObject(treeEntity);*/
 
 	//TODO move impassableTerrain, gridEditor, and b2 world to the map manager (probably?)
 	mMapManager = new MapManager(mScnMgr, spotLight, &impassableTerrain, mWorld, gridEditor);
@@ -556,6 +566,43 @@ void GameRunnable::setup(void)
 	//GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy, mWorld);
 	//GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy);
 	GenerateUnits::generateEightBronze(mScnMgr, &units, &player1.myArmy, mWorld, &impassableTerrain, mUnitController);
+	GenerateUnits::generateTrees(mScnMgr, &natResources, mWorld, &impassableTerrain);
+
+	Ogre::String unit8675 = "UnitNode" + Ogre::StringConverter::toString(8675309);
+
+	Constants constants;
+	Ogre::String peasant = constants.peasant;
+	Unit* unit = new Villager(mScnMgr, GridUtils::numericalCordFinder(0, 6), unit8675, peasant, "Villager", 8675309, mWorld, &impassableTerrain, mUnitController);
+	unit->currentPos = Ogre::Vector2(0, 6);
+	unit->mPlayerId = 1;
+	units.insert(std::make_pair(unit8675, unit));
+	player1.myArmy.insert(std::pair<Ogre::String, Unit*>(unit8675, unit));
+
+	/** wield an axe **/
+	/*Ogre::Vector3 peasantPos = GridUtils::numericalCordFinder(3, 6);
+	peasantPos.y += 200;
+	Ogre::Entity* axeEntity = mScnMgr->createEntity("Axe.mesh");*/
+	/*Ogre::SceneNode* axeNode = mScnMgr->getRootSceneNode()->createChildSceneNode("axe", peasantPos);
+	axeNode->setScale(50, 50, 50);
+	axeNode->attachObject(axeEntity);*/
+
+	/*Ogre::Entity* unitEntity = mScnMgr->createEntity(peasant);
+	Ogre::SceneNode* unitNode = mScnMgr->getRootSceneNode()->createChildSceneNode("Peasant", peasantPos);
+	unitNode->setScale(50, 50, 50);
+	unitNode->attachObject(unitEntity);*/
+
+	//Ogre::Quaternion rot = Ogre::Quaternion::IDENTITY;  // - could make this configurable
+	//Ogre::Quaternion rotation = Ogre::Quaternion(0, 1, sqrt(0.5), sqrt(0.5));
+	//Ogre::Quaternion rotation = Ogre::Quaternion(0, sqrt(0.5), 1, sqrt(0.5));
+	//Ogre::Vector3 offset = Ogre::Vector3(-0.45, 0.35, -0.65);       // - could make this configurable
+	//Ogre::Vector3 offset = Ogre::Vector3::ZERO;
+	//Ogre::TagPoint* pTagPoint = unit->unitEntity->attachObjectToBone("Hand.Hold.L", axeEntity, rotation, offset);
+	//Ogre::TagPoint* pTagPoint = unitEntity->attachObjectToBone("Hand.Hold.L", axeEntity, rotation, offset);
+
+	//pTagPoint->setInheritOrientation(true);   // - could make this configurable
+	//pTagPoint->setInheritParentEntityOrientation(true);   // - could make this configurable
+
+	//unit->animate("Chopping");
 
 	//GenerateUnits::generateOneSky(mScnMgr, &units, &player2.myArmy, mWorld, &impassableTerrain, mUnitController);
 	//GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy, mWorld, &impassableTerrain, mUnitController);

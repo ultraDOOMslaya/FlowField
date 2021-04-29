@@ -36,7 +36,7 @@ void AttackingState::update(Unit& unit, const Ogre::FrameEvent& evt) {
 	unit.animationElapsedTime = unit.unitAnimState->getTimePosition();
 
 	//Make sure the graphic is following the physics body
-	Ogre::Vector3 moveGraphic = Ogre::Vector3(unit.getB2DPosition().x, 0, unit.getB2DPosition().y);
+	Ogre::Vector3 moveGraphic = Ogre::Vector3(unit.getB2DPosition().x, unit.getPosition().y, unit.getB2DPosition().y);
 	unit.commandMove(moveGraphic);
 }
 

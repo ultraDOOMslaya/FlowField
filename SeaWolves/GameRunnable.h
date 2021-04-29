@@ -5,6 +5,7 @@
 #include <Ogre.h>
 #include <OgreApplicationContext.h>
 #include <OgreBitesConfigDialog.h>
+#include <OgreTagPoint.h>
 
 #include <OgreOverlayManager.h>
 #include <OgreOverlay.h>
@@ -46,6 +47,8 @@
 #include "Unit.h"
 #include "MagicAttack.h"
 #include "Building.h"
+#include "ForestTree.h"
+#include "Villager.h"
 
 //Map & Grid
 #include <OgreTerrain.h>
@@ -104,11 +107,6 @@ public:
 	OgreBites::SelectMenu*		mGroundTypeSM;
 	OgreBites::Slider*			mElevationSlider;
 
-	//Building Panel
-	OgreBites::Button*			mSpawnSoldier;
-	OgreBites::Button*			mSpawnArcher;
-	OgreBites::Button*			mSpawnWizard;
-
 	Ogre::Light*				spotLight;
 	Ogre::SceneManager*			mScnMgr;
 	Ogre::Camera*				mCam;
@@ -132,6 +130,8 @@ public:
 	bool						createUnitMode;
 	//std::vector<Unit>			units;
 	std::map<Ogre::String, Unit*> units;
+	std::map<Ogre::String, NaturalResource*> natResources;
+
 	std::vector<Projectile*>	projectiles;
 	std::vector<MagicAttack*>	magicAttacks;
 	std::queue<Ogre::String>	robots;

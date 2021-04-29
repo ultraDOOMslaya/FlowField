@@ -34,12 +34,16 @@ public:
 	const static int			terrainQueryMask = 1;
 	const static int			unitQueryMask = 2;
 	const static int			buildingQueryMask = 3;
+	const static int			naturalResourceMask = 4;
 	const static int			awareRadius = 500;
 	const static int			holdPositionFlowValue = 5;
 	const static int			unitBaseHeight = 200;
 
 	const Ogre::String			robot = "robot.mesh";
 	Ogre::String				robotNode = "RobotNode";
+
+	const Ogre::String			peasant = "Peasant.mesh";
+	const Ogre::String			workAxe = "Axe.mesh";
 
 	const Ogre::String			bronzeSoldierMesh = "BronzeSoldier.mesh";
 	const Ogre::String			bronzeArcherMesh = "BronzeArcher.mesh";
@@ -49,6 +53,9 @@ public:
 	const Ogre::String			skySoldierMesh = "SkySoldier.mesh";
 	const Ogre::String			skyArcherMesh = "SkyArcher.mesh";
 	const Ogre::String			skyWizardMesh = "SkyWizard.mesh";
+
+	const Ogre::String			oakTree = "OakTree.mesh";
+	const Ogre::String			poplarTree = "PoplarTree.mesh";
 
 	const Ogre::String			heavyArmor = "HeavyArmor";
 	const Ogre::String			MediumArmor = "MediumArmor";

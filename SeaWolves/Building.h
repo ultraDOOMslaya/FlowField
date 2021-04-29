@@ -21,11 +21,15 @@ public:
 	void addTerrainValue(int x, int y, b2World* world, std::vector<GridSquare*>* impassableTerrain);
 	void selected();
 	void unselected();
+	void setSpawnPoint(Ogre::Vector2 coords);
+	Ogre::Vector2 getSpawnPoint();
 
 	Ogre::SceneManager*			mScnMgr;
 	Ogre::SceneNode*			buildingNode;
 	Ogre::String				mName;
 	SelectionCircle*			mSelectionCircle;
+	Ogre::Vector2				mSpawnCoords;
+
 
 	//Box2D Physics
 	b2BodyDef					mBodyDef;

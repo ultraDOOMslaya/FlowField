@@ -14,7 +14,7 @@ void AggressiveState::handleInput(Unit& unit, OgreBites::Event& evt) {
 void AggressiveState::update(Unit& unit, const Ogre::FrameEvent& evt) {
 	if (unit.hasTarget()) {
 		unit.distanceFromTarget = unit.getPosition().squaredLength() - unit.mTarget->getPosition().squaredLength();
-		if (unit.inRange()) {
+		if (unit.inRange(unit.mTarget->getPosition(), unit.attackRange)) {
 			unit.mState = Unit::STATE_ATTACKING;
 			unit.mAttackingState->enter(unit);
 		}
