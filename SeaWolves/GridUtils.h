@@ -8,6 +8,9 @@
 
 #include "Box2D\Box2D.h"
 
+#include <exception>
+#include <iostream>
+
 class GridUtils
 {
 public:

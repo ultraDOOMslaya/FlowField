@@ -28,8 +28,13 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	path(NULL),
 	isSelected(false),
 	attacking(false),
+	harvesting(false),
+	building(false),
 	mTarget(NULL),
+	mNatResourceTarget(NULL),
+	mBuildTarget(NULL),
 	attackRange(0),
+	harvestRange(0),
 	distanceFromTarget(0),
 	targetRadius(0)
 {
@@ -37,11 +42,13 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	mWorld = world;
 	unitEntity = gameSceneManager->createEntity(meshName);
 	unitEntity->setCastShadows(true);
-	unitNode = gameSceneManager->getRootSceneNode()->createChildSceneNode(BradsBitch, startPos);
+	Ogre::Vector3 startPosWithHeight = Ogre::Vector3(startPos.x, Constants::unitBaseHeight, startPos.z);
+	unitNode = gameSceneManager->getRootSceneNode()->createChildSceneNode(BradsBitch, startPosWithHeight);
 	unitNode->setScale(50, 50, 50);
 	unitNode->attachObject(unitEntity);
 	mUnitClass = unitClass;
 
+	mInteractionTarget = TARGET_NONE;
 	mState = STATE_IDLE;
 	mIdleState = new IdleState();
 	mWalkingState = new WalkingState();
@@ -49,6 +56,8 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	mSeekingState = new SeekingState();
 	mAttackingState = new AttackingState();
 	mHuntingState = new HuntingState();
+	mHarvestingState = new HarvestingState();
+	mConstructingState = new ConstructingState();
 	mIdleState->enter(*this);
 
 	//unitAnimState = unitEntity->getAnimationState("Idle");
@@ -59,6 +68,8 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	seperationRadius = physicsBodyRadius * 2;
 	targetRadius = 100;
 	attackRange = 100;
+	harvestRange = 50;
+	buildRange = 40;
 	unitEntity->setQueryFlags(Constants::unitQueryMask);
 	unitID = ID;
 	
@@ -119,6 +130,8 @@ void Unit::handleInput(OgreBites::Event &evt) {
 		break;
 	case STATE_HUNTING:
 		mHuntingState->handleInput(*this, evt);
+	case STATE_CONSTRUCTING:
+		mConstructingState->handleInput(*this, evt);
 		break;
 	}
 }
@@ -150,6 +163,8 @@ void Unit::update(const Ogre::FrameEvent& evt) {
 	case Unit::STATE_HUNTING:
 		mHuntingState->update(*this, evt);
 		break;
+	case Unit::STATE_CONSTRUCTING:
+		mConstructingState->update(*this, evt);
 	case Unit::STATE_POST_COMBAT:
 		break;
 	default:
@@ -158,7 +173,7 @@ void Unit::update(const Ogre::FrameEvent& evt) {
 
 	/** Advance Unit Animations **/
 	//unit->unitAnimState->addTime(0.0166666);				//Mocked Delta Time
-	unitAnimState->addTime(evt.timeSinceLastEvent);		//Real Time
+	unitAnimState->addTime(evt.timeSinceLastFrame);		//Real Time
 }
 //----------------------------------------------------------------
 
@@ -270,8 +285,20 @@ void Unit::halt() {
 bool Unit::attackingTarget() {
 	if (mTarget) {
 		finalDestination = mTarget->getPosition();
-		if (inRange()) {
+		if (inRange(mTarget->getPosition(), attackRange)) {
 			attack();
+		}
+		return true;
+	}
+	return false;
+}
+//----------------------------------------------------------------
+
+bool Unit::harvestingTarget() {
+	if (mNatResourceTarget) {
+		finalDestination = mNatResourceTarget->getPosition();
+		if (inRange(mNatResourceTarget->getPosition(), harvestRange)) {
+			harvest();
 		}
 		return true;
 	}
@@ -282,6 +309,18 @@ bool Unit::attackingTarget() {
 void Unit::setTarget(Unit* target) {
 	mTarget = target;
 	attacking = true;
+}
+//----------------------------------------------------------------
+
+void Unit::setNatResourceTarget(NaturalResource* target) {
+	mNatResourceTarget = target;
+	harvesting = true;
+}
+//----------------------------------------------------------------
+
+void Unit::setConstructionTarget(Building* target) {
+	mBuildTarget = target;
+	building = true;
 }
 //----------------------------------------------------------------
 
@@ -296,6 +335,19 @@ void Unit::attack() {
 	}
 }
 //----------------------------------------------------------------
+
+void Unit::harvest() {
+	halt();
+	rotate((mNatResourceTarget->getPosition() - getPosition()));
+	animate("Chopping");
+}
+//----------------------------------------------------------------
+
+void Unit::build() {
+	halt();
+	animate("Building");
+	rotate(mBuildTarget->buildingNode->getPosition() - getPosition());
+}
 
 bool Unit::isAtEndOfAnimation() {
 	return unitAnimState->hasEnded();
@@ -319,9 +371,15 @@ void Unit::takeDamage(int damage) {
 }
 //----------------------------------------------------------------
 
-bool Unit::inRange() {
-	int distance = GridUtils::distanceTo(mTarget->getPosition(), getPosition());
+bool Unit::inRange(Ogre::Vector3 targetPosition, int maxRange) {
+	/*int distance = GridUtils::distanceTo(mTarget->getPosition(), getPosition());
 	if (distance <= attackRange) {
+		return true;
+	}
+	return false;*/
+
+	int distance = GridUtils::distanceTo(targetPosition, getPosition());
+	if (distance <= maxRange) {
 		return true;
 	}
 	return false;
@@ -425,7 +483,7 @@ void Unit::rotate(b2Vec2 direction) {
 
 void Unit::selected() {
 	isSelected = true;
-	selectionCircle = new SelectionCircle(gameSceneManager, getPosition(), unitID);
+	selectionCircle = new SelectionCircle(gameSceneManager, getPosition(), unitID, Constants::GameObject::GAME_OBJECT_UNIT);
 }
 //----------------------------------------------------------------
 

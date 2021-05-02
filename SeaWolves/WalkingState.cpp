@@ -64,8 +64,8 @@ void WalkingState::update(Unit& unit, const Ogre::FrameEvent& evt) {
 	/** Marching and Hunting **/
 	if (unit.b2Destination != b2Vec2_zero) {
 
-		unit.b2ForceToApply.operator*=(evt.timeSinceLastFrame);		//Real Time
-		//unit.b2ForceToApply.operator*=(0.0166666);			//Mocked Delta Time
+		//unit.b2ForceToApply.operator*=(evt.timeSinceLastFrame);		//Real Time
+		unit.b2ForceToApply.operator*=(0.0166666);			//Mocked Delta Time
 		unit.b2Velocity.operator+=(unit.b2ForceToApply);
 
 		float speed = unit.b2Velocity.Length();
@@ -75,11 +75,11 @@ void WalkingState::update(Unit& unit, const Ogre::FrameEvent& evt) {
 
 		unit.rotate(unit.b2Velocity);
 
-		//Ogre::Vector3 newPos = unit.getPosition().operator+=(unit.velocity.operator*(0.0166666));			//Mocked Delta Time
-		Ogre::Vector3 newPos = unit.getPosition().operator+=(unit.velocity.operator*(evt.timeSinceLastFrame));		//Real Time
+		Ogre::Vector3 newPos = unit.getPosition().operator+=(unit.velocity.operator*(0.0166666));			//Mocked Delta Time
+		//Ogre::Vector3 newPos = unit.getPosition().operator+=(unit.velocity.operator*(evt.timeSinceLastFrame));		//Real Time
 
 		unit.mBody->SetLinearVelocity(unit.b2Velocity);
-		Ogre::Vector3 moveGraphic = Ogre::Vector3(unit.getB2DPosition().x, 0, unit.getB2DPosition().y);
+		Ogre::Vector3 moveGraphic = Ogre::Vector3(unit.getB2DPosition().x, unit.getPosition().y, unit.getB2DPosition().y);
 		unit.commandMove(moveGraphic);
 
 	}

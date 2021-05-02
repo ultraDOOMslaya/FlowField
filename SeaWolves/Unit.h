@@ -9,6 +9,7 @@
 #include "PathFinding.h"
 #include "SelectionCircle.h"
 #include "GridUtils.h"
+#include "NaturalResource.h"
 
 #include "UnitController.h"
 
@@ -18,10 +19,13 @@
 #include "AggressiveState.h"
 #include "SeekingState.h"
 #include "HuntingState.h"
+#include "HarvestingState.h"
 #include "AttackingState.h"
+#include "ConstructingState.h"
 
 #include "Box2D\Box2D.h"
 
+class Building;
 class PathFinding;  //Forward declaration
 class UnitController;
 
@@ -31,7 +35,9 @@ class WalkingState;
 class AggressiveState;
 class SeekingState;
 class HuntingState;
+class HarvestingState;
 class AttackingState;
+class ConstructingState;
 
 class Unit
 {
@@ -45,7 +51,17 @@ public:
 		STATE_HUNTING,
 		STATE_SEEKING,
 		STATE_AGGRESSIVE,
-		STATE_POST_COMBAT
+		STATE_POST_COMBAT,
+		STATE_HARVESTING,
+		STATE_CONSTRUCTING
+	};
+
+	enum Target {
+		TARGET_ENEMY,
+		TARGET_NEUTRAL,
+		TARGET_RESOURCE,
+		TARGET_CONSTRUCTION,
+		TARGET_NONE
 	};
 
 	Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String name, Ogre::String meshName, Ogre::String unitClass, int ID, b2World* world, std::vector<GridSquare*>* impassableTerrain, UnitController* unitController);
@@ -62,6 +78,7 @@ public:
 	virtual bool assignedPathLosDiscovered();
 	virtual void halt();
 	virtual bool attackingTarget();
+	virtual bool harvestingTarget();
 	virtual bool isHunting();
 	virtual bool isAttacking();
 	virtual bool isAggressive();
@@ -69,7 +86,11 @@ public:
 	virtual bool hasTarget();
 	virtual bool hasPath();
 	virtual void setTarget(Unit* target);
+	virtual void setNatResourceTarget(NaturalResource* target);
+	virtual void setConstructionTarget(Building* target);
 	virtual void attack();
+	virtual void harvest();
+	virtual void build();
 	virtual void doDamage();
 	virtual void takeDamage(int damage);
 
@@ -83,7 +104,7 @@ public:
 	virtual bool nextLocation(void);
 	virtual void selected(void);
 	virtual void unselected(void);
-	virtual bool inRange(void);
+	virtual bool inRange(Ogre::Vector3 targetPosition, int maxRange);
 	virtual void setLooseTarget(Unit* unit, int distance);
 	virtual void setHardTarget(void);
 	virtual void seekTarget(std::map<Ogre::String, Unit*>* units);
@@ -133,6 +154,8 @@ public:
 	int							physicsBodyRadius;
 	int							unitID;
 	int							attackRange;
+	int							harvestRange;
+	int							buildRange;
 	int							mHitPoints;
 	int							mAttackDamage;
 	int							distanceFromTarget;		//This is not continually updated and its state needs to be reset. Used while picking a target
@@ -141,10 +164,14 @@ public:
 	int							projectileCount = 1000; //TODO this shouldn't be here
 	bool						isSelected;
 	bool						attacking;		//While attacking, will attack any target in an area
+	bool						harvesting;
+	bool						building;
 	bool						hunting;		//A move
 	bool						trekking = false;			//Command move
 	bool						hasAttacked = false;		//check to see if damage has been dealt over a given attack animation
 	Unit*						mTarget;			//Target this unit is attacking
+	NaturalResource*			mNatResourceTarget;	//Target this unit will harvest	
+	Building*					mBuildTarget;
 	Ogre::Real					maxForce;
 	Ogre::Real					maxSpeed;
 	Ogre::Real					walkSpeed;
@@ -166,13 +193,16 @@ public:
 
 	State						mState;
 	State						mPreviousState;
+	Target						mInteractionTarget;
 	//UnitState*				mUnitState;
 	IdleState*					mIdleState;
 	WalkingState*				mWalkingState;
 	AggressiveState*			mAggressiveState;
 	SeekingState*				mSeekingState;
 	HuntingState*				mHuntingState;
+	HarvestingState*			mHarvestingState;
 	AttackingState*				mAttackingState;
+	ConstructingState*			mConstructingState;
 	int							mPlayerId;
 
 };

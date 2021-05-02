@@ -10,7 +10,8 @@ class SelectionCircle
 	Ogre::SceneManager*						gameSceneManager;
 
 public:
-	SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 position, int unitID);
+	SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 position, int unitID, int gameObjectType, Ogre::Real circleRadius);
+	SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 position, int unitID, int gameObjectType);
 	~SelectionCircle();
 	virtual void move(Ogre::Vector3 position);
 

@@ -1,5 +1,23 @@
 #include "GameRunnable.h"
 
+//TODO move this not in this class
+namespace Offsets {
+	/** Map builders **/
+	extern const float worldSize = 2000;
+	extern const float baseHeight = 200;
+
+	extern const int cellSize = 80;
+	extern const float heightOffset = 200;
+
+	extern const float brushSize = 0.025;
+}
+
+namespace TerrainType {
+	extern const Ogre::String Grass = "grass";
+	extern const Ogre::String Rock = "rock";
+	extern const Ogre::String Sand = "sand";
+}
+
 GameRunnable::GameRunnable()
 	: OgreBites::ApplicationContext("SeaWolves"),
 	gridMap(Constants::dimension, std::vector<GridSquare*>(Constants::dimension, NULL)),
@@ -48,107 +66,6 @@ GameRunnable::~GameRunnable()
 }		// Random exception thrown on program close due to GridSquares*
 //----------------------------------------------------------------
 
-void GameRunnable::createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color, Ogre::MaterialPtr	defaultMaterial)
-{
-	Ogre::MeshPtr tileMesh;
-	Ogre::ManualObject* manual = NULL;
-	{
-		manual = mScnMgr->createManualObject(meshName);
-		//bool doIwantToUpdateItLater = false;
-		//manual->setDynamic(doIwantToUpdateItLater);
-		float triangleScale = 0.7f;
-		manual->begin("Examples/GrassFloor", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-		{
-			int cm = width * triangleScale;
-			int cp = height * triangleScale;
-			edgeLength = edgeLength * triangleScale;
-			manual->position(cm, 0, cp);// a vertex
-			//manual->colour(color);
-			manual->position((cm - edgeLength), 0, cp);// a vertex
-			//manual->colour(color);
-			manual->position((cm - edgeLength), 0, (cp + edgeLength));// a vertex
-			//manual->colour(color);
-			manual->position(cm, 0, (cp + edgeLength));// a vertex
-			//manual->colour(color);
-			manual->position(cm, 0, cp);// a vertex
-			//manual->colour(color);
-			manual->position((cm - edgeLength), 0, cp);// a vertex
-			//manual->colour(color);
-			manual->position((cm - edgeLength), 0, (cp + edgeLength));// a vertex
-			//manual->colour(color);
-			manual->position(cm, 0, (cp + edgeLength));// a vertex
-			//manual->colour(color);
-			//face behind / front
-			manual->triangle(0, 1, 2);
-			manual->triangle(2, 3, 0);
-			manual->triangle(4, 6, 5);
-			manual->triangle(6, 4, 7);
-			//face top / down
-			manual->triangle(0, 4, 5);
-			manual->triangle(5, 1, 0);
-			manual->triangle(2, 6, 7);
-			manual->triangle(7, 3, 2);
-			//face left / right
-			manual->triangle(0, 7, 4);
-			manual->triangle(7, 0, 3);
-			manual->triangle(1, 5, 6);
-			manual->triangle(6, 2, 1);
-		}
-		manual->end();
-		tileMesh = manual->convertToMesh(meshName);
-	}
-
-	Ogre::Entity* planeEntity = mScnMgr->createEntity(meshName, tileMesh);
-	planeEntity->setQueryFlags(Constants::terrainQueryMask);
-	mScnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(planeEntity);
-	planeEntity->setCastShadows(false);
-	
-	GridSquare* square = new GridSquare(width, height, meshName, color, defaultMaterial);
-	int x = (width / Constants::edgeLength) - 1;
-	int y = (height / Constants::edgeLength) - 1;
-	gridMap[x][y] = square;
-}
-//----------------------------------------------------------------
-
-void GameRunnable::createPlane(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color, Ogre::MaterialPtr defaultMaterial) {
-	float triangleScale = 0.7f;
-	int cm = width * triangleScale;
-	int cp = height * triangleScale;
-	edgeLength = edgeLength * triangleScale;
-
-	Ogre::ManualObject* man = mScnMgr->createManualObject(meshName);
-	man->begin("Examples/GrassFloor", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-	man->position(cm, 0, cp);
-	man->normal(0, 0, 1);
-	man->textureCoord(0, 0);
-
-	man->position(cm, 0, cp - edgeLength);
-	man->normal(0, 0, 1);
-	man->textureCoord(0, 1);
-
-	man->position(cm - edgeLength, 0, cp - edgeLength);
-	man->normal(0, 0, 1);
-	man->textureCoord(1, 1);
-
-	man->position(cm - edgeLength, 0, cp);
-	man->normal(0, 0, 1);
-	man->textureCoord(1, 0);
-	man->quad(0, 1, 2, 3);
-	man->end();
-	Ogre::MeshPtr tileMesh = man->convertToMesh(meshName);
-
-	Ogre::Entity* planeEntity = mScnMgr->createEntity(meshName, tileMesh);
-	planeEntity->setQueryFlags(Constants::terrainQueryMask);
-	mScnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(planeEntity);
-	planeEntity->setCastShadows(false);
-
-	GridSquare* square = new GridSquare(width, height, meshName, color, defaultMaterial);
-	int x = (width / Constants::edgeLength) - 1;
-	int y = (height / Constants::edgeLength) - 1;
-	gridMap[x][y] = square;
-}
-//----------------------------------------------------------------
-
 void GameRunnable::createTileMap(void)
 {
 	//TODO there is a lot of redundancy and legacy here
@@ -177,7 +94,7 @@ void GameRunnable::createTileMap(void)
 			createSquare(xscale, yscale, Constants::edgeLength, strToPass, false, (Ogre::ColourValue::ColourValue(0.2f, 0.2f, 1.0f, 1.0f)), mapTileMat2);
 		}*/
 		//createSquare(xscale, yscale, Constants::edgeLength, strToPass, false, (Ogre::ColourValue::ColourValue(0.2f, 0.2f, 1.0f, 1.0f)), mat);
-		createPlane(xscale, yscale, Constants::edgeLength, strToPass, false, (Ogre::ColourValue::ColourValue(0.2f, 0.2f, 1.0f, 1.0f)), mat);
+		//createPlane(xscale, yscale, Constants::edgeLength, strToPass, false, (Ogre::ColourValue::ColourValue(0.2f, 0.2f, 1.0f, 1.0f)), mat);
 
 		if (temp == 0) {
 			mat = mScnMgr->getEntity("0")->getSubEntity(0)->getMaterial()->clone("BaseGreenNoLighting");
@@ -234,6 +151,23 @@ bool GameRunnable::keyPressed(const OgreBites::KeyboardEvent& evt)
 	{
 		activePlayer->queuedAttackMove = !activePlayer->queuedAttackMove;
 	}
+
+	//TODO eventually follow this pattern:
+	// 1) get the status of everything selected by the player
+	// 2) execute the input against every selected item
+	if (activePlayer->buildingQueue.size() > 0) {
+		if (evt.keysym.sym == SDLK_q)
+		{
+			Ogre::Vector2 spawnPoint = activePlayer->buildingQueue.at(0)->getSpawnPoint();
+			activePlayer->mLastUnitId = activePlayer->mLastUnitId++;
+			GenerateUnits::generatUnit(mScnMgr, &units, &player1.myArmy, mWorld, &impassableTerrain, mUnitController, activePlayer->mLastUnitId, spawnPoint);
+		}
+	}
+
+	if (evt.keysym.sym == SDLK_b) {
+		activePlayer->queuedConstruction = !activePlayer->queuedConstruction;
+	}
+
 	return true;
 }
 //----------------------------------------------------------------
@@ -246,6 +180,21 @@ bool GameRunnable::mouseMoved(const OgreBites::MouseMotionEvent &evt)
 }
 //----------------------------------------------------------------
 
+Ogre::Vector2 getCell(Ogre::Vector3 centerPosition)
+{
+	int x = centerPosition.x;
+	int z = centerPosition.z;
+
+	/*int cell_x = x % Offsets::cellSize > 0 ? (x / Offsets::cellSize) + 1 : x / Offsets::cellSize;
+	int cell_z = z % Offsets::cellSize > 0 ? (z / Offsets::cellSize) + 1 : z / Offsets::cellSize;*/
+
+	int cell_x = x / Offsets::cellSize;
+	int cell_z = z / Offsets::cellSize;
+
+	return Ogre::Vector2(cell_x, cell_z);
+}
+//----------------------------------------------------------------
+
 bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 {
 	OgreBites::Event fullEvt = OgreBites::Event();
@@ -255,18 +204,43 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 	Ogre::String objectName = "";
 	Ogre::Ray mouseRay = mTrayMgr->getCursorRay(mCam);
 
+	Ogre::Ray terrainMouseRay = mTrayMgr->getCursorRay(mCam);
+	Ogre::TerrainGroup::RayResult rayResult = mMapManager->getRayResult(&mouseRay);
+
 	mRayScnQuery->setRay(mouseRay);
 	Ogre::RaySceneQueryResult& result = mRayScnQuery->execute();
 	Ogre::RaySceneQueryResult::iterator it = result.begin();
 	int rayQuerySize = result.size();
 
+	bool isImpassable = false;
+	Ogre::Vector2 gridCords = GridUtils::cordNumericalFinder(rayResult.position);
+	for (auto terrain = impassableTerrain.begin(); terrain != impassableTerrain.end(); ++terrain)
+	{
+		if ((*terrain)->x == gridCords.x && (*terrain)->y == gridCords.y)
+			isImpassable = true;
+	}
+
+	std::ostringstream oss;
+	oss << "wp_x: " << rayResult.position.x << " wp_z: " << rayResult.position.z << "\n";
+	oss << "gridX: " << gridCords.x << " gridY: " << gridCords.y << "\n";
+	oss << "is impassable: " << isImpassable;
+	mCordPanel->setText(oss.str());
+
 	if (evt.button == SDL_BUTTON_LEFT) {
 		// Did we drag or did we click?
 		if (selectBox->mStop == selectBox->mStart) {
-			if (rayQuerySize > 1) {
+			if (rayQuerySize >= 1) {
 				//Found the floor object AND something else
 				Unit* unit; //TODO eventually we will have buildings and resources. Make this a gameobject and have unit inherit from it.
+				Building* building;
 				for (; it != result.end(); it++) {
+					if (it->movable->getQueryFlags() == Constants::buildingQueryMask) {
+						std::map<Ogre::String, Building*>::iterator itTree = buildings.find(it->movable->getParentSceneNode()->getName());
+						building = itTree->second;
+
+						activePlayer->focusBuilding(building);
+						break;
+					}
 					if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
 						std::map<Ogre::String, Unit*>::iterator itTree = units.find(it->movable->getParentSceneNode()->getName());
 						unit = itTree->second;
@@ -281,17 +255,28 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 				//Just the floor object
 				pim->clearFocusedLocations(activePlayer, gridMap);
 				activePlayer->clearUnitQueue();
+				activePlayer->clearBuildingQueue();
 			}
 		}
 		else {
 			pim->performSelection(selectBox->mStart, selectBox->mStop, activePlayer, gridMap);
 		}
 		selectBox->disable();
+
+		if (activePlayer->queuedConstruction) {
+			//TODO make a building
+			//rayResult.position.x
+			Ogre::String buildingName = "Building" + Ogre::StringConverter::toString(activePlayer->mLastBuildingId++);
+			Building* construction = GenerateUnits::generateBuilding(mScnMgr, rayResult.position, activePlayer->mLastBuildingId++, "RedBrickBuilding.mesh", mWorld, &impassableTerrain, 300, &activePlayer->myBuildings, &buildings);
+			activePlayer->queuedConstruction = false;
+			//activePlayer->construct(construction);
+			
+		}
 	}
 
 	if (evt.button == SDL_BUTTON_RIGHT) {
 
-		if (result.size() == 0)
+		if (!rayResult.hit && result.size() == 0)
 			return true;
 
 		for (; it != result.end(); it++)
@@ -299,12 +284,9 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			objectName = it->movable->getName();
 		}
 		// Used for right click movement... basic click to move
-		Ogre::Vector2 SquareIndex = GridUtils::gridIndexFinder(objectName);
-
-		//cordinate debugging
-		std::ostringstream oss;
-		oss << objectName;
-		mCordPanel->setText(oss.str());
+		Ogre::Vector2 SquareIndex = getCell(rayResult.position);
+		//TODO why is squareindex capitalized?
+		//Ogre::Vector2 SquareIndex = GridUtils::gridIndexFinder(objectName);
 
 		PathFinding* path = new PathFinding(SquareIndex, &impassableTerrain, mScnMgr, activePlayer->unitQueue.size(), activePlayer->unitGroupConglomerate());
 
@@ -355,6 +337,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 		//TODO this may be the wrong place for this after the refactor
 		/* Reset state player state */
 		//activePlayer->queuedAttackMove = false;
+		//activePlayer->queuedConstruction = false;
 
 		if (mShowFlowPathCB->isChecked()) {
 			if (activePlayer->unitQueue.size() > 0) {
@@ -362,9 +345,9 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 				for (std::vector<Ogre::Vector2*>::iterator it = path->formationLocations.begin(); it != path->formationLocations.end(); ++it) {
 					Ogre::Vector2* point = *it;
 
-					mat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::Green);
+					//mat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::Green);
 					
-					gridEditor->changeTileColor(point->x, point->y, mat, Ogre::ColourValue::Green);
+					//gridEditor->changeTileColor(point->x, point->y, mat, Ogre::ColourValue::Green);
 
 				}
 			}
@@ -373,7 +356,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 		if (!mNonCombat->isChecked()) {
 			Ogre::RaySceneQueryResult::iterator it = result.begin();
 			// Right click on an enemy player?
-			if (rayQuerySize > 1) {
+			if (rayQuerySize > 0) {
 				//Found the floor object AND something else
 				for (; it != result.end(); it++) {
 					if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
@@ -386,6 +369,18 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 						default:
 							break;
 						}
+					}
+
+					if (it->movable->getQueryFlags() == Constants::naturalResourceMask) {
+						std::map<Ogre::String, NaturalResource*>::iterator itTree = natResources.find(it->movable->getParentSceneNode()->getName());
+						NaturalResource& natResource = *itTree->second;
+						activePlayer->harvest(&natResource);
+					}
+
+					if (it->movable->getQueryFlags() == Constants::buildingQueryMask) {
+						std::map<Ogre::String, Building*>::iterator itTree = buildings.find(it->movable->getParentSceneNode()->getName());
+						Building& building = *itTree->second;
+						activePlayer->construct(&building);
 					}
 				}
 			}
@@ -400,22 +395,22 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 		for (; it != result.end(); it++) {
 			if (it->movable->getQueryFlags() == Constants::terrainQueryMask) {
 				if (mModeCB->isChecked()) {
-					//gridEditor->addTerrainValue(it->movable->getName(), redMat, mWorld, &impassableTerrain);
+					gridEditor->addTerrainValue(it->movable->getName(), redMat, mWorld, &impassableTerrain);
 				}
-				if (mAlterTextureCB->isChecked()) {
-					MapEditor::changeSquareTexture(mScnMgr->getEntity(it->movable->getName()), mGroundTypeSM->getSelectedItem());
-				}
-				if (mAlterElevationCB->isChecked()) {
-					Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
-					Ogre::Real elevationStep = 60;
-					Ogre::Real elevation = mElevationSlider->getValue();
-					Ogre::Entity* obj = mScnMgr->getEntity(it->movable->getName());
-					Ogre::SceneNode* node = obj->getParentSceneNode();
-					transVector.y += (elevation * elevationStep);
-					node->translate(transVector, Ogre::Node::TS_LOCAL);
-					/*mScnMgr->getSceneNode("camAnchor")->translate(transVector* evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);*/
+				//if (mAlterTextureCB->isChecked()) {
+				//	MapEditor::changeSquareTexture(mScnMgr->getEntity(it->movable->getName()), mGroundTypeSM->getSelectedItem());
+				//}
+				//if (mAlterElevationCB->isChecked()) {
+				//	Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
+				//	Ogre::Real elevationStep = 60;
+				//	Ogre::Real elevation = mElevationSlider->getValue();
+				//	Ogre::Entity* obj = mScnMgr->getEntity(it->movable->getName());
+				//	Ogre::SceneNode* node = obj->getParentSceneNode();
+				//	transVector.y += (elevation * elevationStep);
+				//	node->translate(transVector, Ogre::Node::TS_LOCAL);
+				//	/*mScnMgr->getSceneNode("camAnchor")->translate(transVector* evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);*/
 
-				}
+				//}
 			}
 		}
 	}
@@ -449,7 +444,7 @@ void GameRunnable::setup(void)
 	mScnMgr->addRenderQueueListener(getOverlaySystem());
 	mTrayMgr = new OgreBites::TrayManager("InterfaceName", getRenderWindow(), mTrayListener);
 	mTrayMgr->showFrameStats(OgreBites::TrayLocation::TL_BOTTOMLEFT);
-	mCordPanel = mTrayMgr->createTextBox(OgreBites::TL_BOTTOMRIGHT, "MouseCords", "Mouse Cordinates", 175.0f, 125.0f);
+	mCordPanel = mTrayMgr->createTextBox(OgreBites::TL_BOTTOMRIGHT, "MouseCords", "Mouse Cordinates", 225.0f, 175.0f);
 	//mModeWidget = mTrayMgr->createParamsPanel(OgreBites::TL_TOPRIGHT, "ModeSet",  Ogre::Real(175), 3);
 	mModeCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "WallGen", "Editor Mode", 150.0f);
 	mUnitCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "UnitGen", "New Units", 150.0f);
@@ -470,7 +465,8 @@ void GameRunnable::setup(void)
 	camAnchor = mScnMgr->getRootSceneNode()->createChildSceneNode("camAnchor");
 	camNode = camAnchor->createChildSceneNode("camNode");
 	mCam = mScnMgr->createCamera("myCam");
-	camAnchor->setPosition((Constants::edgeLength * Constants::gridWidth), 750, (Constants::edgeLength * Constants::gridHeight));
+	//camAnchor->setPosition((Constants::edgeLength * Constants::gridWidth), 750, (Constants::edgeLength * Constants::gridHeight));
+	camAnchor->setPosition(Ogre::Vector3::ZERO + Ogre::Vector3(847, 950, 1058));
 	camNode->lookAt(Ogre::Vector3(0, 0, 0), Ogre::Node::TransformSpace::TS_WORLD);
 	
 	mCam->setNearClipDistance(5);
@@ -495,9 +491,15 @@ void GameRunnable::setup(void)
 
 	//gridMap = new std::vector<std::vector<GridSquare*>>();
 
-	mScnMgr->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+	mScnMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
 	//mScnMgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
-	Ogre::Light* spotLight = mScnMgr->createLight("SpotLight");
+	spotLight = mScnMgr->createLight("SpotLight");
+	spotLight->setType(Ogre::Light::LT_DIRECTIONAL);
+	spotLight->setDirection(Ogre::Vector3(1.0f, -1.0f, -1.0f).normalisedCopy());
+	spotLight->setDiffuseColour(1.0f, 1.0f, 1.0f);
+	spotLight->setSpecularColour(0.25f, 0.25f, 0.25f);
+
+	/*spotLight = mScnMgr->createLight("SpotLight");
 	spotLight->setDiffuseColour(0, 0, 1.0);
 	spotLight->setSpecularColour(0, 0, 1.0);
 	spotLight->setType(Ogre::Light::LT_SPOTLIGHT);
@@ -505,14 +507,14 @@ void GameRunnable::setup(void)
 	spotLightNode->attachObject(spotLight);
 	spotLightNode->setDirection(-1, -1, 0);
 	spotLightNode->setPosition(Ogre::Vector3(200, 200, 0));
-	spotLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+	spotLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));*/
 
 	mRayScnQuery = mScnMgr->createRayQuery(Ogre::Ray());
 	mRayScnQuery->setSortByDistance(true);
 
-	createTileMap();
-
 	/* TESTING ZONE */
+
+	//Terrain
 
 
 	/*Ogre::MaterialPtr mat =
@@ -550,8 +552,9 @@ void GameRunnable::setup(void)
 
 	Ogre::Entity* mOceanSurfaceEnt = mScnMgr->createEntity("OceanSurface", "OceanSurface");
 	mScnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(mOceanSurfaceEnt);
-	mOceanSurfaceEnt->setMaterialName("Ocean2_HLSL_GLSL");
-
+	mOceanSurfaceEnt->setMaterialName("Examples/WaterStream");
+	mOceanSurfaceEnt->getParentSceneNode()->translate(1200, 195, 1120);
+	
 	selectBox = new SelectionBox("SelectionBox");
 	mScnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(selectBox);
 
@@ -563,11 +566,53 @@ void GameRunnable::setup(void)
 	b2Vec2 gravity(0.0f, 0.0f);
 	mWorld = new b2World(gravity);
 
+
+	//TODO move impassableTerrain, gridEditor, and b2 world to the map manager (probably?)
+	mMapManager = new MapManager(mScnMgr, spotLight, &impassableTerrain, mWorld, gridEditor);
+
 	mUnitController = new UnitController(&units, &players, &projectiles, &magicAttacks);
 	//GenerateUnits::generateOneBronze(mScnMgr, &units, &player1.myArmy, mWorld);
 	//GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy, mWorld);
 	//GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy);
-	//GenerateUnits::generateEightBronze(mScnMgr, &units, &player1.myArmy, mWorld, &impassableTerrain, mUnitController);
+	GenerateUnits::generateEightBronze(mScnMgr, &units, &player1.myArmy, mWorld, &impassableTerrain, mUnitController);
+	GenerateUnits::generateTrees(mScnMgr, &natResources, mWorld, &impassableTerrain);
+	GenerateUnits::generateBuildings(mScnMgr, GridUtils::numericalCordFinder(8, 5), activePlayer->mLastBuildingId++, "DoesntMatter", mWorld, &impassableTerrain, 0, &activePlayer->myBuildings, &buildings);
+
+	Ogre::String unit8675 = "UnitNode" + Ogre::StringConverter::toString(8675309);
+
+	Constants constants;
+	Ogre::String peasant = constants.peasant;
+	Unit* unit = new Villager(mScnMgr, GridUtils::numericalCordFinder(0, 6), unit8675, peasant, "Villager", 8675309, mWorld, &impassableTerrain, mUnitController);
+	unit->currentPos = Ogre::Vector2(0, 6);
+	unit->mPlayerId = 1;
+	units.insert(std::make_pair(unit8675, unit));
+	player1.myArmy.insert(std::pair<Ogre::String, Unit*>(unit8675, unit));
+
+	/** wield an axe **/
+	/*Ogre::Vector3 peasantPos = GridUtils::numericalCordFinder(3, 6);
+	peasantPos.y += 200;
+	Ogre::Entity* axeEntity = mScnMgr->createEntity("Axe.mesh");*/
+	/*Ogre::SceneNode* axeNode = mScnMgr->getRootSceneNode()->createChildSceneNode("axe", peasantPos);
+	axeNode->setScale(50, 50, 50);
+	axeNode->attachObject(axeEntity);*/
+
+	/*Ogre::Entity* unitEntity = mScnMgr->createEntity(peasant);
+	Ogre::SceneNode* unitNode = mScnMgr->getRootSceneNode()->createChildSceneNode("Peasant", peasantPos);
+	unitNode->setScale(50, 50, 50);
+	unitNode->attachObject(unitEntity);*/
+
+	//Ogre::Quaternion rot = Ogre::Quaternion::IDENTITY;  // - could make this configurable
+	//Ogre::Quaternion rotation = Ogre::Quaternion(0, 1, sqrt(0.5), sqrt(0.5));
+	//Ogre::Quaternion rotation = Ogre::Quaternion(0, sqrt(0.5), 1, sqrt(0.5));
+	//Ogre::Vector3 offset = Ogre::Vector3(-0.45, 0.35, -0.65);       // - could make this configurable
+	//Ogre::Vector3 offset = Ogre::Vector3::ZERO;
+	//Ogre::TagPoint* pTagPoint = unit->unitEntity->attachObjectToBone("Hand.Hold.L", axeEntity, rotation, offset);
+	//Ogre::TagPoint* pTagPoint = unitEntity->attachObjectToBone("Hand.Hold.L", axeEntity, rotation, offset);
+
+	//pTagPoint->setInheritOrientation(true);   // - could make this configurable
+	//pTagPoint->setInheritParentEntityOrientation(true);   // - could make this configurable
+
+	//unit->animate("Chopping");
 
 	//GenerateUnits::generateOneSky(mScnMgr, &units, &player2.myArmy, mWorld, &impassableTerrain, mUnitController);
 	//GenerateUnits::generateFourSky(mScnMgr, &units, &player2.myArmy, mWorld, &impassableTerrain, mUnitController);
@@ -575,6 +620,8 @@ void GameRunnable::setup(void)
 	float32 timeStep = 1.0f / 60.0f;
 	int32 velocityIterations = 10;
 	int32 positionIterations = 8;
+
+	
 
 	/* END TESTING ZONE */
 

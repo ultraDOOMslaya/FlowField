@@ -5,6 +5,7 @@
 #include <Ogre.h>
 #include <OgreApplicationContext.h>
 #include <OgreBitesConfigDialog.h>
+#include <OgreTagPoint.h>
 
 #include <OgreOverlayManager.h>
 #include <OgreOverlay.h>
@@ -42,15 +43,25 @@
 #include "BitStream.h"
 #include "RakNetTypes.h"  // MessageID
 
-//Units
+//GameObjects
 #include "Unit.h"
 #include "MagicAttack.h"
+//#include "Building.h"
+#include "Barracks.h"
+#include "ForestTree.h"
+#include "Villager.h"
 
 //Map & Grid
-#include "MapEditor.h"
-
-
+#include <OgreTerrain.h>
+#include <OgreTerrainGroup.h>
+#include "MapManager.h"
 #include "Box2D\Box2D.h"
+
+struct Cell {
+	int x;
+	int y;
+	int unpassable;
+};
 
 enum GameMessages
 {
@@ -72,9 +83,9 @@ public:
 	virtual void changeSquareColor(int num);
 	virtual void frameRendered(const Ogre::FrameEvent& evt);
 
-	virtual void createSquare(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color, Ogre::MaterialPtr defaultMaterial);
-	virtual void createPlane(int width, int height, int edgeLength, std::string meshName, bool oddOrEven, Ogre::ColourValue color, Ogre::MaterialPtr defaultMaterial);
+
 	virtual void createTileMap(void);
+
 
 	virtual void spawnProjectile(Unit* unit);
 	virtual void spawnMagic(Unit* unit);
@@ -97,6 +108,7 @@ public:
 	OgreBites::SelectMenu*		mGroundTypeSM;
 	OgreBites::Slider*			mElevationSlider;
 
+	Ogre::Light*				spotLight;
 	Ogre::SceneManager*			mScnMgr;
 	Ogre::Camera*				mCam;
 	Ogre::RenderWindow*         mWindow;
@@ -119,6 +131,9 @@ public:
 	bool						createUnitMode;
 	//std::vector<Unit>			units;
 	std::map<Ogre::String, Unit*> units;
+	std::map<Ogre::String, Building*> buildings;
+	std::map<Ogre::String, NaturalResource*> natResources;
+
 	std::vector<Projectile*>	projectiles;
 	std::vector<MagicAttack*>	magicAttacks;
 	std::queue<Ogre::String>	robots;
@@ -143,11 +158,16 @@ public:
 	SelectionBox*				selectBox;
 	Ogre::PlaneBoundedVolumeListSceneQuery* volQuery;
 
+	//GameObjects
+	Building*					mRedBuilding;
+	Building*					mBlueBuilding;
+
 	//Manager Singletons
 	//TODO why are these pointers?
 	UnitController*				mUnitController;
 	PlayerInputManager*			pim;
 	GameManager*				GameMgr;
+	MapManager*					mMapManager;
 
 	//Net Code
 	RakNet::Packet*				packet;
@@ -155,7 +175,7 @@ public:
 	RakNet::SocketDescriptor	sd;
 
 	//Box2d Physics
-	b2World*					mWorld;
+	b2World*					mWorld;	
 };
 
 #endif __GameRunnable_h_

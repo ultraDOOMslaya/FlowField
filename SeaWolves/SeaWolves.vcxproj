@@ -144,14 +144,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(BOX2D_HOME)\include;C:\Projects\Dependencies\RakNet\Source;$(OGRE_HOME)\include\OGRE\RTShaderSystem;$(OGRE_HOME)\include\OGRE\Bites;$(SDL2_HOME)\include;$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOX2D_HOME)\include;C:\Projects\Dependencies\RakNet\Source;$(OGRE_HOME)\include\OGRE\RTShaderSystem;$(OGRE_HOME)\include\OGRE\Bites;$(SDL2_HOME)\include;$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OGRE\Terrain;$(OGRE_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;OgreBites.lib;OgreMain.lib;OgreOverlay.lib;OgreRTShaderSystem.lib;SDL2.lib;SDL2main.lib;Box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;OgreBites.lib;OgreMain.lib;OgreOverlay.lib;OgreRTShaderSystem.lib;OgreTerrain.lib;SDL2.lib;SDL2main.lib;Box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Projects\FlowField\SeaWolves\Box2D\lib;$(SDL2_HOME)\lib\x64;$(OGRE_HOME)\lib;$(OGRE_HOME)\lib\OGRE;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -318,13 +318,18 @@
     <ClInclude Include="AIUtils.h" />
     <ClInclude Include="Archer.h" />
     <ClInclude Include="AttackingState.h" />
+    <ClInclude Include="Building.h" />
     <ClInclude Include="CombatBehaviour.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="EditorUtil.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="HarvestingState.h" />
     <ClInclude Include="HuntingState.h" />
     <ClInclude Include="IdleState.h" />
+    <ClInclude Include="MapManager.h" />
+    <ClInclude Include="NaturalResource.h" />
     <ClInclude Include="SeekingState.h" />
+    <ClInclude Include="ForestTree.h" />
     <ClInclude Include="UnitController.h" />
     <ClInclude Include="GameRunnable.h" />
     <ClInclude Include="GenerateUnits.h" />
@@ -346,6 +351,7 @@
     <ClInclude Include="SteeringBehaviour.h" />
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitState.h" />
+    <ClInclude Include="Villager.h" />
     <ClInclude Include="WalkingState.h" />
     <ClInclude Include="Wizard.h" />
   </ItemGroup>
@@ -465,13 +471,18 @@
     <ClCompile Include="AIUtils.cpp" />
     <ClCompile Include="Archer.cpp" />
     <ClCompile Include="AttackingState.cpp" />
+    <ClCompile Include="Building.cpp" />
     <ClCompile Include="CombatBehaviour.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="EditorUtil.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="HarvestingState.cpp" />
     <ClCompile Include="HuntingState.cpp" />
     <ClCompile Include="IdleState.cpp" />
+    <ClCompile Include="MapManager.cpp" />
+    <ClCompile Include="NaturalResource.cpp" />
     <ClCompile Include="SeekingState.cpp" />
+    <ClCompile Include="ForestTree.cpp" />
     <ClCompile Include="UnitController.cpp" />
     <ClCompile Include="GameRunnable.cpp" />
     <ClCompile Include="GenerateUnits.cpp" />
@@ -493,6 +504,7 @@
     <ClCompile Include="SteeringBehaviour.cpp" />
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitState.cpp" />
+    <ClCompile Include="Villager.cpp" />
     <ClCompile Include="WalkingState.cpp" />
     <ClCompile Include="Wizard.cpp" />
   </ItemGroup>

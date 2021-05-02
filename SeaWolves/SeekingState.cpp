@@ -2,7 +2,7 @@
 
 
 void SeekingState::enter(Unit& unit) {
-	unit.mUnitController->seekTarget(&unit);
+	//unit.mUnitController->seekTarget(&unit);
 	unit.mState = Unit::STATE_SEEKING;
 	unit.animate("Walk");
 }
@@ -14,15 +14,29 @@ void SeekingState::handleInput(Unit& unit, OgreBites::Event& evt) {
 
 
 void SeekingState::update(Unit& unit, const Ogre::FrameEvent& evt) {
-	unit.distanceFromTarget = unit.getPosition().squaredLength() - unit.mTarget->getPosition().squaredLength();
-	if (unit.inRange()) {
-		unit.mState = Unit::STATE_ATTACKING;
-		unit.mAttackingState->enter(unit);
+	
+	if (unit.mInteractionTarget == Unit::TARGET_ENEMY) {
+		unit.distanceFromTarget = unit.getPosition().squaredLength() - unit.mTarget->getPosition().squaredLength();
+		if (unit.inRange(unit.mTarget->getPosition(), unit.attackRange)) {
+			unit.mState = Unit::STATE_ATTACKING;
+			unit.mAttackingState->enter(unit);
+		}
+		else {
+			unit.finalDestination = unit.mTarget->getPosition();
+			unit.b2FinalDestination = unit.mTarget->getB2DPosition();
+		}
 	}
-	else {
-		unit.finalDestination = unit.mTarget->getPosition();
-		unit.b2FinalDestination = unit.mTarget->getB2DPosition();
+	else if (unit.mInteractionTarget == Unit::TARGET_CONSTRUCTION) {
+		if (unit.inRange(unit.mBuildTarget->getPosition(), unit.buildRange)) {
+			unit.mState = Unit::STATE_CONSTRUCTING;
+			unit.mConstructingState->enter(unit);
+		}
+		else {
+			unit.finalDestination = unit.mBuildTarget->getPosition();
+			unit.b2FinalDestination = unit.mBuildTarget->getB2DPosition();
+		}
 	}
+	
 
 	/* Realtime directing */
 	Ogre::Vector2 position = GridUtils::b2CordNumericalFinder(unit.getB2DPosition());
@@ -57,7 +71,7 @@ void SeekingState::update(Unit& unit, const Ogre::FrameEvent& evt) {
 		unit.mBody->SetType(b2_dynamicBody);
 	}
 
-	/** Marching and Hunting **/
+	/** Marching and Seeking **/
 	if (unit.b2Destination != b2Vec2_zero) {
 
 		//unit.b2ForceToApply.operator*=(evt.timeSinceLastFrame);		//Real Time
@@ -75,7 +89,7 @@ void SeekingState::update(Unit& unit, const Ogre::FrameEvent& evt) {
 		//Ogre::Vector3 newPos = unit.getPosition().operator+=(unit.velocity.operator*(evt.timeSinceLastFrame));		//Real Time
 
 		unit.mBody->SetLinearVelocity(unit.b2Velocity);
-		Ogre::Vector3 moveGraphic = Ogre::Vector3(unit.getB2DPosition().x, 0, unit.getB2DPosition().y);
+		Ogre::Vector3 moveGraphic = Ogre::Vector3(unit.getB2DPosition().x, unit.getPosition().y, unit.getB2DPosition().y);
 		unit.commandMove(moveGraphic);
 
 	}
