@@ -8,6 +8,7 @@
 #include "Building.h"
 
 class Unit;
+class Building;
 
 class Player
 {
@@ -18,6 +19,7 @@ public:
 	virtual void focusUnits(Ogre::SceneQueryResult& result);
 	virtual void focusUnit(Unit* unit);
 	virtual void focusBuilding(Building* building);
+	virtual bool isVillagerFocused();
 	virtual void addToQueue(Unit* unit);
 	virtual void addToBuildingQueue(Building* building);
 	virtual void assignToGroup();
@@ -26,6 +28,7 @@ public:
 	virtual void cullUnit(Unit* unit);
 	virtual void harvest(NaturalResource* target);
 	virtual void attack();
+	virtual void construct(Building* constructionTarget);
 	virtual void attack(Unit* target);
 	virtual void attackMove();
 	virtual bool hasUnitInArmy(Ogre::String unitName);
@@ -38,12 +41,15 @@ public:
 	std::vector<Unit*>					unitGroup;		//Have previous orders
 	std::vector<Unit*>					renegeGroup;	//Units switching groups
 	int									mLastUnitId;
+	int									mLastBuildingId;
 
 	std::map<Ogre::String, Unit*>		myArmy;
 	std::map<Ogre::String, Building*>   myBuildings;
 	PlayerRelationship*					relationship;
-	bool								queuedAttackMove;
 	int									playerId;
+
+	bool								queuedAttackMove;
+	bool								queuedConstruction;
 	
 };
 

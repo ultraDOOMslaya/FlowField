@@ -2,7 +2,7 @@
 
 
 void SeekingState::enter(Unit& unit) {
-	unit.mUnitController->seekTarget(&unit);
+	//unit.mUnitController->seekTarget(&unit);
 	unit.mState = Unit::STATE_SEEKING;
 	unit.animate("Walk");
 }
@@ -14,15 +14,29 @@ void SeekingState::handleInput(Unit& unit, OgreBites::Event& evt) {
 
 
 void SeekingState::update(Unit& unit, const Ogre::FrameEvent& evt) {
-	unit.distanceFromTarget = unit.getPosition().squaredLength() - unit.mTarget->getPosition().squaredLength();
-	if (unit.inRange(unit.mTarget->getPosition(), unit.attackRange)) {
-		unit.mState = Unit::STATE_ATTACKING;
-		unit.mAttackingState->enter(unit);
+	
+	if (unit.mInteractionTarget == Unit::TARGET_ENEMY) {
+		unit.distanceFromTarget = unit.getPosition().squaredLength() - unit.mTarget->getPosition().squaredLength();
+		if (unit.inRange(unit.mTarget->getPosition(), unit.attackRange)) {
+			unit.mState = Unit::STATE_ATTACKING;
+			unit.mAttackingState->enter(unit);
+		}
+		else {
+			unit.finalDestination = unit.mTarget->getPosition();
+			unit.b2FinalDestination = unit.mTarget->getB2DPosition();
+		}
 	}
-	else {
-		unit.finalDestination = unit.mTarget->getPosition();
-		unit.b2FinalDestination = unit.mTarget->getB2DPosition();
+	else if (unit.mInteractionTarget == Unit::TARGET_CONSTRUCTION) {
+		if (unit.inRange(unit.mBuildTarget->getPosition(), unit.buildRange)) {
+			unit.mState = Unit::STATE_CONSTRUCTING;
+			unit.mConstructingState->enter(unit);
+		}
+		else {
+			unit.finalDestination = unit.mBuildTarget->getPosition();
+			unit.b2FinalDestination = unit.mBuildTarget->getB2DPosition();
+		}
 	}
+	
 
 	/* Realtime directing */
 	Ogre::Vector2 position = GridUtils::b2CordNumericalFinder(unit.getB2DPosition());

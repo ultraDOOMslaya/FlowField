@@ -28,8 +28,11 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	path(NULL),
 	isSelected(false),
 	attacking(false),
+	harvesting(false),
+	building(false),
 	mTarget(NULL),
 	mNatResourceTarget(NULL),
+	mBuildTarget(NULL),
 	attackRange(0),
 	harvestRange(0),
 	distanceFromTarget(0),
@@ -45,6 +48,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	unitNode->attachObject(unitEntity);
 	mUnitClass = unitClass;
 
+	mInteractionTarget = TARGET_NONE;
 	mState = STATE_IDLE;
 	mIdleState = new IdleState();
 	mWalkingState = new WalkingState();
@@ -53,6 +57,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	mAttackingState = new AttackingState();
 	mHuntingState = new HuntingState();
 	mHarvestingState = new HarvestingState();
+	mConstructingState = new ConstructingState();
 	mIdleState->enter(*this);
 
 	//unitAnimState = unitEntity->getAnimationState("Idle");
@@ -64,6 +69,7 @@ Unit::Unit(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::String Bra
 	targetRadius = 100;
 	attackRange = 100;
 	harvestRange = 50;
+	buildRange = 40;
 	unitEntity->setQueryFlags(Constants::unitQueryMask);
 	unitID = ID;
 	
@@ -124,6 +130,8 @@ void Unit::handleInput(OgreBites::Event &evt) {
 		break;
 	case STATE_HUNTING:
 		mHuntingState->handleInput(*this, evt);
+	case STATE_CONSTRUCTING:
+		mConstructingState->handleInput(*this, evt);
 		break;
 	}
 }
@@ -155,6 +163,8 @@ void Unit::update(const Ogre::FrameEvent& evt) {
 	case Unit::STATE_HUNTING:
 		mHuntingState->update(*this, evt);
 		break;
+	case Unit::STATE_CONSTRUCTING:
+		mConstructingState->update(*this, evt);
 	case Unit::STATE_POST_COMBAT:
 		break;
 	default:
@@ -308,6 +318,12 @@ void Unit::setNatResourceTarget(NaturalResource* target) {
 }
 //----------------------------------------------------------------
 
+void Unit::setConstructionTarget(Building* target) {
+	mBuildTarget = target;
+	building = true;
+}
+//----------------------------------------------------------------
+
 void Unit::attack() {
 	halt();
 	rotate((mTarget->getPosition() - getPosition()));
@@ -326,6 +342,12 @@ void Unit::harvest() {
 	animate("Chopping");
 }
 //----------------------------------------------------------------
+
+void Unit::build() {
+	halt();
+	animate("Building");
+	rotate(mBuildTarget->buildingNode->getPosition() - getPosition());
+}
 
 bool Unit::isAtEndOfAnimation() {
 	return unitAnimState->hasEnded();
@@ -461,7 +483,7 @@ void Unit::rotate(b2Vec2 direction) {
 
 void Unit::selected() {
 	isSelected = true;
-	selectionCircle = new SelectionCircle(gameSceneManager, getPosition(), unitID);
+	selectionCircle = new SelectionCircle(gameSceneManager, getPosition(), unitID, Constants::GameObject::GAME_OBJECT_UNIT);
 }
 //----------------------------------------------------------------
 

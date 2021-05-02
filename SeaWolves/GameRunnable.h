@@ -46,7 +46,8 @@
 //GameObjects
 #include "Unit.h"
 #include "MagicAttack.h"
-#include "Building.h"
+//#include "Building.h"
+#include "Barracks.h"
 #include "ForestTree.h"
 #include "Villager.h"
 
@@ -130,6 +131,7 @@ public:
 	bool						createUnitMode;
 	//std::vector<Unit>			units;
 	std::map<Ogre::String, Unit*> units;
+	std::map<Ogre::String, Building*> buildings;
 	std::map<Ogre::String, NaturalResource*> natResources;
 
 	std::vector<Projectile*>	projectiles;

@@ -3,9 +3,11 @@
 
 
 Player::Player()
-	: queuedAttackMove(false)
+	: queuedAttackMove(false),
+	queuedConstruction(false)
 {
 	mLastUnitId = 10;
+	mLastBuildingId = 10;
 }
 
 
@@ -47,6 +49,16 @@ void Player::focusUnit(Unit* unit) {
 void Player::focusBuilding(Building* building) {
 	clearBuildingQueue();
 	addToBuildingQueue(building);
+}
+//----------------------------------------------------------------
+
+bool Player::isVillagerFocused() {
+	for (Unit* unit : unitQueue) {
+		if (unit->mUnitClass == "Villager")
+			return true;
+	}
+
+	return false;
 }
 //----------------------------------------------------------------
 
@@ -163,6 +175,18 @@ void Player::attackMove() {
 	}
 }
 //-----------------------------------------------------=-----------
+
+void Player::construct(Building* constructionTarget) {
+	for (Unit* unit : unitQueue) {
+		if (unit->mUnitClass == "Villager") {
+			unit->setConstructionTarget(constructionTarget);
+			unit->mInteractionTarget = Unit::TARGET_CONSTRUCTION;
+			unit->mState = Unit::STATE_SEEKING;
+			unit->mSeekingState->enter(*unit);
+		}
+	}
+}
+//----------------------------------------------------------------
 
 //TODO move this to a generic util class
 /*

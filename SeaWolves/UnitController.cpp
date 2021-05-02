@@ -93,6 +93,7 @@ void UnitController::seekTarget(Unit* unit) {
 }
 //----------------------------------------------------------------
 
+
 void UnitController::spawnSpellAction(Unit* unit) {
 
 	//TODO make unit classes enum... this should be a switch case

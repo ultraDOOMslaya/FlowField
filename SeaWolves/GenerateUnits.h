@@ -9,7 +9,7 @@
 #include "Wizard.h"
 
 #include "ForestTree.h"
-#include "Building.h"
+#include "Barracks.h"
 
 #include "Constants.h"
 #include "Box2D\Box2D.h"
@@ -37,5 +37,8 @@ public:
 
 	static void generateTrees(Ogre::SceneManager* mScnMgr, std::map<Ogre::String, NaturalResource*>* natResources, b2World* world, std::vector<GridSquare*>* impassableTerrain);
 
+	static void generateBuildings(Ogre::SceneManager* gameSceneManager, Ogre::Vector3 buildingPos, int buildingId, Ogre::String meshName, b2World* world, std::vector<GridSquare*>* impassableTerrain, int ticksToCompletion, std::map<Ogre::String, Building*>* playerBuildings, std::map<Ogre::String, Building*>* buildings);
+
+	static Building* generateBuilding(Ogre::SceneManager* gameSceneManager, Ogre::Vector3 buildingPos, int buildingId, Ogre::String meshName, b2World* world, std::vector<GridSquare*>* impassableTerrain, int ticksToCompletion, std::map<Ogre::String, Building*>* playerBuildings, std::map<Ogre::String, Building*>* buildings);
 };
 

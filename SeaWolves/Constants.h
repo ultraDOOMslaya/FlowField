@@ -6,9 +6,18 @@
 
 /* Clearpoint: the point at which heavy armor units have passed the group and the rest of the group can move (if they don't haveLos). */
 
+
+
 class Constants
 {
 public:
+	enum GameObject
+	{
+		GAME_OBJECT_UNIT,
+		GAME_OBJECT_NATURAL_RESOURCE,
+		GAME_OBJECT_BUILDING
+	};
+
 	Constants();
 	~Constants();
 
@@ -60,6 +69,8 @@ public:
 	const Ogre::String			heavyArmor = "HeavyArmor";
 	const Ogre::String			MediumArmor = "MediumArmor";
 	const Ogre::String			LightArmor = "LightArmor";
+
+	const Ogre::String			redBuilding = "RedBrickBuilding.mesh";
 };
 
 #endif __Constants_h_

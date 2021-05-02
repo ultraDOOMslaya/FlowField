@@ -316,3 +316,17 @@ void GenerateUnits::generateTrees(Ogre::SceneManager* mScnMgr, std::map<Ogre::St
 	ForestTree* tree4 = new ForestTree(mScnMgr, tree4Pos, "poplar2", "PoplarTree.mesh", world, impassableTerrain);
 	natResources->insert(std::pair<Ogre::String, NaturalResource*>("poplar2", tree4));
 }
+
+void GenerateUnits::generateBuildings(Ogre::SceneManager* gameSceneManager, Ogre::Vector3 buildingPosition, int buildingId, Ogre::String meshName, b2World* world, std::vector<GridSquare*>* impassableTerrain, int ticksToCompletion, std::map<Ogre::String, Building*>* playerBuildings, std::map<Ogre::String, Building*>* buildings) {
+	buildingPosition.y += Constants::unitBaseHeight;
+	Barracks* redRax = new Barracks(gameSceneManager, buildingPosition, buildingId, "RedBrickShack.mesh", world, impassableTerrain, 0);
+	buildings->insert(std::pair<Ogre::String, Building*>(redRax->getName(), redRax));
+	playerBuildings->insert(std::pair<Ogre::String, Building*>(redRax->getName(), redRax));
+}
+
+Building* GenerateUnits::generateBuilding(Ogre::SceneManager* gameSceneManager, Ogre::Vector3 buildingPosition, int buildingId, Ogre::String meshName, b2World* world, std::vector<GridSquare*>* impassableTerrain, int ticksToCompletion, std::map<Ogre::String, Building*>* playerBuildings, std::map<Ogre::String, Building*>* buildings) {
+	Barracks* redRax = new Barracks(gameSceneManager, buildingPosition, buildingId, "RedBrickShack.mesh", world, impassableTerrain, ticksToCompletion);
+	buildings->insert(std::pair<Ogre::String, Building*>(redRax->getName(), redRax));
+	playerBuildings->insert(std::pair<Ogre::String, Building*>(redRax->getName(), redRax));
+	return redRax;
+}

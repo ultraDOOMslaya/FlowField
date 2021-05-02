@@ -164,6 +164,10 @@ bool GameRunnable::keyPressed(const OgreBites::KeyboardEvent& evt)
 		}
 	}
 
+	if (evt.keysym.sym == SDLK_b) {
+		activePlayer->queuedConstruction = !activePlayer->queuedConstruction;
+	}
+
 	return true;
 }
 //----------------------------------------------------------------
@@ -231,7 +235,10 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 				Building* building;
 				for (; it != result.end(); it++) {
 					if (it->movable->getQueryFlags() == Constants::buildingQueryMask) {
-						activePlayer->focusBuilding(mRedBuilding);
+						std::map<Ogre::String, Building*>::iterator itTree = buildings.find(it->movable->getParentSceneNode()->getName());
+						building = itTree->second;
+
+						activePlayer->focusBuilding(building);
 						break;
 					}
 					if (it->movable->getQueryFlags() == Constants::unitQueryMask) {
@@ -255,6 +262,16 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 			pim->performSelection(selectBox->mStart, selectBox->mStop, activePlayer, gridMap);
 		}
 		selectBox->disable();
+
+		if (activePlayer->queuedConstruction) {
+			//TODO make a building
+			//rayResult.position.x
+			Ogre::String buildingName = "Building" + Ogre::StringConverter::toString(activePlayer->mLastBuildingId++);
+			Building* construction = GenerateUnits::generateBuilding(mScnMgr, rayResult.position, activePlayer->mLastBuildingId++, "RedBrickBuilding.mesh", mWorld, &impassableTerrain, 300, &activePlayer->myBuildings, &buildings);
+			activePlayer->queuedConstruction = false;
+			//activePlayer->construct(construction);
+			
+		}
 	}
 
 	if (evt.button == SDL_BUTTON_RIGHT) {
@@ -320,6 +337,7 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 		//TODO this may be the wrong place for this after the refactor
 		/* Reset state player state */
 		//activePlayer->queuedAttackMove = false;
+		//activePlayer->queuedConstruction = false;
 
 		if (mShowFlowPathCB->isChecked()) {
 			if (activePlayer->unitQueue.size() > 0) {
@@ -357,6 +375,12 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent &evt)
 						std::map<Ogre::String, NaturalResource*>::iterator itTree = natResources.find(it->movable->getParentSceneNode()->getName());
 						NaturalResource& natResource = *itTree->second;
 						activePlayer->harvest(&natResource);
+					}
+
+					if (it->movable->getQueryFlags() == Constants::buildingQueryMask) {
+						std::map<Ogre::String, Building*>::iterator itTree = buildings.find(it->movable->getParentSceneNode()->getName());
+						Building& building = *itTree->second;
+						activePlayer->construct(&building);
 					}
 				}
 			}
@@ -542,21 +566,6 @@ void GameRunnable::setup(void)
 	b2Vec2 gravity(0.0f, 0.0f);
 	mWorld = new b2World(gravity);
 
-	Ogre::Vector3 buildingPosition = GridUtils::numericalCordFinder(8, 5);
-	buildingPosition.y += Constants::unitBaseHeight;
-	Ogre::String buildingName = "RedBrickBuilding";
-	mRedBuilding = new Building(mScnMgr, buildingPosition, buildingName, "RedBrickShack.mesh", mWorld, &impassableTerrain);
-	mRedBuilding->setSpawnPoint(Ogre::Vector2(8, 7));
-	activePlayer->myBuildings.insert(std::make_pair(buildingName, mRedBuilding));
-
-
-	
-
-	//treeEntity->setCastShadows(true);
-	/*Ogre::SceneNode* treeNode = mScnMgr->getRootSceneNode()->createChildSceneNode("tree", Ogre::Vector3(560, 200, 640));
-	treeNode->rotate(Ogre::Quaternion(Ogre::Degree(180), Ogre::Vector3::UNIT_Y));
-	treeNode->setScale(50, 50, 50);
-	treeNode->attachObject(treeEntity);*/
 
 	//TODO move impassableTerrain, gridEditor, and b2 world to the map manager (probably?)
 	mMapManager = new MapManager(mScnMgr, spotLight, &impassableTerrain, mWorld, gridEditor);
@@ -567,6 +576,7 @@ void GameRunnable::setup(void)
 	//GenerateUnits::generateFourBronze(mScnMgr, &units, &player1.myArmy);
 	GenerateUnits::generateEightBronze(mScnMgr, &units, &player1.myArmy, mWorld, &impassableTerrain, mUnitController);
 	GenerateUnits::generateTrees(mScnMgr, &natResources, mWorld, &impassableTerrain);
+	GenerateUnits::generateBuildings(mScnMgr, GridUtils::numericalCordFinder(8, 5), activePlayer->mLastBuildingId++, "DoesntMatter", mWorld, &impassableTerrain, 0, &activePlayer->myBuildings, &buildings);
 
 	Ogre::String unit8675 = "UnitNode" + Ogre::StringConverter::toString(8675309);
 

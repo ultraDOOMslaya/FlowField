@@ -15,7 +15,7 @@
 class Building
 {
 public:
-	Building(Ogre::SceneManager* gameSceneManager, Ogre::Vector3 startPos, Ogre::String name, Ogre::String meshName, b2World* world, std::vector<GridSquare*>* impassableTerrain);
+	Building(Ogre::SceneManager* gameSceneManager, Ogre::Vector3 startPos, int buildingId, Ogre::String meshName, b2World* world, std::vector<GridSquare*>* impassableTerrain);
 	~Building();
 
 	void addTerrainValue(int x, int y, b2World* world, std::vector<GridSquare*>* impassableTerrain);
@@ -23,8 +23,13 @@ public:
 	void unselected();
 	void setSpawnPoint(Ogre::Vector2 coords);
 	Ogre::Vector2 getSpawnPoint();
+	Ogre::Vector3 getPosition();
+	b2Vec2 getB2DPosition();
+	Ogre::String getName();
 
 	Ogre::SceneManager*			mScnMgr;
+	Ogre::Entity*				constructionEntity;
+	Ogre::Entity*				buildingEntity;
 	Ogre::SceneNode*			buildingNode;
 	Ogre::String				mName;
 	SelectionCircle*			mSelectionCircle;
@@ -36,6 +41,9 @@ public:
 	b2Body*						mBody;
 	b2World*					mWorld;
 	bool						isSelected;
+
+	int							mBuildingId;
+	int							mTicksToCompletion;
 };
 
 #endif __Building_h_

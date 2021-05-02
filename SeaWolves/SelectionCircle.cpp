@@ -1,7 +1,7 @@
 #include "SelectionCircle.h"
 
 
-SelectionCircle::SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 position, int unitID, Ogre::Real circleRadius)
+SelectionCircle::SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 position, int unitID, int gameObjectType, Ogre::Real circleRadius)
 {
 	gameSceneManager = mScnMgr;
 	//-------------------------------------------------------
@@ -30,7 +30,7 @@ SelectionCircle::SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 posi
 		circularCord2[loopCount].z = (Ogre::Math::Sin(theta) * circleRadius) + position.z;
 	}
 
-	Ogre::String circleName = "circleXY" + Ogre::StringConverter::toString(unitID);
+	Ogre::String circleName = "circleXY_" + Ogre::StringConverter::toString(gameObjectType) + "_" + Ogre::StringConverter::toString(unitID);
 	circleXY = gameSceneManager->createManualObject(circleName);
 
 	//*** Circle XY ***
@@ -50,7 +50,7 @@ SelectionCircle::SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 posi
 }
 
 
-SelectionCircle::SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 position, int unitID)
+SelectionCircle::SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 position, int unitID, int gameObjectType)
 {
 	gameSceneManager = mScnMgr;
 	//-------------------------------------------------------
@@ -80,7 +80,7 @@ SelectionCircle::SelectionCircle(Ogre::SceneManager* mScnMgr, Ogre::Vector3 posi
 		circularCord2[loopCount].z = (Ogre::Math::Sin(theta) * circleRadius) + position.z;
 	}
 
-	Ogre::String circleName = "circleXY" + Ogre::StringConverter::toString(unitID);
+	Ogre::String circleName = "circleXY_" + Ogre::StringConverter::toString(gameObjectType) + "_" + Ogre::StringConverter::toString(unitID);
 	circleXY = gameSceneManager->createManualObject(circleName);
 
 	//*** Circle XY ***

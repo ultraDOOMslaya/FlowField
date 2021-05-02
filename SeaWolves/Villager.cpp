@@ -6,6 +6,7 @@ Villager::Villager(Ogre::SceneManager* mScnMgr, Ogre::Vector3 startPos, Ogre::St
 	: Unit(mScnMgr, startPos, BradsBitch, meshName, unitClass, ID, world, impassableTerrain, unitController)
 {
 	attackRange = 20;
+	buildRange = 200;
 	mAttackDamage = 1;
 	mHitPoints = 50;
 
