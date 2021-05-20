@@ -491,7 +491,7 @@ void GameRunnable::setup(void)
 
 	//gridMap = new std::vector<std::vector<GridSquare*>>();
 
-	mScnMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
+	mScnMgr->setAmbientLight(Ogre::ColourValue(0.8f, 0.8f, 0.8f));
 	//mScnMgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
 	spotLight = mScnMgr->createLight("SpotLight");
 	spotLight->setType(Ogre::Light::LT_DIRECTIONAL);
@@ -587,6 +587,16 @@ void GameRunnable::setup(void)
 	unit->mPlayerId = 1;
 	units.insert(std::make_pair(unit8675, unit));
 	player1.myArmy.insert(std::pair<Ogre::String, Unit*>(unit8675, unit));
+
+
+	//Ogre::Entity* treeEnt = mScnMgr->createEntity("BirchTree.001.mesh");
+	treeEnt = mScnMgr->createEntity("leaves.484.mesh");
+	treeNode = mScnMgr->getRootSceneNode()->createChildSceneNode("BirchTree", Ogre::Vector3(500, 200, 500));
+	treeNode->setScale(40, 40, 40);
+	treeNode->attachObject(treeEnt);
+	Ogre::AnimationState* animState = treeEnt->getAnimationState("Chopping");
+	animState->setLoop(true);
+	animState->setEnabled(true);
 
 	/** wield an axe **/
 	/*Ogre::Vector3 peasantPos = GridUtils::numericalCordFinder(3, 6);

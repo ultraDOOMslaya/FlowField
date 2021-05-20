@@ -128,6 +128,10 @@ public:
 	std::queue<SquareNeighbor*> unitNeighbors;
 	Ogre::Vector2				currentPos;
 	
+	Ogre::SceneNode* treeNode;
+	Ogre::Entity* treeEnt;
+
+
 	bool						createUnitMode;
 	//std::vector<Unit>			units;
 	std::map<Ogre::String, Unit*> units;
